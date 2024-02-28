@@ -136,11 +136,32 @@ void MainWindow::SlotSwitchReg(){
 
 在主程序启动后加载qss
 ``` cpp
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+
+    QFile qss(":/style/stylesheet.qss");
+
+    if( qss.open(QFile::ReadOnly))
+    {
+        qDebug("open success");
+        QString style = QLatin1String(qss.readAll());
+        a.setStyleSheet(style);
+        qss.close();
+    }else{
+         qDebug("Open failed");
+     }
+
+    MainWindow w;
+    w.show();
+
+    return a.exec();
+}
 ```
 
 然后我们写qss样式美化界面
 ``` qss
-#LoginDialog{
+QDialog#LoginDialog{
 background-color:rgb(255,255,255)
 }
 ```

@@ -165,3 +165,4 @@ QDialog#LoginDialog{
 background-color:rgb(255,255,255)
 }
 ```
+主界面有一道灰色的是toolbar造成的，去mainwindow.ui里把那个toolbar删了就行了。

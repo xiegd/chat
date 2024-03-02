@@ -20,6 +20,15 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    if(_login_dlg){
+        delete _login_dlg;
+        _login_dlg = nullptr;
+    }
+
+    if(_reg_dlg){
+        delete _reg_dlg;
+        _reg_dlg = nullptr;
+    }
 }
 
 void MainWindow::SlotSwitchReg()

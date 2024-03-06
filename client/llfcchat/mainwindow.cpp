@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //创建一个CentralWidget, 并将其设置为MainWindow的中心部件
     _login_dlg = new LoginDialog(this);
     setCentralWidget(_login_dlg);
-    _login_dlg->show();
+    //_login_dlg->show();
 
     //创建和注册消息的连接
     connect(_login_dlg, &LoginDialog::switchRegister, this, &MainWindow::SlotSwitchReg);

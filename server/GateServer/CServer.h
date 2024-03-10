@@ -2,13 +2,14 @@
 #include <string>
 #include "const.h"
 
-class CServer
+class CServer:public std::enable_shared_from_this<CServer>
 {
 public:
-	CServer(unsigned short& port);
-	void Listen();
+	CServer(boost::asio::io_context& ioc, unsigned short& port);
+	void Start();
 private:
 	tcp::acceptor  _acceptor;
-	net::io_context _ioc;
+	net::io_context& _ioc;
+	boost::asio::ip::tcp::socket   _socket;
 };
 

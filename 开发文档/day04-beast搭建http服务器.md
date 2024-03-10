@@ -16,46 +16,50 @@ using tcp = boost::asio::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 ```
 CServer.h中声明acceptor, 以及用于事件循环的上下文iocontext,和构造函数
 ``` cpp
-class CServer
+class CServer:public std::enable_shared_from_this<CServer>
 {
 public:
-	CServer(unsigned short& port);
+	CServer(boost::asio::io_context& ioc, unsigned short& port);
+	void Start();
 private:
 	tcp::acceptor  _acceptor;
-	net::io_context _ioc;
+	net::io_context& _ioc;
+	boost::asio::ip::tcp::socket   _socket;
 };
 ```
 cpp中实现构造函数如下
 ``` cpp
-CServer::CServer(unsigned short& port) :_ioc(1),
-_acceptor(_ioc, { net::ip::make_address("0.0.0.0"), port }) {
+CServer::CServer(boost::asio::io_context& ioc, unsigned short& port) :_ioc(ioc),
+_acceptor(ioc, tcp::endpoint(tcp::v4(), port)),_socket(ioc) {
+
 }
 ```
-接下来我们实现Listen函数，用来监听新链接
+接下来我们实现Start函数，用来监听新链接
 ``` cpp
-void CServer::Listen()
-{
-	tcp::socket socket{ _ioc };
-	_acceptor.async_accept(socket, [&](beast::error_code ec) {
+void CServer::Start()
+{	
+	auto self = shared_from_this();
+	_acceptor.async_accept(_socket, [self](beast::error_code ec) {
 		try {
 			//出错则放弃这个连接，继续监听新链接
 			if (ec) {
-				Listen();
+				self->Start();
 				return;
 			}
 
 			//处理新链接，创建HpptConnection类管理新连接
-
+			std::make_shared<HttpConnection>(std::move(self->_socket))->Start();
 			//继续监听
-			Listen();
+			self->Start();
 		}
 		catch (std::exception& exp) {
 			std::cout << "exception is " << exp.what() << std::endl;
+			self->Start();
 		}
 	});
 }
 ```
-上面函数有个很严重的问题就是lambda表达式捕获的是局部变量的引用，而局部变量是会被释放的，所以要保证回调函数触发之前socket不会被释放。我的思路是构造HttpConnection类型的智能指针管理这个socket。
+Start函数内创建HttpConnection类型智能指针，将_socket内部数据转移给HttpConnection管理，_socket继续用来接受写的链接。
 
 我们创建const.h将文件件和一些作用于声明放在const.h里，这样以后创建的文件包含这个const.h即可，不用写那么多头文件了。
 
@@ -73,53 +77,50 @@ using tcp = boost::asio::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 新建HttpConnection类文件，在头文件添加声明
 ``` cpp
 #include "const.h"
-class HttpConnection
+
+class HttpConnection: public std::enable_shared_from_this<HttpConnection>
 {
+	friend class LogicSystem;
 public:
-	HttpConnection(net::io_context& ioc);
-	tcp::socket& GetSocket();
+	HttpConnection(tcp::socket socket);
+	void Start();
+	
 private:
+	void CheckDeadline();
+	void WriteResponse();
+	void HandleReq();
 	tcp::socket  _socket;
+	// The buffer for performing reads.
+	beast::flat_buffer  _buffer{ 8192 };
+
+	// The request message.
+	http::request<http::dynamic_body> _request;
+
+	// The response message.
+	http::response<http::dynamic_body> _response;
+
+	// The timer for putting a deadline on connection processing.
+	net::steady_timer deadline_{
+		_socket.get_executor(), std::chrono::seconds(60) };
 };
 ```
-实现
+_buffer 用来接受数据
+
+_request 用来解析请求
+
+_response 用来回应客户端
+
+_deadline 用来做定时器判断请求是否超时
+
+实现HttpConnection构造函数
 
 ``` cpp
-HttpConnection::HttpConnection(net::io_context& ioc):_socket(ioc)
-{
-
-}
-
-tcp::socket& HttpConnection::GetSocket()
-{
-	return _socket;
+HttpConnection::HttpConnection(tcp::socket socket)
+	: _socket(std::move(socket)) {
 }
 ```
-把之前Server的Listen函数修改，捕获HttpConnection智能指针，这样能达到闭包的效果
-``` cpp
-void CServer::Listen()
-{
-	auto http_con_ptr = std::make_shared<HttpConnection>(_ioc);
-	_acceptor.async_accept(http_con_ptr->GetSocket(), [http_con_ptr, this](beast::error_code ec) {
-		try {
-			//出错则放弃这个连接，继续监听新链接
-			if (ec) {
-				Listen();
-				return;
-			}
 
-			//处理新链接，创建HpptConnection类管理新连接
-			http_con_ptr->Start();
-			//继续监听
-			Listen();
-		}
-		catch (std::exception& exp) {
-			std::cout << "exception is " << exp.what() << std::endl;
-		}
-	});
-}
-```
-我们考虑在Start内部调用http::async_read函数，其源码为
+我们考虑在HttpConnection::Start内部调用http::async_read函数，其源码为
 ``` cpp
 async_read(
     AsyncReadStream& stream,
@@ -135,60 +136,9 @@ async_read(
 
 第四个参数为回调函数，接受成功或者失败，都会触发回调函数，我们用lambda表达式就可以了。
 
-我们将1,2,3这几个参数写到HttpConnection类的成员声明里
-``` cpp
-// The buffer for performing reads.
-beast::flat_buffer _buffer{ 8192 };
+我们已经将1,2,3这几个参数写到HttpConnection类的成员声明里了
 
-// The request message.
-http::request<http::dynamic_body> _request;
-
-// The response message.
-http::response<http::dynamic_body> _response;
-
-// The timer for putting a deadline on connection processing.
-net::steady_timer deadline_{
-	_socket.get_executor(), std::chrono::seconds(60) };
-```
-_buffer 用来接受数据
-
-_request 用来解析请求
-
-_response 用来回应客户端
-
-_deadline 用来做定时器判断请求是否超时
-
-HttpConnection的Start
-``` cpp
-void HttpConnection::Start()
-{
-	http::async_read(_socket, _buffer, _request, [this](beast::error_code ec,
-		std::size_t bytes_transferred) {
-			try {
-				if (ec) {
-					std::cout << "http read err is " << ec.what() << std::endl;
-					return;
-				}
-
-				//处理读到的数据
-				
-			}
-			catch (std::exception& exp) {
-				std::cout << "exception is " << exp.what() << std::endl;
-			}
-		}
-	);
-}
-```
-如果lambda回调之前HttpConnection被回收了，那么回调函数就会访问无效的内存地址，所以我们还要对HttpConnection保活，在回调之前HttpConnection是有效的，所以要用`shared_from_this()`基于this对象生成共享的智能指针，该智能指针和之前管理this的智能指针共享引用计数，而不是我们根据this构造一个新的智能指针(会导致this被两个智能指针管理)
-
-HttpConnection声明时继承std::enable_shared_from_this
-``` cpp
-class HttpConnection: public std::enable_shared_from_this<HttpConnection>{
-    //...
-}
-```
-把Start函数修改如下
+实现HttpConnection的Start函数
 ``` cpp
 void HttpConnection::Start()
 {
@@ -204,6 +154,7 @@ void HttpConnection::Start()
 				//处理读到的数据
 				boost::ignore_unused(bytes_transferred);
 				self->HandleReq();
+				self->CheckDeadline();
 			}
 			catch (std::exception& exp) {
 				std::cout << "exception is " << exp.what() << std::endl;
@@ -212,3 +163,193 @@ void HttpConnection::Start()
 	);
 }
 ```
+我们实现HandleReq
+``` cpp
+void HttpConnection::HandleReq() {
+	//设置版本
+	_response.version(_request.version());
+	//设置为短链接
+	_response.keep_alive(false);
+
+	if (_request.method() == http::verb::get) {
+		bool success = LogicSystem::GetInstance()->HandleGet(_request.target(), shared_from_this());
+		if (!success) {
+			_response.result(http::status::not_found);
+			_response.set(http::field::content_type, "text/plain");
+			beast::ostream(_response.body()) << "url not found\r\n";
+			WriteResponse();
+			return;
+		}
+
+		_response.result(http::status::ok);
+		_response.set(http::field::server, "GateServer");
+		WriteResponse();
+		return;
+	}
+}
+```
+为了方便我们先实现Get请求的处理，根据请求类型为get调用LogicSystem的HandleGet接口处理get请求，根据处理成功还是失败回应数据包给对方。
+
+我们先实现LogicSystem，采用单例模式，单例基类之前讲解过了
+``` cpp
+#include <memory>
+#include <mutex>
+#include <iostream>
+template <typename T>
+class Singleton {
+protected:
+	Singleton() = default;
+	Singleton(const Singleton<T>&) = delete;
+	Singleton& operator=(const Singleton<T>& st) = delete;
+	
+	static std::shared_ptr<T> _instance;
+public:
+	static std::shared_ptr<T> GetInstance() {
+		static std::once_flag s_flag;
+		std::call_once(s_flag, [&]() {
+			_instance = shared_ptr<T>(new T);
+			});
+
+		return _instance;
+	}
+	void PrintAddress() {
+		std::cout << _instance.get() << endl;
+	}
+	~Singleton() {
+		std::cout << "this is singleton destruct" << std::endl;
+	}
+};
+
+template <typename T>
+std::shared_ptr<T> Singleton<T>::_instance = nullptr;
+```
+实现LogicSystem单例类
+``` cpp
+#include "Singleton.h"
+#include <functional>
+#include <map>
+#include "const.h"
+
+class HttpConnection;
+typedef std::function<void(std::shared_ptr<HttpConnection>)> HttpHandler;
+class LogicSystem :public Singleton<LogicSystem>
+{
+	friend class Singleton<LogicSystem>;
+public:
+	~LogicSystem();
+	bool HandleGet(std::string, std::shared_ptr<HttpConnection>);
+	void RegGet(std::string, HttpHandler handler);
+private:
+	LogicSystem();
+	std::map<std::string, HttpHandler> _post_handlers;
+	std::map<std::string, HttpHandler> _get_handlers;
+};
+```
+_post_handlers和_get_handlers分别是post请求和get请求的回调函数map，key为路由，value为回调函数。
+
+我们实现RegGet函数，接受路由和回调函数作为参数
+``` cpp
+void LogicSystem::RegGet(std::string url, HttpHandler handler) {
+	_get_handlers.insert(make_pair(url, handler));
+}
+```
+在构造函数中实现具体的消息注册
+``` cpp
+LogicSystem::LogicSystem() {
+	RegGet("/get_test", [](std::shared_ptr<HttpConnection> connection) {
+		beast::ostream(connection->_response.body()) << "receive get_test req";
+	});
+}
+```
+为防止互相引用，以及LogicSystem能够成功访问HttpConnection，在LogicSystem.cpp中包含HttpConnection头文件
+
+并且在HttpConnection中添加友元类LogicSystem, 且在HttpConnection.cpp中包含LogicSystem.h文件
+
+``` cpp
+bool LogicSystem::HandleGet(std::string path, std::shared_ptr<HttpConnection> con) {
+	if (_get_handlers.find(path) == _get_handlers.end()) {
+		return false;
+	}
+
+	_get_handlers[path](con);
+	return true;
+}
+```
+这样我们在HttpConnection里实现WriteResponse函数
+``` cpp
+void HttpConnection::WriteResponse() {
+	auto self = shared_from_this();
+	_response.content_length(_response.body().size());
+	http::async_write(
+		_socket,
+		_response,
+		[self](beast::error_code ec, std::size_t)
+		{
+			self->_socket.shutdown(tcp::socket::shutdown_send, ec);
+			self->deadline_.cancel();
+		});
+}
+```
+因为http是短链接，所以发送完数据后不需要再监听对方链接，直接断开发送端即可。
+
+另外，http处理请求需要有一个时间约束，发送的数据包不能超时。所以在发送时我们启动一个定时器，收到发送的回调后取消定时器。
+
+我们实现检测超时的函数
+``` cpp
+void HttpConnection::CheckDeadline() {
+	auto self = shared_from_this();
+
+	deadline_.async_wait(
+		[self](beast::error_code ec)
+		{
+			if (!ec)
+			{
+				// Close socket to cancel any outstanding operation.
+				self->_socket.close(ec);
+			}
+		});
+}
+```
+我们在主函数中初始化上下文iocontext以及启动信号监听ctr-c退出事件， 并且启动iocontext服务
+``` cpp
+int main()
+{
+	try
+	{
+		unsigned short port = static_cast<unsigned short>(8080);
+		net::io_context ioc{ 1 };
+		boost::asio::signal_set signals(ioc, SIGINT, SIGTERM);
+		signals.async_wait([&ioc](const boost::system::error_code& error, int signal_number) {
+
+			if (error) {
+				return;
+			}
+			ioc.stop();
+			});
+		std::make_shared<CServer>(ioc, port)->Start();
+		ioc.run();
+	}
+	catch (std::exception const& e)
+	{
+		std::cerr << "Error: " << e.what() << std::endl;
+		return EXIT_FAILURE;
+	}
+}
+``
+启动服务器，在浏览器输入`http://localhost:8080/get_test`
+
+会看到服务器回包`receive get_test req`
+
+如果我们输入带参数的url请求`http://localhost:8080/get_test?key1=value1&key2=value2`
+
+会收到服务器反馈`url not found`
+
+所以对于get请求带参数的情况我们要实现参数解析，我们可以自己实现简单的url解析函数
+
+
+
+
+
+
+
+

@@ -1,31 +1,32 @@
 #include "CServer.h"
 #include <iostream>
 #include "HttpConnection.h"
-CServer::CServer(unsigned short& port) :_ioc(1),
-_acceptor(_ioc, { net::ip::make_address("0.0.0.0"), port }) {
-	
+CServer::CServer(boost::asio::io_context& ioc, unsigned short& port) :_ioc(ioc),
+_acceptor(ioc, tcp::endpoint(tcp::v4(), port)),_socket(ioc) {
+
 }
 
-void CServer::Listen()
-{
-	auto http_con_ptr = std::make_shared<HttpConnection>(_ioc);
-	_acceptor.async_accept(http_con_ptr->GetSocket(), [http_con_ptr, this](beast::error_code ec) {
+void CServer::Start()
+{	
+	auto self = shared_from_this();
+	_acceptor.async_accept(_socket, [self](beast::error_code ec) {
 		try {
 			//出错则放弃这个连接，继续监听新链接
 			if (ec) {
-				Listen();
+				self->Start();
 				return;
 			}
 
 			//处理新链接，创建HpptConnection类管理新连接
-			http_con_ptr->Start();
+			std::make_shared<HttpConnection>(std::move(self->_socket))->Start();
 			//继续监听
-			Listen();
+			self->Start();
 		}
 		catch (std::exception& exp) {
 			std::cout << "exception is " << exp.what() << std::endl;
-			Listen();
+			self->Start();
 		}
 	});
 }
+
 

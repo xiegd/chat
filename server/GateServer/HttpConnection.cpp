@@ -17,6 +17,7 @@ void HttpConnection::Start()
 				}
 
 				//处理读到的数据
+
 				boost::ignore_unused(bytes_transferred);
 				self->HandleReq();
 				self->CheckDeadline();
@@ -137,6 +138,22 @@ void HttpConnection::HandleReq() {
 	if (_request.method() == http::verb::get) {
 		PreParseGetParam();
 		bool success = LogicSystem::GetInstance()->HandleGet(_get_url, shared_from_this());
+		if (!success) {
+			_response.result(http::status::not_found);
+			_response.set(http::field::content_type, "text/plain");
+			beast::ostream(_response.body()) << "url not found\r\n";
+			WriteResponse();
+			return;
+		}
+
+		_response.result(http::status::ok);
+		_response.set(http::field::server, "GateServer");
+		WriteResponse();
+		return;
+	}
+
+	if (_request.method() == http::verb::post) {
+		bool success = LogicSystem::GetInstance()->HandlePost(_request.target(), shared_from_this());
 		if (!success) {
 			_response.result(http::status::not_found);
 			_response.set(http::field::content_type, "text/plain");

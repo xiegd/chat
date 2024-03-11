@@ -346,6 +346,157 @@ int main()
 
 所以对于get请求带参数的情况我们要实现参数解析，我们可以自己实现简单的url解析函数
 
+``` cpp
+//char 转为16进制
+unsigned char ToHex(unsigned char x)
+{
+	return  x > 9 ? x + 55 : x + 48;
+}
+```
+将十进制的char转为16进制，如果是数字不超过9则加48转为对应的ASCII码的值
+
+如果字符是大于9的，比如A~Z, a~z等则加55，获取到对应字符的ASCII码值
+
+详细的ASCII码表大家可以看这个[https://c.biancheng.net/c/ascii/](https://c.biancheng.net/c/ascii/)
+
+接下来实现从16进制转为十进制的char的方法
+``` cpp
+unsigned char FromHex(unsigned char x)
+{
+	unsigned char y;
+	if (x >= 'A' && x <= 'Z') y = x - 'A' + 10;
+	else if (x >= 'a' && x <= 'z') y = x - 'a' + 10;
+	else if (x >= '0' && x <= '9') y = x - '0';
+	else assert(0);
+	return y;
+}
+```
+接下来我们实现url编码工作
+``` cpp
+std::string UrlEncode(const std::string& str)
+{
+	std::string strTemp = "";
+	size_t length = str.length();
+	for (size_t i = 0; i < length; i++)
+	{
+		//判断是否仅有数字和字母构成
+		if (isalnum((unsigned char)str[i]) ||
+			(str[i] == '-') ||
+			(str[i] == '_') ||
+			(str[i] == '.') ||
+			(str[i] == '~'))
+			strTemp += str[i];
+		else if (str[i] == ' ') //为空字符
+			strTemp += "+";
+		else
+		{
+			//其他字符需要提前加%并且高四位和低四位分别转为16进制
+			strTemp += '%';
+			strTemp += ToHex((unsigned char)str[i] >> 4);
+			strTemp += ToHex((unsigned char)str[i] & 0x0F);
+		}
+	}
+	return strTemp;
+}
+```
+我们先判断str[i]是否为字母或者数字，或者一些简单的下划线，如果是泽直接拼接，否则判断是否为空字符，如果为空则换成'+'拼接。否则就是特殊字符，我们需要将特殊字符转化为'%'和两个十六进制字符拼接。现拼接'%'，再将字符的高四位拼接到strTemp上，最后将低四位拼接到strTemp上。
+
+url解码的工作正好相反
+``` cpp
+std::string UrlDecode(const std::string& str)
+{
+	std::string strTemp = "";
+	size_t length = str.length();
+	for (size_t i = 0; i < length; i++)
+	{
+		//还原+为空
+		if (str[i] == '+') strTemp += ' ';
+		//遇到%将后面的两个字符从16进制转为char再拼接
+		else if (str[i] == '%')
+		{
+			assert(i + 2 < length);
+			unsigned char high = FromHex((unsigned char)str[++i]);
+			unsigned char low = FromHex((unsigned char)str[++i]);
+			strTemp += high * 16 + low;
+		}
+		else strTemp += str[i];
+	}
+	return strTemp;
+}
+```
+接下来实现get请求的参数解析, 在HttpConnection里添加两个成员
+``` cpp
+std::string _get_url;
+std::unordered_map<std::string, std::string> _get_params;
+```
+参数解析如下
+``` cpp
+void HttpConnection::PreParseGetParam() {
+	// 提取 URI  
+	auto uri = _request.target();
+	// 查找查询字符串的开始位置（即 '?' 的位置）  
+	auto query_pos = uri.find('?');
+	if (query_pos == std::string::npos) {
+		_get_url = uri;
+		return;
+	}
+
+	_get_url = uri.substr(0, query_pos);
+	std::string query_string = uri.substr(query_pos + 1);
+	std::string key;
+	std::string value;
+	size_t pos = 0;
+	while ((pos = query_string.find('&')) != std::string::npos) {
+		auto pair = query_string.substr(0, pos);
+		size_t eq_pos = pair.find('=');
+		if (eq_pos != std::string::npos) {
+			key = UrlDecode(pair.substr(0, eq_pos)); // 假设有 url_decode 函数来处理URL解码  
+			value = UrlDecode(pair.substr(eq_pos + 1));
+			_get_params[key] = value;
+		}
+		query_string.erase(0, pos + 1);
+	}
+	// 处理最后一个参数对（如果没有 & 分隔符）  
+	if (!query_string.empty()) {
+		size_t eq_pos = query_string.find('=');
+		if (eq_pos != std::string::npos) {
+			key = UrlDecode(query_string.substr(0, eq_pos));
+			value = UrlDecode(query_string.substr(eq_pos + 1));
+			_get_params[key] = value;
+		}
+	}
+}
+```
+HttpConnection::HandleReq函数略作修改
+``` cpp
+void HttpConnection::HandleReq() {
+	//...省略
+	if (_request.method() == http::verb::get) {
+		PreParseGetParam();
+		bool success = LogicSystem::GetInstance()->HandleGet(_get_url, shared_from_this());
+	}
+	//...省略
+}
+```
+我们修改LogicSytem构造函数，在get_test的回调里返回参数给对端
+``` cpp
+LogicSystem::LogicSystem() {
+	RegGet("/get_test", [](std::shared_ptr<HttpConnection> connection) {
+		beast::ostream(connection->_response.body()) << "receive get_test req " << std::endl;
+		int i = 0;
+		for (auto& elem : connection->_get_params) {
+			i++;
+			beast::ostream(connection->_response.body()) << "param" << i << " key is " << elem.first;
+			beast::ostream(connection->_response.body()) << ", " <<  " value is " << elem.second << std::endl;
+		}
+	});
+}
+```
+在浏览器输入`http://localhost:8080/get_test?key1=value1&key2=value2`
+
+看到浏览器收到如下图信息，说明我们的get请求逻辑处理完了
+
+![https://cdn.llfc.club/1710148646788.jpg](https://cdn.llfc.club/1710148646788.jpg)
 
 
 

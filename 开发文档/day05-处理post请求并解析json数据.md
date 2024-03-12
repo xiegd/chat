@@ -92,4 +92,90 @@ void HttpConnection::HandleReq() {
 
 ![https://cdn.llfc.club/1710164199348.jpg](https://cdn.llfc.club/1710164199348.jpg)
 
+## 客户端增加post逻辑
+我们之前在客户端实现了httpmgr的post请求，在点击获取验证码的槽函数里添加发送http的post请求即可
+``` cpp
+void RegisterDialog::on_get_code_clicked()
+{
+    //验证邮箱的地址正则表达式
+    auto email = ui->email_edit->text();
+    // 邮箱地址的正则表达式
+    QRegularExpression regex(R"((\w+)(\.|_)?(\w*)@(\w+)(\.(\w+))+)");
+    bool match = regex.match(email).hasMatch(); // 执行正则表达式匹配
+    if(match){
+        //发送http请求获取验证码
+        QJsonObject json_obj;
+        json_obj["email"] = email;
+        HttpMgr::GetInstance()->PostHttpReq(QUrl("http://localhost:8080/get_varifycode"),
+                     json_obj, ReqId::ID_GET_VARIFY_CODE,Modules::REGISTERMOD);
 
+    }else{
+        //提示邮箱不正确
+        showTip(tr("邮箱地址不正确"),false);
+    }
+}
+```
+当服务器不启动，客户端输入邮箱，点击获取验证码，客户端会收到网络连接失败的提示
+
+![https://cdn.llfc.club/1710209670231.jpg](https://cdn.llfc.club/1710209670231.jpg)
+
+启动服务器后，再次获取验证码，就显示正确提示了，而且客户端输出了服务器回传的邮箱地址`email is  "secondtonone1@163.com"`，界面也刷新为正确显示
+
+![https://cdn.llfc.club/1710210157771.jpg](https://cdn.llfc.club/1710210157771.jpg)
+
+## 客户端配置管理
+
+我们发现客户端代码中很多参数都是写死的，最好通过配置文件管理，我们在代码所在目录中新建一个config.ini文件, 内部添加配置
+``` cpp
+[GateServer]
+host=localhost
+port=8080
+```
+接着右键项目添加现有文件config.ini即可加入项目中。
+
+因为我们的程序最终会输出的bin目录，所以在pro中添加拷贝脚本将配置也拷贝到bin目录
+``` bash
+win32:CONFIG(release, debug | release)
+{
+    #指定要拷贝的文件目录为工程目录下release目录下的所有dll、lib文件，例如工程目录在D:\QT\Test
+    #PWD就为D:/QT/Test，DllFile = D:/QT/Test/release/*.dll
+    TargetConfig = $${PWD}/config.ini
+    #将输入目录中的"/"替换为"\"
+    TargetConfig = $$replace(TargetConfig, /, \\)
+    #将输出目录中的"/"替换为"\"
+    OutputDir =  $${OUT_PWD}/$${DESTDIR}
+    OutputDir = $$replace(OutputDir, /, \\)
+    //执行copy命令
+    QMAKE_POST_LINK += copy /Y \"$$TargetConfig\" \"$$OutputDir\"
+}
+```
+global.h中添加声明
+``` cpp
+extern QString gate_url_prefix;
+```
+在cpp中添加定义
+``` cpp
+QString gate_url_prefix = "";
+```
+在main函数中添加解析配置的逻辑
+``` cpp
+// 获取当前应用程序的路径
+QString app_path = QCoreApplication::applicationDirPath();
+// 拼接文件名
+QString fileName = "config.ini";
+QString config_path = QDir::toNativeSeparators(app_path +
+                        QDir::separator() + fileName);
+
+QSettings settings(config_path, QSettings::IniFormat);
+QString gate_host = settings.value("GateServer/host").toString();
+QString gate_port = settings.value("GateServer/port").toString();
+gate_url_prefix = "http://"+gate_host+":"+gate_port;
+```
+将RegisterDialog发送post请求修改为
+``` cpp
+ HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix+"/get_varifycode"),
+                     json_obj, ReqId::ID_GET_VARIFY_CODE,Modules::REGISTERMOD);
+```
+再次测试仍旧可以收到服务器回馈的http包。
+
+这么做的好处就是客户端增加了配置，而且以后修改参数也方便。

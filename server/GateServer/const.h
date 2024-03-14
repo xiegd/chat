@@ -8,6 +8,7 @@
 #include <json/json.h>
 #include <json/value.h>
 #include <json/reader.h>
+#include "Singleton.h"
 
 namespace beast = boost::beast;         // from <boost/beast.hpp>
 namespace http = beast::http;           // from <boost/beast/http.hpp>
@@ -19,3 +20,6 @@ enum ErrorCodes {
 	Error_Json = 1001,  //JsonΩ‚Œˆ¥ÌŒÛ
 	RPCFailed = 1002,  //RPC«Î«Û¥ÌŒÛ
 };
+
+class ConfigMgr;
+extern ConfigMgr gCfgMgr;

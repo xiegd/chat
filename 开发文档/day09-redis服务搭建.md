@@ -63,3 +63,46 @@ docker run -d --name llfc-redis -p 6380:6379 redis  --requirepass "123456"
 设置好ip和密码，点击测试连接连通就成功了
 
 ![https://cdn.llfc.club/1710657223612.jpg](https://cdn.llfc.club/1710657223612.jpg)
+
+## widows编译和配置redis
+
+Linux的redis库直接编译安装即可，windows反而麻烦一些，我们先阐述windows环境如何配置redis库， C++ 的redis库有很多种，最常用的有hredis和redis-plus-plus. 我们用redis-plus-plus. 这里介绍一种简单的安装方式---vcpkg
+
+先安装vcpkg, 源码地址
+
+[https://github.com/microsoft/vcpkg/releases](https://github.com/microsoft/vcpkg/releases)
+
+下载源码后
+
+windows版本redis下载地址
+
+[https://github.com/microsoftarchive/redis](https://github.com/microsoftarchive/redis)
+
+因为是源码，所以进入msvc目录
+
+![https://cdn.llfc.club/1710725726234.jpg](https://cdn.llfc.club/1710725726234.jpg)
+
+用visual studio打开sln文件，弹出升级窗口, 我的是vs2019所以升级到142
+
+![https://cdn.llfc.club/1710725937787.jpg](https://cdn.llfc.club/1710725937787.jpg)
+
+只需要生成hiredis工程和Win32_Interop工程即可，分别点击生成,生成hiredis.lib和Win32_Interop.lib即可
+
+右键两个工程的属性，代码生成里选择运行时库加载模式为MDD(Debug模式动态运行加载)，为了兼容我们其他的库，其他的库也是MDD模式
+
+![https://cdn.llfc.club/1710726777016.jpg](https://cdn.llfc.club/1710726777016.jpg)
+
+编译Win32_Interop.lib时报错， system_error不是std成员，
+
+![https://cdn.llfc.club/1710727129177.jpg](https://cdn.llfc.club/1710727129177.jpg)
+
+解决办法为在Win32_variadicFunctor.cpp和Win32_FDAPI.cpp添加
+`#include <system_error>`,再右键生成成功
+
+![https://cdn.llfc.club/1710729372811.jpg](https://cdn.llfc.club/1710729372811.jpg)
+
+将hiredis.lib和Win32_Interop.lib拷贝到`D:\cppsoft\reids\lib`
+
+将`redis-3.0\deps\hiredis`文件夹拷贝到`D:\cppsoft\reids\include`
+
+然后我们在visual studio中配置

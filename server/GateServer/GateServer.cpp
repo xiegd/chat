@@ -102,11 +102,11 @@ void TestRedis() {
 
 int main()
 {
-	TestRedis();
-	/*try
+	//TestRedis();
+	try
 	{
 		ConfigMgr gCfgMgr;
-		 std::string gate_port_str = gCfgMgr["GateServer"]["Port"];
+		std::string gate_port_str = gCfgMgr["GateServer"]["Port"];
 		unsigned short gate_port = atoi(gate_port_str.c_str());
 		net::io_context ioc{ 1 };
 		boost::asio::signal_set signals(ioc, SIGINT, SIGTERM);
@@ -125,6 +125,6 @@ int main()
 	{
 		std::cerr << "Error: " << e.what() << std::endl;
 		return EXIT_FAILURE;
-	}*/
+	}
 }
 

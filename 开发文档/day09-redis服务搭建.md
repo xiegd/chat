@@ -327,3 +327,4 @@ ssize_t FDAPI_write(int rfd, const void *buf, size_t count);
 ## 封装redis操作类
 
 因为hredis提供的操作太别扭了，我们手动封装redis操作类，简化调用流程。
+

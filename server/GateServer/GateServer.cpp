@@ -115,6 +115,12 @@ void TestRedisMgr() {
 	assert(RedisMgr::GetInstance()->Del("bloginfo"));
 	assert(RedisMgr::GetInstance()->ExistsKey("bloginfo") == false);
 	assert(RedisMgr::GetInstance()->LPush("lpushkey1", "lpushvalue1"));
+	assert(RedisMgr::GetInstance()->LPush("lpushkey1", "lpushvalue2"));
+	assert(RedisMgr::GetInstance()->LPush("lpushkey1", "lpushvalue3"));
+	assert(RedisMgr::GetInstance()->RPop("lpushkey1", value));
+	assert(RedisMgr::GetInstance()->RPop("lpushkey1", value));
+	assert(RedisMgr::GetInstance()->LPop("lpushkey1", value));
+	assert(RedisMgr::GetInstance()->LPop("lpushkey2", value)==false);
 	RedisMgr::GetInstance()->Close();
 }
 

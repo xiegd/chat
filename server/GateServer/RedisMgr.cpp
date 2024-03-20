@@ -120,6 +120,38 @@ bool RedisMgr::LPop(const std::string &key, std::string& value){
 	return true;
 }
 
+bool RedisMgr::RPush(const std::string& key, const std::string& value) {
+	this->_reply = (redisReply*)redisCommand(this->_connect, "RPUSH %s %s", key.c_str(), value.c_str());
+	if (NULL == this->_reply)
+	{
+		std::cout << "Execut command [ RPUSH " << key << "  " << value << " ] failure ! " << std::endl;
+		freeReplyObject(this->_reply);
+		return false;
+	}
+
+	if (this->_reply->type != REDIS_REPLY_INTEGER || this->_reply->integer <= 0) {
+		std::cout << "Execut command [ RPUSH " << key << "  " << value << " ] failure ! " << std::endl;
+		freeReplyObject(this->_reply);
+		return false;
+	}
+
+	std::cout << "Execut command [ RPUSH " << key << "  " << value << " ] success ! " << std::endl;
+	freeReplyObject(this->_reply);
+	return true;
+}
+bool RedisMgr::RPop(const std::string& key, std::string& value) {
+	this->_reply = (redisReply*)redisCommand(this->_connect, "RPOP %s ", key.c_str());
+	if (_reply == nullptr || _reply->type == REDIS_REPLY_NIL) {
+		std::cout << "Execut command [ RPOP " << key << " ] failure ! " << std::endl;
+		freeReplyObject(this->_reply);
+		return false;
+	}
+	value = _reply->str;
+	std::cout << "Execut command [ RPOP " << key << " ] success ! " << std::endl;
+	freeReplyObject(this->_reply);
+	return true;
+}
+
 bool RedisMgr::HSet(const std::string &key, const std::string &hkey, const std::string &value) {
 	this->_reply = (redisReply*)redisCommand(this->_connect, "HSET %s %s %s", key.c_str(), hkey.c_str(), value.c_str());
 	if (_reply == nullptr || _reply->type != REDIS_REPLY_INTEGER ) {

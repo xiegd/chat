@@ -18,6 +18,10 @@ async function GetVarifyCode(call, callback) {
         let query_res = await redis_module.GetRedis(const_module.code_prefix+call.request.email);
         console.log("query_res is ", query_res)
         let uniqueId = query_res;
+        if (uniqueId.length > 4) {
+            uniqueId = uniqueId.substring(0, 4);
+          } 
+          
         console.log("uniqueId is ", uniqueId)
         if(query_res ==null){
             uniqueId = uuidv4();

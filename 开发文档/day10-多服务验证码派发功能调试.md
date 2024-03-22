@@ -158,3 +158,10 @@ async function GetVarifyCode(call, callback) {
 
 如果10分钟之内多次请求，因为验证码被缓存在redis中，所以会被复用返回给客户端。
 
+![https://cdn.llfc.club/1711079058273.jpg](https://cdn.llfc.club/1711079058273.jpg)
+
+看起来客户端收到服务器的回复了，我们去邮箱看看是否收到验证码
+
+![https://cdn.llfc.club/1711080431619.jpg](https://cdn.llfc.club/1711080431619.jpg)
+
+确实收到了验证码。好的多服务调用实现了，大家可以把这个功能理解下，接下来去实现注册逻辑。

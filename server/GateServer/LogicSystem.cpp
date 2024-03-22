@@ -29,6 +29,14 @@ LogicSystem::LogicSystem() {
 			return true;
 		}
 
+		if (!src_root.isMember("email")) {
+			std::cout << "Failed to parse JSON data!" << std::endl;
+			root["error"] = ErrorCodes::Error_Json;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
+
 		auto email = src_root["email"].asString();
 		GetVarifyRsp rsp = VerifyGrpcClient::GetInstance()->GetVarifyCode(email);
 		cout << "email is " << email << endl;

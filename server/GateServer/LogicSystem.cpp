@@ -1,6 +1,7 @@
 #include "LogicSystem.h"
 #include "HttpConnection.h"
 #include "VerifyGrpcClient.h"
+#include "RedisMgr.h"
 
 LogicSystem::LogicSystem() {
 	RegGet("/get_test", [](std::shared_ptr<HttpConnection> connection) {
@@ -62,20 +63,43 @@ LogicSystem::LogicSystem() {
 			beast::ostream(connection->_response.body()) << jsonstr;
 			return true;
 		}
-
-		if (!src_root.isMember("email")) {
-			std::cout << "Failed to parse JSON data!" << std::endl;
-			root["error"] = ErrorCodes::Error_Json;
+		//先查找redis中email对应的验证码是否合理
+		std::string  varify_code;
+		bool b_get_varify = RedisMgr::GetInstance()->Get(src_root["email"].asString(), varify_code);
+		if (!b_get_varify) {
+			std::cout << " get varify code expired" << std::endl;
+			root["error"] = ErrorCodes::VarifyExpired;
 			std::string jsonstr = root.toStyledString();
 			beast::ostream(connection->_response.body()) << jsonstr;
 			return true;
 		}
 
-		auto email = src_root["email"].asString();
-		GetVarifyRsp rsp = VerifyGrpcClient::GetInstance()->GetVarifyCode(email);
-		cout << "email is " << email << endl;
-		root["error"] = rsp.error();
+		if (varify_code != src_root["varifycode"].asString()) {
+			std::cout << " varify code error" << std::endl;
+			root["error"] = ErrorCodes::VarifyCodeErr;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
+
+		//访问redis查找
+		bool b_usr_exist = RedisMgr::GetInstance()->ExistsKey(src_root["user"].asString());
+		if (b_usr_exist) {
+			std::cout << " user exist" << std::endl;
+			root["error"] = ErrorCodes::UserExist;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
+
+		//查找数据库判断用户是否存在
+
+		root["error"] = 0;
 		root["email"] = src_root["email"];
+		root ["user"]= src_root["user"].asString();
+		root["passwd"] = src_root["passwd"].asString();
+		root["confirm"] = src_root["confirm"].asString();
+		root["varifycode"] = src_root["varifycode"].asString();
 		std::string jsonstr = root.toStyledString();
 		beast::ostream(connection->_response.body()) << jsonstr;
 		return true;

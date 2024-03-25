@@ -10,6 +10,7 @@ public:
 	bool Connect(const std::string& host, int port);
 	bool Get(const std::string &key, std::string& value);
 	bool Set(const std::string &key, const std::string &value);
+	bool SetExpire(const std::string& key, int seconds);
 	bool Auth(const std::string &password);
 	bool LPush(const std::string &key, const std::string &value);
 	bool LPop(const std::string &key, std::string& value);
@@ -21,6 +22,7 @@ public:
 	bool Del(const std::string &key);
 	bool ExistsKey(const std::string &key);
 	void Close();
+	bool KeyExists(const std::string& key);
 private:
 	RedisMgr();
 

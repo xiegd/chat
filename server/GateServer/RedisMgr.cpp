@@ -69,6 +69,18 @@ bool RedisMgr::Set(const std::string &key, const std::string &value){
 	return true;
 }
 
+bool RedisMgr::SetExpire(const std::string& key, int seconds)
+{
+	redisReply* reply = static_cast<redisReply*>(redisCommand(this->_connect, "EXPIRE %s %d", key.c_str(), seconds));
+	if (reply == nullptr) {
+		// 处理错误
+		return false;
+	}
+	int result = reply->integer;
+	freeReplyObject(reply);
+	return result;
+}
+
 bool RedisMgr::Auth(const std::string &password)
 {
 	this->_reply = (redisReply*)redisCommand(this->_connect, "AUTH %s", password.c_str());
@@ -239,4 +251,16 @@ bool RedisMgr::ExistsKey(const std::string &key)
 void RedisMgr::Close()
 {
 	redisFree(_connect);
+}
+
+bool RedisMgr::KeyExists(const std::string& key)
+{
+	redisReply* reply = static_cast<redisReply*>(redisCommand(this->_connect, "EXISTS %s", key.c_str()));
+	if (reply == nullptr) {
+		// 没找到
+		return false;
+	}
+	bool result = (reply->integer == 1);
+	freeReplyObject(reply);
+	return result;
 }

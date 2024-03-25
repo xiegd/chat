@@ -165,13 +165,13 @@ void RegisterDialog::on_sure_btn_clicked()
         return;
     }
 
-    //发送http请求获取验证码
+    //day11 发送http请求注册用户
     QJsonObject json_obj;
     json_obj["user"] = ui->user_edit->text();
     json_obj["email"] = ui->email_edit->text();
     json_obj["passwd"] = ui->pass_edit->text();
     json_obj["confirm"] = ui->confirm_edit->text();
     json_obj["varifycode"] = ui->varify_edit->text();
-    HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix+"/use_register"),
+    HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix+"/user_register"),
                  json_obj, ReqId::ID_REG_USER,Modules::REGISTERMOD);
 }

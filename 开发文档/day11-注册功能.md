@@ -185,23 +185,17 @@ B、datadir这里设置mysql数据库的数据存放目录
 
 ``` cpp
 //安装mysql  安装完成后Mysql会有一个随机密码
-mysqld --initialize --console
+.\mysqld.exe --initialize --console
 ```
 如下图，随机密码要记住，以后我们改密码会用到
 
 ![https://cdn.llfc.club/83635680847f591980ade3501655f8d.png](https://cdn.llfc.club/83635680847f591980ade3501655f8d.png)
 
-修改密码, 注意实际开发中会创建一个admin管理账号，设置其密码，root用户和密码尽量保持复杂。我们为了方便直接修改root用户密码
-
-``` bash
-ALTER USER 'root'@'localhost' IDENTIFIED BY '123456';
-```
-
 接下来在cmd执行第二条命令
 
 ``` cpp
 //安装mysql服务并启动   
-mysqld --install mysql
+.\mysqld.exe --install mysql
 ```
 
 如果出现以下情况，说明cmd不是以管理员形式执行的，改用为管理员权限执行即可。
@@ -270,6 +264,85 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY '123456';
 编辑path，进去后添加 %MYSQL_HOME%\bin
 
 ![https://cdn.llfc.club/1711352718673.jpg](https://cdn.llfc.club/1711352718673.jpg)
+
+## 测试连接
+
+为了方便测试，大家可以使用navicat等桌面工具测试连接。以后增删改查也方便。
+
+可以去官网下载
+
+[https://www.navicat.com.cn/](https://www.navicat.com.cn/)
+
+或者我得网盘下载
+
+[https://pan.baidu.com/s/10jApYUrwaI19j345dpPGNA?pwd=77m2](https://pan.baidu.com/s/10jApYUrwaI19j345dpPGNA?pwd=77m2)
+
+验证码： 77m2
+
+效果如下：
+
+![https://cdn.llfc.club/1711531330919.jpg](https://cdn.llfc.club/1711531330919.jpg)
+
+## Docker环境配置mysql
+
+拉取mysql镜像
+
+``` bash
+docker pull mysql:8.0
+```
+先启动一个测试版本，然后把他的配置文件拷贝出来
+``` bash
+docker run --name mysqltest \
+-p 3307:3306 -e MYSQL_ROOT_PASSWORD=root \
+-d mysql
+```
+创建三个目录，我得目录是
+``` bash
+mkdir -p /home/zack/llfc/mysql/config
+mkdir -p /home/zack/llfc/mysql/data
+mkdir -p /home/zack/llfc/mysql/logs
+```
+
+进入docker中
+``` bash
+docker exec -it mysqltest bash
+```
+之后可以通过搜寻找到配置在`/etc/mysql/my.cnf`
+
+所以接下来退出容器，执行拷贝命令
+``` bash
+docker cp mysqltest:/etc/mysql/my.cnf  /home/zack/llfc/mysql/config
+```
+然后删除测试用的mysql docker
+``` bash
+docker rm -f mysqltest 
+```
+然后启动我们的容器
+``` bash
+docker run --restart=on-failure:3 -d   \
+-v /home/zack/llfc/mysql/config/my.cnf:/etc/mysql/my.cnf \
+-v /home/zack/llfc/mysql/data/:/var/lib/mysql \
+-v /home/zack/llfc/mysql/logs:/logs -p 3308:3306  \
+--name llfcmysql -e MYSQL_ROOT_PASSWORD=123456 mysql:8.0
+```
+## 设置远程访问
+
+进入docker 
+``` bash
+docker exec -it llfcmysql bash
+```
+登录mysql
+``` bash
+mysql -u root -p
+```
+设置允许远程访问，我不设置也能访问的，这里介绍一下。
+``` bash
+use mysql
+ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
+flush privileges;
+```
+
+再次用navicat连接，是可以连接上了。
 
 
 

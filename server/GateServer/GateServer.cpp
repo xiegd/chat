@@ -10,6 +10,7 @@
 #include "ConfigMgr.h"
 #include "hiredis.h"
 #include "RedisMgr.h"
+#include "MysqlMgr.h"
 
 void TestRedis() {
 	//连接redis 需要启动才可以进行连接
@@ -126,6 +127,7 @@ void TestRedisMgr(std::string host, int port, std::string pwd) {
 
 int main()
 {
+	MysqlMgr::GetInstance();
 	try
 	{
 		ConfigMgr gCfgMgr;

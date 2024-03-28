@@ -344,6 +344,19 @@ flush privileges;
 
 再次用navicat连接，是可以连接上了。
 
+## 完善GateServer配置
+添加Redis和Mysql配置
+``` ini
+[Mysql]
+Host = 81.68.86.146
+Port = 3308
+Passwd = 123456
+[Redis]
+Host = 81.68.86.146
+Port = 6380
+Passwd = 123456
+```
+## 封装mysql接口
 
 
 

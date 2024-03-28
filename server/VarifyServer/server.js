@@ -17,14 +17,15 @@ async function GetVarifyCode(call, callback) {
     try{
         let query_res = await redis_module.GetRedis(const_module.code_prefix+call.request.email);
         console.log("query_res is ", query_res)
+        if(query_res == null){
+
+        }
         let uniqueId = query_res;
-        if (uniqueId.length > 4) {
-            uniqueId = uniqueId.substring(0, 4);
-          } 
-          
-        console.log("uniqueId is ", uniqueId)
         if(query_res ==null){
             uniqueId = uuidv4();
+            if (uniqueId.length > 4) {
+                uniqueId = uniqueId.substring(0, 4);
+            } 
             let bres = await redis_module.SetRedisExpire(const_module.code_prefix+call.request.email, uniqueId,600)
             if(!bres){
                 callback(null, { email:  call.request.email,

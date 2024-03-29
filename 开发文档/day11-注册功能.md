@@ -368,6 +368,11 @@ Passwd = 123456
 
 [https://dev.mysql.com/downloads/connector/cpp/](https://dev.mysql.com/downloads/connector/cpp/)
 
+如果下载缓慢可以去我的网盘下载
+[https://pan.baidu.com/s/1XAVhPAAzZpZahsyITua2oQ?pwd=9c1w](https://pan.baidu.com/s/1XAVhPAAzZpZahsyITua2oQ?pwd=9c1w)
+
+提取码：9c1w 
+
 ![https://cdn.llfc.club/1711692126532.jpg](https://cdn.llfc.club/1711692126532.jpg)
 
 下载后将文件夹解压放在一个自己常用的目录，我放在`D:\cppsoft\mysql_connector`
@@ -394,4 +399,4 @@ VC++ 包含目录添加`D:\cppsoft\mysql_connector\include`
 xcopy $(ProjectDir)config.ini  $(SolutionDir)$(Platform)\$(Configuration)\   /y
 xcopy $(ProjectDir)*.dll   $(SolutionDir)$(Platform)\$(Configuration)\   /y
 ```
-## 
+## 封装接口

@@ -356,9 +356,42 @@ Host = 81.68.86.146
 Port = 6380
 Passwd = 123456
 ```
-## 封装mysql接口
+## Mysql Connector C++
+尽管Mysql提供了访问数据库的接口，但是都是基于C风格的，为了便于面向对象设计，我们使用Mysql Connector C++ 这个库来访问mysql。
 
+我们先安装这个库，因为我们windows环境代码是debug版本，所以下载connector的debug版本，如果你的开发编译用的release版本，那么就要下载releas版本，否则会报错
+`terminate called after throwing an instance of 'std::bad_alloc'`.
 
+因为我在windows只做debug调试后期会将项目移植到Linux端，所以这里只下载debug版
 
+下载地址
 
+[https://dev.mysql.com/downloads/connector/cpp/](https://dev.mysql.com/downloads/connector/cpp/)
 
+![https://cdn.llfc.club/1711692126532.jpg](https://cdn.llfc.club/1711692126532.jpg)
+
+下载后将文件夹解压放在一个自己常用的目录，我放在`D:\cppsoft\mysql_connector`
+
+![https://cdn.llfc.club/1711692478215.jpg](https://cdn.llfc.club/1711692478215.jpg)
+
+接下来去visual studio中配置项目
+
+VC++ 包含目录添加`D:\cppsoft\mysql_connector\include`
+
+![https://cdn.llfc.club/1711692778937.jpg](https://cdn.llfc.club/1711692778937.jpg)
+
+库目录包含`D:\cppsoft\mysql_connector\lib64\vs14`
+
+![https://cdn.llfc.club/1711693069494.jpg](https://cdn.llfc.club/1711693069494.jpg)
+
+然后将`D:\cppsoft\mysql_connector\lib64\debug`下的mysqlcppconn8-2-vs14.dll和mysqlcppconn9-vs14.dll分别拷贝到项目中
+
+为了让项目自动将dll拷贝到运行目录，可以在生成事件->生成后事件中添加xcopy命令
+
+![https://cdn.llfc.club/1711693404656.jpg](https://cdn.llfc.club/1711693404656.jpg)
+
+``` bash
+xcopy $(ProjectDir)config.ini  $(SolutionDir)$(Platform)\$(Configuration)\   /y
+xcopy $(ProjectDir)*.dll   $(SolutionDir)$(Platform)\$(Configuration)\   /y
+```
+## 

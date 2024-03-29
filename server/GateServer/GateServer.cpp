@@ -102,8 +102,6 @@ void TestRedis() {
 }
 
 void TestRedisMgr() {
-	assert(RedisMgr::GetInstance()->Connect("127.0.0.1", 6380));
-	assert(RedisMgr::GetInstance()->Auth("123456"));
 	assert(RedisMgr::GetInstance()->Set("blogwebsite","llfc.club"));
 	std::string value="";
 	assert(RedisMgr::GetInstance()->Get("blogwebsite", value) );
@@ -128,7 +126,7 @@ int main()
 {
 	try
 	{
-		ConfigMgr gCfgMgr;
+		TestRedisMgr();
 		std::string gate_port_str = gCfgMgr["GateServer"]["Port"];
 		unsigned short gate_port = atoi(gate_port_str.c_str());
 		net::io_context ioc{ 1 };

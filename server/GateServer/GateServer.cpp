@@ -102,9 +102,7 @@ void TestRedis() {
 
 }
 
-void TestRedisMgr(std::string host, int port, std::string pwd) {
-	assert(RedisMgr::GetInstance()->Connect(host, port));
-	assert(RedisMgr::GetInstance()->Auth(pwd));
+void TestRedisMgr() {
 	assert(RedisMgr::GetInstance()->Set("blogwebsite","llfc.club"));
 	std::string value="";
 	assert(RedisMgr::GetInstance()->Get("blogwebsite", value) );
@@ -130,7 +128,7 @@ int main()
 	MysqlMgr::GetInstance();
 	try
 	{
-		ConfigMgr gCfgMgr;
+		TestRedisMgr();
 		std::string gate_port_str = gCfgMgr["GateServer"]["Port"];
 		unsigned short gate_port = atoi(gate_port_str.c_str());
 		net::io_context ioc{ 1 };

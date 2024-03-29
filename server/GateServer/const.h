@@ -10,6 +10,7 @@
 #include <json/reader.h>
 #include "Singleton.h"
 #include <assert.h>
+#include <queue>
 #include <jdbc/mysql_driver.h>
 #include <jdbc/mysql_connection.h>
 #include <jdbc/cppconn/prepared_statement.h>

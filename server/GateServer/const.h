@@ -32,5 +32,4 @@ enum ErrorCodes {
 	UserExist = 1005,       //用户已经存在
 };
 
-class ConfigMgr;
-extern ConfigMgr gCfgMgr;
+

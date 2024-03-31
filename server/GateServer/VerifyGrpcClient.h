@@ -78,7 +78,9 @@ class VerifyGrpcClient:public Singleton<VerifyGrpcClient>
 {
 	friend class Singleton<VerifyGrpcClient>;
 public:
-
+	~VerifyGrpcClient() {
+		pool_->Close();
+	}
 	GetVarifyRsp GetVarifyCode(std::string email) {
 		ClientContext context;
 		GetVarifyRsp reply;

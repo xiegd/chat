@@ -29,8 +29,8 @@ public:
 	}
 
 	~RPConPool() {
-		Close();
 		std::lock_guard<std::mutex> lock(mutex_);
+		Close();
 		while (!connections_.empty()) {
 			connections_.pop();
 		}
@@ -54,10 +54,10 @@ public:
 	}
 
 	void returnConnection(std::unique_ptr<VarifyService::Stub> context) {
+		std::lock_guard<std::mutex> lock(mutex_);
 		if (b_stop_) {
 			return;
 		}
-		std::lock_guard<std::mutex> lock(mutex_);
 		connections_.push(std::move(context));
 		cond_.notify_one();
 	}

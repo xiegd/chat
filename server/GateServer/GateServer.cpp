@@ -11,6 +11,7 @@
 #include "hiredis.h"
 #include "RedisMgr.h"
 #include "MysqlMgr.h"
+#include "AsioIOServicePool.h"
 
 void TestRedis() {
 	//连接redis 需要启动才可以进行连接
@@ -120,7 +121,6 @@ void TestRedisMgr() {
 	assert(RedisMgr::GetInstance()->RPop("lpushkey1", value));
 	assert(RedisMgr::GetInstance()->LPop("lpushkey1", value));
 	assert(RedisMgr::GetInstance()->LPop("lpushkey2", value)==false);
-	RedisMgr::GetInstance()->Close();
 }
 
 int main()
@@ -150,5 +150,6 @@ int main()
 		std::cerr << "Error: " << e.what() << std::endl;
 		return EXIT_FAILURE;
 	}
+
 }
 

@@ -6,7 +6,7 @@ RedisMgr::RedisMgr() {
 }
 
 RedisMgr::~RedisMgr() {
-
+	Close();
 }
 
 
@@ -246,21 +246,4 @@ bool RedisMgr::ExistsKey(const std::string &key)
 	return true;
 }
 
-void RedisMgr::Close()
-{
-	_con_pool->Close();
-}
 
-bool RedisMgr::KeyExists(const std::string& key)
-{
-	auto connect = _con_pool->getConnection();
-	auto reply = static_cast<redisReply*>(redisCommand(connect, "EXISTS %s", key.c_str()));
-	if (reply == nullptr) {
-		// Ã»ÕÒµ½
-		return false;
-	}
-	bool result = (reply->integer == 1);
-	freeReplyObject(reply);
-	_con_pool->returnConnection(connect);
-	return result;
-}

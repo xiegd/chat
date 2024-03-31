@@ -28,15 +28,10 @@ public:
 			std::cout << "认证成功" << std::endl;
 			connections_.push(context);
 		}
+
 	}
 
 	~RedisConPool() {
-		std::lock_guard<std::mutex> lock(mutex_);
-		while (!connections_.empty()) {
-			auto* context = connections_.front();
-			redisFree(context);
-			connections_.pop();
-		}
 	}
 
 	redisContext* getConnection() {
@@ -58,6 +53,9 @@ public:
 
 	void returnConnection(redisContext* context) {
 		std::lock_guard<std::mutex> lock(mutex_);
+		if (b_stop_) {
+			return;
+		}
 		connections_.push(context);
 		cond_.notify_one();
 	}
@@ -94,8 +92,9 @@ public:
 	std::string HGet(const std::string &key, const std::string &hkey);
 	bool Del(const std::string &key);
 	bool ExistsKey(const std::string &key);
-	void Close();
-	bool KeyExists(const std::string& key);
+	void Close() {
+		_con_pool->Close();
+	}
 private:
 	RedisMgr();
 	unique_ptr<RedisConPool>  _con_pool;

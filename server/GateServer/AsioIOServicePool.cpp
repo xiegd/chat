@@ -16,6 +16,7 @@ _works(size), _nextIOService(0){
 }
 
 AsioIOServicePool::~AsioIOServicePool() {
+	Stop();
 	std::cout << "AsioIOServicePool destruct" << endl;
 }
 

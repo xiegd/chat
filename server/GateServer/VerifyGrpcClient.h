@@ -29,7 +29,7 @@ public:
 	}
 
 	~RPConPool() {
-		b_stop_ = true;
+		Close();
 		std::lock_guard<std::mutex> lock(mutex_);
 		while (!connections_.empty()) {
 			connections_.pop();
@@ -54,6 +54,9 @@ public:
 	}
 
 	void returnConnection(std::unique_ptr<VarifyService::Stub> context) {
+		if (b_stop_) {
+			return;
+		}
 		std::lock_guard<std::mutex> lock(mutex_);
 		connections_.push(std::move(context));
 		cond_.notify_one();
@@ -79,7 +82,7 @@ class VerifyGrpcClient:public Singleton<VerifyGrpcClient>
 	friend class Singleton<VerifyGrpcClient>;
 public:
 	~VerifyGrpcClient() {
-		pool_->Close();
+		
 	}
 	GetVarifyRsp GetVarifyCode(std::string email) {
 		ClientContext context;

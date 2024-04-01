@@ -73,6 +73,7 @@ public:
 	MysqlDao();
 	~MysqlDao();
 	bool GetUserId(int& id);
+	bool ExistUser(const std::string& name, bool& exist);
 private:
 	std::unique_ptr<MySqlPool> pool_;
 };

@@ -7,6 +7,7 @@ class MysqlMgr: public Singleton<MysqlMgr>
 public:
 	~MysqlMgr();
 	bool GetUserId(int& id);
+	bool ExistUser(const std::string& name, bool & exist);
 private:
 	MysqlMgr();
 	MysqlDao  _dao;

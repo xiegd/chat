@@ -47,5 +47,36 @@ bool MysqlDao::GetUserId(int& id)
 	}
 }
 
+bool MysqlDao::ExistUser(const std::string& name, bool& exist)
+{
+	//auto con = pool_->getConnection();
+	//try {
+	//	if (con == nullptr) {
+	//		pool_->returnConnection(std::move(con));
+	//		return false;
+	//	}
+
+	//	std::unique_ptr<sql::Statement> stmt(con->createStatement());
+	//	// 执行存储过程
+	//	std::unique_ptr<sql::ResultSet> res(stmt->executeQuery("CALL get_user_id()"));
+
+	//	// 处理结果集
+	//	while (res->next()) {
+	//		id = res->getInt("id");
+	//		std::cout << "New ID: " << id << std::endl;
+	//		break;
+	//	}
+
+	//	pool_->returnConnection(std::move(con));
+	//	return true;
+	//}
+	//catch (sql::SQLException& e) {
+	//	pool_->returnConnection(std::move(con));
+	//	std::cerr << "SQLException: " << e.what();
+	//	std::cerr << " (MySQL error code: " << e.getErrorCode();
+	//	std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+	//	return false;
+	//}
+}
 
 

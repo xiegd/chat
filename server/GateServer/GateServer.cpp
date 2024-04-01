@@ -123,12 +123,17 @@ void TestRedisMgr() {
 	assert(RedisMgr::GetInstance()->LPop("lpushkey2", value)==false);
 }
 
+void TestMysqlMgr() {
+	int id = 0;
+	bool res = MysqlMgr::GetInstance()->GetUserId(id);
+	std::cout << "id  is " << id << std::endl;
+}
+
 int main()
 {
 	MysqlMgr::GetInstance();
 	try
 	{
-		TestRedisMgr();
 		auto & gCfgMgr = ConfigMgr::Inst();
 		std::string gate_port_str = gCfgMgr["GateServer"]["Port"];
 		unsigned short gate_port = atoi(gate_port_str.c_str());

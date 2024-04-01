@@ -32,6 +32,10 @@ public:
 	}
 
 	~RedisConPool() {
+		std::lock_guard<std::mutex> lock(mutex_);
+		while (!connections_.empty()) {
+			connections_.pop();
+		}
 	}
 
 	redisContext* getConnection() {

@@ -30,6 +30,9 @@ enum ErrorCodes {
 	VarifyExpired = 1003, //验证码过期
 	VarifyCodeErr = 1004, //验证码错误
 	UserExist = 1005,       //用户已经存在
+	PasswdErr = 1006,    //密码错误
 };
+
+#define CODEPREFIX  "code_"
 
 

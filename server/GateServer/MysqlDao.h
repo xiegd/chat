@@ -72,8 +72,7 @@ class MysqlDao
 public:
 	MysqlDao();
 	~MysqlDao();
-	bool GetUserId(int& id);
-	bool ExistUser(const std::string& name, bool& exist);
+	int RegUser(const std::string& name, const std::string& email, const std::string& pwd);
 private:
 	std::unique_ptr<MySqlPool> pool_;
 };

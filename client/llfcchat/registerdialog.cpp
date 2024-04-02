@@ -3,6 +3,7 @@
 #include <QRegularExpression>
 #include "global.h"
 #include "httpmgr.h"
+#include <QRegularExpressionValidator>
 
 RegisterDialog::RegisterDialog(QWidget *parent) :
     QDialog(parent),
@@ -19,24 +20,52 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
     initHttpHandlers();
     //day11 设定输入框输入后清空字符串
     ui->err_tip->clear();
+
+    // 创建一个正则表达式对象，按照上述密码要求
+    // 这个正则表达式解释：
+    // [a-zA-Z\d!@#$%^&*]{8,} 密码长度至少8，可以是字母、数字和特定的特殊字符
+    QRegularExpression regExp("[a-zA-Z\\d!@#$%^&*]{6,15}");
+    QRegularExpressionValidator *validator = new QRegularExpressionValidator(regExp, ui->pass_edit);
+    ui->pass_edit->setValidator(validator);
+
+    QRegularExpressionValidator *validator2 = new QRegularExpressionValidator(regExp, ui->confirm_edit);
+    ui->confirm_edit->setValidator(validator2);
+
     connect(ui->user_edit, &QLineEdit::textEdited, this, [this](){
-        ui->err_tip->clear();
+
     });
 
-    connect(ui->email_edit, &QLineEdit::textEdited, this, [this](){
-        ui->err_tip->clear();
+    connect(ui->email_edit, &QLineEdit::editingFinished, this, [this](){
+        //验证邮箱的地址正则表达式
+        auto email = ui->email_edit->text();
+        // 邮箱地址的正则表达式
+        QRegularExpression regex(R"((\w+)(\.|_)?(\w*)@(\w+)(\.(\w+))+)");
+        bool match = regex.match(email).hasMatch(); // 执行正则表达式匹配
+        if(!match){
+            //提示邮箱不正确
+            showTip(tr("邮箱地址不正确"),false);
+            return;
+        }
+
     });
 
-    connect(ui->pass_edit, &QLineEdit::textEdited, this, [this](){
-        ui->err_tip->clear();
+    connect(ui->pass_edit, &QLineEdit::editingFinished, this, [this](){
+         auto pass = ui->pass_edit->text();
+         auto confirm = ui->pass_edit->text();
+         if(pass != confirm){
+             //提示邮箱不正确
+             showTip(tr("密码不匹配"),false);
+             return;
+         }
+
     });
 
     connect(ui->confirm_edit, &QLineEdit::textEdited, this, [this](){
-        ui->err_tip->clear();
+
     });
 
     connect(ui->varify_edit, &QLineEdit::textEdited, this, [this](){
-        ui->err_tip->clear();
+
     });
 }
 
@@ -117,6 +146,7 @@ void RegisterDialog::initHttpHandlers()
         auto email = jsonObj["email"].toString();
         showTip(tr("用户注册成功"), true);
         qDebug()<< "email is " << email ;
+        qDebug()<< "user uuid is " <<  jsonObj["uuid"].toString();
     });
 }
 
@@ -132,6 +162,9 @@ void RegisterDialog::showTip(QString str, bool b_ok)
 
     repolish(ui->err_tip);
 }
+
+
+
 //day11 添加确认槽函数
 void RegisterDialog::on_sure_btn_clicked()
 {
@@ -143,6 +176,15 @@ void RegisterDialog::on_sure_btn_clicked()
     if(ui->email_edit->text() == ""){
         showTip(tr("邮箱不能为空"), false);
         return;
+    }
+
+    // 邮箱地址的正则表达式
+    QRegularExpression regex(R"((\w+)(\.|_)?(\w*)@(\w+)(\.(\w+))+)");
+    bool match = regex.match(ui->email_edit->text()).hasMatch(); // 执行正则表达式匹配
+    if(!match){
+        //提示邮箱不正确
+        showTip(tr("邮箱地址不正确"),false);
+        return ;
     }
 
     if(ui->pass_edit->text() == ""){
@@ -169,7 +211,7 @@ void RegisterDialog::on_sure_btn_clicked()
     QJsonObject json_obj;
     json_obj["user"] = ui->user_edit->text();
     json_obj["email"] = ui->email_edit->text();
-    json_obj["passwd"] = ui->pass_edit->text();
+    json_obj["passwd"] = xorString(ui->pass_edit->text());
     json_obj["confirm"] = ui->confirm_edit->text();
     json_obj["varifycode"] = ui->varify_edit->text();
     HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix+"/user_register"),

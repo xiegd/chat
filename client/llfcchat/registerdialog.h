@@ -29,6 +29,7 @@ private:
     Ui::RegisterDialog *ui;
     void showTip(QString str,bool b_ok);
     QMap<ReqId, std::function<void(const QJsonObject&)>> _handlers;
+    int _errtype;
 };
 
 #endif // REGISTERDIALOG_H

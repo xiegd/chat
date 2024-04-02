@@ -124,16 +124,16 @@ void TestRedisMgr() {
 }
 
 void TestMysqlMgr() {
-	int id = 0;
-	bool res = MysqlMgr::GetInstance()->GetUserId(id);
+	int id = MysqlMgr::GetInstance()->RegUser("wwc","secondtonone1@163.com","123456");
 	std::cout << "id  is " << id << std::endl;
 }
 
 int main()
 {
-	MysqlMgr::GetInstance();
 	try
 	{
+		MysqlMgr::GetInstance();
+		RedisMgr::GetInstance();
 		auto & gCfgMgr = ConfigMgr::Inst();
 		std::string gate_port_str = gCfgMgr["GateServer"]["Port"];
 		unsigned short gate_port = atoi(gate_port_str.c_str());

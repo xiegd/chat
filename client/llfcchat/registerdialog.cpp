@@ -21,16 +21,6 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
     //day11 设定输入框输入后清空字符串
     ui->err_tip->clear();
 
-    // 创建一个正则表达式对象，按照上述密码要求
-    // 这个正则表达式解释：
-    // [a-zA-Z\d!@#$%^&*]{8,} 密码长度至少8，可以是字母、数字和特定的特殊字符
-    QRegularExpression regExp("[a-zA-Z\\d!@#$%^&*]{6,15}");
-    QRegularExpressionValidator *validator = new QRegularExpressionValidator(regExp, ui->pass_edit);
-    ui->pass_edit->setValidator(validator);
-
-    QRegularExpressionValidator *validator2 = new QRegularExpressionValidator(regExp, ui->confirm_edit);
-    ui->confirm_edit->setValidator(validator2);
-
     connect(ui->user_edit, &QLineEdit::textEdited, this, [this](){
 
     });
@@ -58,14 +48,31 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
              return;
          }
 
+         if(confirm.length() < 6){
+             //提示邮箱不正确
+             showTip(tr("密码长度应为6~15"),false);
+             return;
+         }
+
+         // 创建一个正则表达式对象，按照上述密码要求
+         // 这个正则表达式解释：
+         // ^[a-zA-Z0-9!@#$%^&*]{6,15}$ 密码长度至少6，可以是字母、数字和特定的特殊字符
+         QRegularExpression regExp("^[a-zA-Z0-9!@#$%^&*]{6,15}$");
+         bool match = regExp.match(pass).hasMatch();
+         if(!match){
+             //提示邮箱不正确
+             showTip(tr("不能包含特殊字符"),false);
+             return;
+         }
+
     });
 
-    connect(ui->confirm_edit, &QLineEdit::textEdited, this, [this](){
-
+    connect(ui->confirm_edit, &QLineEdit::editingFinished, this, [this](){
+         auto pass = ui->pass_edit->text();
     });
 
-    connect(ui->varify_edit, &QLineEdit::textEdited, this, [this](){
-
+    connect(ui->varify_edit, &QLineEdit::editingFinished, this, [this](){
+         auto pass = ui->varify_edit->text();
     });
 }
 

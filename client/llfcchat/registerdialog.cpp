@@ -61,7 +61,7 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
          bool match = regExp.match(pass).hasMatch();
          if(!match){
              //提示邮箱不正确
-             showTip(tr("不能包含特殊字符"),false);
+             showTip(tr("不能包含非法字符"),false);
              return;
          }
 

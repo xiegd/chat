@@ -399,4 +399,310 @@ VC++ 包含目录添加`D:\cppsoft\mysql_connector\include`
 xcopy $(ProjectDir)config.ini  $(SolutionDir)$(Platform)\$(Configuration)\   /y
 xcopy $(ProjectDir)*.dll   $(SolutionDir)$(Platform)\$(Configuration)\   /y
 ```
-## 封装接口
+## 封装mysql连接池
+``` cpp
+class MySqlPool {
+public:
+	MySqlPool(const std::string& url, const std::string& user, const std::string& pass, const std::string& schema, int poolSize)
+		: url_(url), user_(user), pass_(pass), schema_(schema), poolSize_(poolSize), b_stop_(false){
+		try {
+			for (int i = 0; i < poolSize_; ++i) {
+				sql::mysql::MySQL_Driver* driver = sql::mysql::get_mysql_driver_instance();
+				std::unique_ptr<sql::Connection> con(driver->connect(url_, user_, pass_));
+				con->setSchema(schema_);
+				pool_.push(std::move(con));
+			}
+		}
+		catch (sql::SQLException& e) {
+			// 处理异常
+			std::cout << "mysql pool init failed" << std::endl;
+		}
+	}
+
+	std::unique_ptr<sql::Connection> getConnection() {
+		std::unique_lock<std::mutex> lock(mutex_);
+		cond_.wait(lock, [this] { 
+			if (b_stop_) {
+				return true;
+			}		
+			return !pool_.empty(); });
+		if (b_stop_) {
+			return nullptr;
+		}
+		std::unique_ptr<sql::Connection> con(std::move(pool_.front()));
+		pool_.pop();
+		return con;
+	}
+
+	void returnConnection(std::unique_ptr<sql::Connection> con) {
+		std::unique_lock<std::mutex> lock(mutex_);
+		if (b_stop_) {
+			return;
+		}
+		pool_.push(std::move(con));
+		cond_.notify_one();
+	}
+
+	void Close() {
+		b_stop_ = true;
+		cond_.notify_all();
+	}
+
+	~MySqlPool() {
+		std::unique_lock<std::mutex> lock(mutex_);
+		while (!pool_.empty()) {
+			pool_.pop();
+		}
+	}
+
+private:
+	std::string url_;
+	std::string user_;
+	std::string pass_;
+	std::string schema_;
+	int poolSize_;
+	std::queue<std::unique_ptr<sql::Connection>> pool_;
+	std::mutex mutex_;
+	std::condition_variable cond_;
+	std::atomic<bool> b_stop_;
+};
+```
+## 封装DAO操作层
+
+类的声明
+``` cpp
+class MysqlDao
+{
+public:
+	MysqlDao();
+	~MysqlDao();
+	int RegUser(const std::string& name, const std::string& email, const std::string& pwd);
+private:
+	std::unique_ptr<MySqlPool> pool_;
+};
+```
+实现
+``` cpp
+MysqlDao::MysqlDao()
+{
+	auto & cfg = ConfigMgr::Inst();
+	const auto& host = cfg["Mysql"]["Host"];
+	const auto& port = cfg["Mysql"]["Port"];
+	const auto& pwd = cfg["Mysql"]["Passwd"];
+	const auto& schema = cfg["Mysql"]["Schema"];
+	const auto& user = cfg["Mysql"]["User"];
+	pool_.reset(new MySqlPool(host+":"+port, user, pwd,schema, 5));
+}
+
+MysqlDao::~MysqlDao(){
+	pool_->Close();
+}
+
+int MysqlDao::RegUser(const std::string& name, const std::string& email, const std::string& pwd)
+{
+	auto con = pool_->getConnection();
+	try {
+		if (con == nullptr) {
+			pool_->returnConnection(std::move(con));
+			return false;
+		}
+		// 准备调用存储过程
+		unique_ptr < sql::PreparedStatement > stmt(con->prepareStatement("CALL reg_user(?,?,?,@result)"));
+		// 设置输入参数
+		stmt->setString(1, name);
+		stmt->setString(2, email);
+		stmt->setString(3, pwd);
+
+		// 由于PreparedStatement不直接支持注册输出参数，我们需要使用会话变量或其他方法来获取输出参数的值
+
+		  // 执行存储过程
+		stmt->execute();
+		// 如果存储过程设置了会话变量或有其他方式获取输出参数的值，你可以在这里执行SELECT查询来获取它们
+	   // 例如，如果存储过程设置了一个会话变量@result来存储输出结果，可以这样获取：
+	   unique_ptr<sql::Statement> stmtResult(con->createStatement());
+	  unique_ptr<sql::ResultSet> res(stmtResult->executeQuery("SELECT @result AS result"));
+	  if (res->next()) {
+	       int result = res->getInt("result");
+	      cout << "Result: " << result << endl;
+		  pool_->returnConnection(std::move(con));
+		  return result;
+	  }
+	  pool_->returnConnection(std::move(con));
+		return -1;
+	}
+	catch (sql::SQLException& e) {
+		pool_->returnConnection(std::move(con));
+		std::cerr << "SQLException: " << e.what();
+		std::cerr << " (MySQL error code: " << e.getErrorCode();
+		std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+		return -1;
+	}
+}
+```
+新建数据库llfc， llfc数据库添加user表和user_id表
+
+![https://cdn.llfc.club/1712109915609.jpg](https://cdn.llfc.club/1712109915609.jpg)
+
+user表
+![https://cdn.llfc.club/1712109796859.jpg](https://cdn.llfc.club/1712109796859.jpg)
+
+user_id就一行数据，用来记录用户id
+
+![https://cdn.llfc.club/1712110047125.jpg](https://cdn.llfc.club/1712110047125.jpg)
+
+这里id用简单计数表示，不考虑以后合服务器和分表分库，如果考虑大家可以采取不同的策略，雪花算法等。
+
+新建存储过程
+``` cpp
+CREATE DEFINER=`root`@`%` PROCEDURE `reg_user`(
+    IN `new_name` VARCHAR(255), 
+    IN `new_email` VARCHAR(255), 
+    IN `new_pwd` VARCHAR(255), 
+    OUT `result` INT)
+BEGIN
+    -- 如果在执行过程中遇到任何错误，则回滚事务
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- 回滚事务
+        ROLLBACK;
+        -- 设置返回值为-1，表示错误
+        SET result = -1;
+    END;
+    
+    -- 开始事务
+    START TRANSACTION;
+
+    -- 检查用户名是否已存在
+    IF EXISTS (SELECT 1 FROM `user` WHERE `name` = new_name) THEN
+        SET result = 0; -- 用户名已存在
+        COMMIT;
+    ELSE
+        -- 用户名不存在，检查email是否已存在
+        IF EXISTS (SELECT 1 FROM `user` WHERE `email` = new_email) THEN
+            SET result = 0; -- email已存在
+            COMMIT;
+        ELSE
+            -- email也不存在，更新user_id表
+            UPDATE `user_id` SET `id` = `id` + 1;
+            
+            -- 获取更新后的id
+            SELECT `id` INTO @new_id FROM `user_id`;
+            
+            -- 在user表中插入新记录
+            INSERT INTO `user` (`uid`, `name`, `email`, `pwd`) VALUES (@new_id, new_name, new_email, new_pwd);
+            -- 设置result为新插入的uid
+            SET result = @new_id; -- 插入成功，返回新的uid
+            COMMIT;
+        
+        END IF;
+    END IF;
+    
+END
+```
+
+## 数据库管理者
+我们需要建立一个数据库管理者用来实现服务层，对接逻辑层的调用
+``` cpp
+#include "const.h"
+#include "MysqlDao.h"
+class MysqlMgr: public Singleton<MysqlMgr>
+{
+	friend class Singleton<MysqlMgr>;
+public:
+	~MysqlMgr();
+	int RegUser(const std::string& name, const std::string& email,  const std::string& pwd);
+private:
+	MysqlMgr();
+	MysqlDao  _dao;
+};
+```
+实现
+``` cpp
+#include "MysqlMgr.h"
+
+
+MysqlMgr::~MysqlMgr() {
+
+}
+
+int MysqlMgr::RegUser(const std::string& name, const std::string& email, const std::string& pwd)
+{
+	return _dao.RegUser(name, email, pwd);
+}
+
+MysqlMgr::MysqlMgr() {
+}
+```
+## 逻辑层调用
+在逻辑层注册消息处理。
+``` cpp
+RegPost("/user_register", [](std::shared_ptr<HttpConnection> connection) {
+    auto body_str = boost::beast::buffers_to_string(connection->_request.body().data());
+    std::cout << "receive body is " << body_str << std::endl;
+    connection->_response.set(http::field::content_type, "text/json");
+    Json::Value root;
+    Json::Reader reader;
+    Json::Value src_root;
+    bool parse_success = reader.parse(body_str, src_root);
+    if (!parse_success) {
+        std::cout << "Failed to parse JSON data!" << std::endl;
+        root["error"] = ErrorCodes::Error_Json;
+        std::string jsonstr = root.toStyledString();
+        beast::ostream(connection->_response.body()) << jsonstr;
+        return true;
+    }
+
+    auto email = src_root["email"].asString();
+    auto name = src_root["user"].asString();
+    auto pwd = src_root["passwd"].asString();
+    auto confirm = src_root["confirm"].asString();
+
+    if (pwd != confirm) {
+        std::cout << "password err " << std::endl;
+        root["error"] = ErrorCodes::PasswdErr;
+        std::string jsonstr = root.toStyledString();
+        beast::ostream(connection->_response.body()) << jsonstr;
+        return true;
+    }
+
+    //先查找redis中email对应的验证码是否合理
+    std::string  varify_code;
+    bool b_get_varify = RedisMgr::GetInstance()->Get(CODEPREFIX+src_root["email"].asString(), varify_code);
+    if (!b_get_varify) {
+        std::cout << " get varify code expired" << std::endl;
+        root["error"] = ErrorCodes::VarifyExpired;
+        std::string jsonstr = root.toStyledString();
+        beast::ostream(connection->_response.body()) << jsonstr;
+        return true;
+    }
+
+    if (varify_code != src_root["varifycode"].asString()) {
+        std::cout << " varify code error" << std::endl;
+        root["error"] = ErrorCodes::VarifyCodeErr;
+        std::string jsonstr = root.toStyledString();
+        beast::ostream(connection->_response.body()) << jsonstr;
+        return true;
+    }
+
+    //查找数据库判断用户是否存在
+    int uid = MysqlMgr::GetInstance()->RegUser(name, email, pwd);
+    if (uid == 0 || uid == -1) {
+        std::cout << " user or email exist" << std::endl;
+        root["error"] = ErrorCodes::UserExist;
+        std::string jsonstr = root.toStyledString();
+        beast::ostream(connection->_response.body()) << jsonstr;
+        return true;
+    }
+    root["error"] = 0;
+    root["uid"] = uid;
+    root["email"] = email;
+    root ["user"]= name;
+    root["passwd"] = pwd;
+    root["confirm"] = confirm;
+    root["varifycode"] = src_root["varifycode"].asString();
+    std::string jsonstr = root.toStyledString();
+    beast::ostream(connection->_response.body()) << jsonstr;
+    return true;
+    });
+```
+再次启动客户端测试，可以注册成功

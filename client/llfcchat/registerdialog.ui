@@ -179,6 +179,31 @@
              </property>
             </widget>
            </item>
+           <item>
+            <widget class="QWidget" name="widget_2" native="true">
+             <property name="minimumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_5">
+              <item>
+               <widget class="QLabel" name="label">
+                <property name="text">
+                 <string>TextLabel</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
           </layout>
          </item>
          <item>
@@ -215,6 +240,16 @@
                <width>16777215</width>
                <height>25</height>
               </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="confirm_visible">
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="rc.qrc">:/res/unvisible.png</pixmap>
              </property>
             </widget>
            </item>
@@ -355,6 +390,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="rc.qrc"/>
+ </resources>
  <connections/>
 </ui>

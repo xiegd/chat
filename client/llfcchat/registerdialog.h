@@ -6,6 +6,8 @@
 #include <functional>
 #include <QMap>
 #include <QJsonObject>
+#include <QSet>
+
 namespace Ui {
 class RegisterDialog;
 }
@@ -25,11 +27,18 @@ private slots:
 public slots:
     void slot_reg_mod_finish(ReqId id, QString res, ErrorCodes err);
 private:
+    bool checkUserValid();
+    bool checkEmailValid();
+    bool checkPassValid();
+    bool checkVarifyValid();
+    bool checkConfirmValid();
     void initHttpHandlers();
+    void AddTipErr(TipErr te,QString tips);
+    void DelTipErr(TipErr te);
     Ui::RegisterDialog *ui;
     void showTip(QString str,bool b_ok);
     QMap<ReqId, std::function<void(const QJsonObject&)>> _handlers;
-    int _errtype;
+    QMap<TipErr, QString> _tip_errs;
 };
 
 #endif // REGISTERDIALOG_H

@@ -25,7 +25,7 @@ void TestRedis() {
 	printf("Connect to redisServer Success\n");
 
 	std::string redis_password = "123456";
-	redisReply* r = (redisReply*)redisCommand(c, "AUTH %s", redis_password);
+	redisReply* r = (redisReply*)redisCommand(c, "AUTH %s", redis_password.c_str());
 	 if (r->type == REDIS_REPLY_ERROR) {
 		 printf("Redis认证失败！\n");
 	}else {
@@ -130,31 +130,32 @@ void TestMysqlMgr() {
 
 int main()
 {
-	try
-	{
-		MysqlMgr::GetInstance();
-		RedisMgr::GetInstance();
-		auto & gCfgMgr = ConfigMgr::Inst();
-		std::string gate_port_str = gCfgMgr["GateServer"]["Port"];
-		unsigned short gate_port = atoi(gate_port_str.c_str());
-		net::io_context ioc{ 1 };
-		boost::asio::signal_set signals(ioc, SIGINT, SIGTERM);
-		signals.async_wait([&ioc](const boost::system::error_code& error, int signal_number) {
+	TestRedis();
+	//try
+	//{
+	//	MysqlMgr::GetInstance();
+	//	RedisMgr::GetInstance();
+	//	auto & gCfgMgr = ConfigMgr::Inst();
+	//	std::string gate_port_str = gCfgMgr["GateServer"]["Port"];
+	//	unsigned short gate_port = atoi(gate_port_str.c_str());
+	//	net::io_context ioc{ 1 };
+	//	boost::asio::signal_set signals(ioc, SIGINT, SIGTERM);
+	//	signals.async_wait([&ioc](const boost::system::error_code& error, int signal_number) {
 
-			if (error) {
-				return;
-			}
-			ioc.stop();
-			});
-		std::make_shared<CServer>(ioc, gate_port)->Start();
-		std::cout << "Gate Server listen on port: " << gate_port << std::endl;
-		ioc.run();
-	}
-	catch (std::exception const& e)
-	{
-		std::cerr << "Error: " << e.what() << std::endl;
-		return EXIT_FAILURE;
-	}
+	//		if (error) {
+	//			return;
+	//		}
+	//		ioc.stop();
+	//		});
+	//	std::make_shared<CServer>(ioc, gate_port)->Start();
+	//	std::cout << "Gate Server listen on port: " << gate_port << std::endl;
+	//	ioc.run();
+	//}
+	//catch (std::exception const& e)
+	//{
+	//	std::cerr << "Error: " << e.what() << std::endl;
+	//	return EXIT_FAILURE;
+	//}
 
 }
 

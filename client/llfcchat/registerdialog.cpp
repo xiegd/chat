@@ -51,8 +51,24 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
     ui->confirm_visible->SetState("unvisible","unvisible_hover","unvisible_press","visible",
                                   "visible_hover","visible_press");
     //连接点击事件
-    auto pass_visible = ui->pass_visible;
-    connect(ui->pass_visible, &ClickedLabel::clicked, this, [pass_visible]() {
+
+    connect(ui->pass_visible, &ClickedLabel::clicked, this, [this]() {
+        auto state = ui->pass_visible->GetCurState();
+        if(state == ClickLbState::Normal){
+            ui->pass_edit->setEchoMode(QLineEdit::Password);
+        }else{
+             ui->pass_edit->setEchoMode(QLineEdit::Normal);
+        }
+        qDebug() << "Label was clicked!";
+    });
+
+    connect(ui->confirm_visible, &ClickedLabel::clicked, this, [this]() {
+        auto state = ui->confirm_visible->GetCurState();
+        if(state == ClickLbState::Normal){
+            ui->confirm_edit->setEchoMode(QLineEdit::Password);
+        }else{
+             ui->confirm_edit->setEchoMode(QLineEdit::Normal);
+        }
         qDebug() << "Label was clicked!";
     });
 }
@@ -137,15 +153,8 @@ bool RegisterDialog::checkPassValid()
 {
     auto pass = ui->pass_edit->text();
     auto confirm = ui->confirm_edit->text();
-    if(pass != confirm){
-        //提示密码不匹配
-        AddTipErr(TipErr::TIP_PWD_CONFIRM, tr("密码不匹配"));
-        return false;
-    }else{
-       DelTipErr(TipErr::TIP_PWD_CONFIRM);
-    }
 
-    if(pass.length() < 6){
+    if(pass.length() < 6 || pass.length()>15){
         //提示长度不准确
         AddTipErr(TipErr::TIP_PWD_ERR, tr("密码长度应为6~15"));
         return false;
@@ -163,6 +172,14 @@ bool RegisterDialog::checkPassValid()
     }
 
     DelTipErr(TipErr::TIP_PWD_ERR);
+
+    if(pass != confirm){
+        //提示密码不匹配
+        AddTipErr(TipErr::TIP_PWD_CONFIRM, tr("密码和确认密码不匹配"));
+        return false;
+    }else{
+       DelTipErr(TipErr::TIP_PWD_CONFIRM);
+    }
     return true;
 }
 
@@ -182,15 +199,8 @@ bool RegisterDialog::checkConfirmValid()
 {
     auto pass = ui->pass_edit->text();
     auto confirm = ui->confirm_edit->text();
-    if(pass != confirm){
-        //提示密码不匹配
-        AddTipErr(TipErr::TIP_PWD_CONFIRM, tr("密码不匹配"));
-        return false;
-    }else{
-       DelTipErr(TipErr::TIP_PWD_CONFIRM);
-    }
 
-    if(confirm.length() < 6){
+    if(confirm.length() < 6 || confirm.length() > 15 ){
         //提示长度不准确
         AddTipErr(TipErr::TIP_CONFIRM_ERR, tr("密码长度应为6~15"));
         return false;
@@ -208,6 +218,14 @@ bool RegisterDialog::checkConfirmValid()
     }
 
     DelTipErr(TipErr::TIP_CONFIRM_ERR);
+
+    if(pass != confirm){
+        //提示密码不匹配
+        AddTipErr(TipErr::TIP_PWD_CONFIRM, tr("确认密码和密码不匹配"));
+        return false;
+    }else{
+       DelTipErr(TipErr::TIP_PWD_CONFIRM);
+    }
     return true;
 }
 

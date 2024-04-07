@@ -15,6 +15,7 @@ void ClickedLabel::mousePressEvent(QMouseEvent* event)  {
             setProperty("state",_selected_hover);
             repolish(this);
             update();
+
         }else{
                qDebug()<<"clicked , change to normal hover: "<< _normal_hover;
             _curstate = ClickLbState::Normal;
@@ -78,6 +79,10 @@ void ClickedLabel::SetState(QString normal, QString hover, QString press,
 
     setProperty("state",normal);
     repolish(this);
+}
+
+ClickLbState ClickedLabel::GetCurState(){
+    return _curstate;
 }
 
 

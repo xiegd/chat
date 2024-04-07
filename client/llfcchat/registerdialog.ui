@@ -180,28 +180,25 @@
             </widget>
            </item>
            <item>
-            <widget class="QWidget" name="widget_2" native="true">
+            <widget class="ClickedLabel" name="pass_visible">
              <property name="minimumSize">
               <size>
-               <width>25</width>
-               <height>25</height>
+               <width>20</width>
+               <height>20</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>25</width>
-               <height>25</height>
+               <width>20</width>
+               <height>20</height>
               </size>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_5">
-              <item>
-               <widget class="QLabel" name="label">
-                <property name="text">
-                 <string>TextLabel</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
             </widget>
            </item>
           </layout>
@@ -244,12 +241,24 @@
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="confirm_visible">
+            <widget class="ClickedLabel" name="confirm_visible">
+             <property name="minimumSize">
+              <size>
+               <width>20</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>20</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
              <property name="text">
               <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="rc.qrc">:/res/unvisible.png</pixmap>
              </property>
             </widget>
            </item>
@@ -390,8 +399,13 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="rc.qrc"/>
- </resources>
+ <customwidgets>
+  <customwidget>
+   <class>ClickedLabel</class>
+   <extends>QLabel</extends>
+   <header>clickedlabel.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
  <connections/>
 </ui>

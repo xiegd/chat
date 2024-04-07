@@ -26,6 +26,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        clickedlabel.cpp \
         global.cpp \
         httpmgr.cpp \
         logindialog.cpp \
@@ -34,6 +35,7 @@ SOURCES += \
         registerdialog.cpp
 
 HEADERS += \
+        clickedlabel.h \
         global.h \
         httpmgr.h \
         logindialog.h \

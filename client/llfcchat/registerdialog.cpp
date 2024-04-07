@@ -40,6 +40,21 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
     connect(ui->varify_edit, &QLineEdit::editingFinished, this, [this](){
          checkVarifyValid();
     });
+
+    //设置浮动显示手形状
+    ui->pass_visible->setCursor(Qt::PointingHandCursor);
+    ui->confirm_visible->setCursor(Qt::PointingHandCursor);
+
+    ui->pass_visible->SetState("unvisible","unvisible_hover","unvisible_press","visible",
+                               "visible_hover","visible_press");
+
+    ui->confirm_visible->SetState("unvisible","unvisible_hover","unvisible_press","visible",
+                                  "visible_hover","visible_press");
+    //连接点击事件
+    auto pass_visible = ui->pass_visible;
+    connect(ui->pass_visible, &ClickedLabel::clicked, this, [pass_visible]() {
+        qDebug() << "Label was clicked!";
+    });
 }
 
 RegisterDialog::~RegisterDialog()

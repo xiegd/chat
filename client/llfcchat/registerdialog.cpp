@@ -7,7 +7,7 @@
 
 RegisterDialog::RegisterDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::RegisterDialog)
+    ui(new Ui::RegisterDialog),_countdown(5)
 {
     ui->setupUi(this);
     //设置密码格式隐藏
@@ -71,10 +71,25 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
         }
         qDebug() << "Label was clicked!";
     });
+
+    // 创建定时器
+    _countdown_timer = new QTimer(this);
+    // 连接信号和槽
+    connect(_countdown_timer, &QTimer::timeout, [this](){
+        if(_countdown==0){
+            _countdown_timer->stop();
+            emit sigSwitchLogin();
+            return;
+        }
+        _countdown--;
+        auto str = QString("注册成功，%1 s后返回登录").arg(_countdown);
+        ui->tip_lb->setText(str);
+    });
 }
 
 RegisterDialog::~RegisterDialog()
 {
+    qDebug()<<"destruct RegDlg";
     delete ui;
 }
 
@@ -254,6 +269,7 @@ void RegisterDialog::initHttpHandlers()
         showTip(tr("用户注册成功"), true);
         qDebug()<< "email is " << email ;
         qDebug()<< "user uuid is " <<  jsonObj["uuid"].toString();
+        ChangeTipPage();
     });
 }
 
@@ -272,6 +288,15 @@ void RegisterDialog::DelTipErr(TipErr te)
     }
 
     showTip(_tip_errs.first(), false);
+}
+
+void RegisterDialog::ChangeTipPage()
+{
+    _countdown_timer->stop();
+    ui->stackedWidget->setCurrentWidget(ui->page_2);
+
+    // 启动定时器，设置间隔为1000毫秒（1秒）
+    _countdown_timer->start(1000);
 }
 
 void RegisterDialog::showTip(QString str, bool b_ok)
@@ -326,4 +351,16 @@ void RegisterDialog::on_sure_btn_clicked()
     json_obj["varifycode"] = ui->varify_edit->text();
     HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix+"/user_register"),
                  json_obj, ReqId::ID_REG_USER,Modules::REGISTERMOD);
+}
+
+void RegisterDialog::on_return_btn_clicked()
+{
+    _countdown_timer->stop();
+    emit sigSwitchLogin();
+}
+
+void RegisterDialog::on_cancel_btn_clicked()
+{
+    _countdown_timer->stop();
+    emit sigSwitchLogin();
 }

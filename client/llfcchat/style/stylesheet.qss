@@ -49,6 +49,9 @@ background-color:rgb(255,255,255)
    border-image: url(:/res/visible_hover.png);
 }
 
+#tip_lb, #tip2_lb{
+    color:green;
+}
 
 
 

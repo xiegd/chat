@@ -27,6 +27,7 @@ public:
 public slots:
     void SlotSwitchReg();
     void SlotSwitchLogin();
+    void SlotSwitchReset();
 private:
     void TestDlg();
     Ui::MainWindow *ui;

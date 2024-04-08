@@ -50,6 +50,11 @@ void MainWindow::SlotSwitchLogin()
     connect(_login_dlg, &LoginDialog::switchRegister, this, &MainWindow::SlotSwitchReg);
 }
 
+void MainWindow::SlotSwitchReset()
+{
+
+}
+
 void MainWindow::TestDlg()
 {
     qDebug() << "Hello world!!";

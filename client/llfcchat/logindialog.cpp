@@ -7,7 +7,8 @@ LoginDialog::LoginDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(ui->reg_btn, &QPushButton::clicked, this, &LoginDialog::switchRegister);
-
+    ui->forget_label->SetState("normal","hover","","selected","selected_hover","");
+    ui->forget_label->setCursor(Qt::PointingHandCursor);
 }
 
 LoginDialog::~LoginDialog()

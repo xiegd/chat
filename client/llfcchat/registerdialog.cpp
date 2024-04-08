@@ -45,11 +45,11 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
     ui->pass_visible->setCursor(Qt::PointingHandCursor);
     ui->confirm_visible->setCursor(Qt::PointingHandCursor);
 
-    ui->pass_visible->SetState("unvisible","unvisible_hover","unvisible_press","visible",
-                               "visible_hover","visible_press");
+    ui->pass_visible->SetState("unvisible","unvisible_hover","","visible",
+                               "visible_hover","");
 
-    ui->confirm_visible->SetState("unvisible","unvisible_hover","unvisible_press","visible",
-                                  "visible_hover","visible_press");
+    ui->confirm_visible->SetState("unvisible","unvisible_hover","","visible",
+                                  "visible_hover","");
     //连接点击事件
 
     connect(ui->pass_visible, &ClickedLabel::clicked, this, [this]() {

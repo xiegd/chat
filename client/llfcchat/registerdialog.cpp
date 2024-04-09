@@ -312,8 +312,6 @@ void RegisterDialog::showTip(QString str, bool b_ok)
     repolish(ui->err_tip);
 }
 
-
-
 //day11 添加确认槽函数
 void RegisterDialog::on_sure_btn_clicked()
 {

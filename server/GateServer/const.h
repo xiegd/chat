@@ -31,6 +31,8 @@ enum ErrorCodes {
 	VarifyCodeErr = 1004, //验证码错误
 	UserExist = 1005,       //用户已经存在
 	PasswdErr = 1006,    //密码错误
+	EmailNotMatch = 1007,  //邮箱不匹配
+	PasswdUpFailed = 1008,  //更新密码失败
 };
 
 #define CODEPREFIX  "code_"

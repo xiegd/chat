@@ -159,18 +159,25 @@ LogicSystem::LogicSystem() {
 		}
 		//查询数据库判断用户名和邮箱是否匹配
 		bool email_valid = MysqlMgr::GetInstance()->CheckEmail(name, email);
-
-		//查找数据库判断用户是否存在
-		int uid = MysqlMgr::GetInstance()->RegUser(name, email, pwd);
-		if (uid == 0 || uid == -1) {
-			std::cout << " user or email exist" << std::endl;
-			root["error"] = ErrorCodes::UserExist;
+		if (!email_valid) {
+			std::cout << " user email not match" << std::endl;
+			root["error"] = ErrorCodes::EmailNotMatch;
 			std::string jsonstr = root.toStyledString();
 			beast::ostream(connection->_response.body()) << jsonstr;
 			return true;
 		}
+
+		//更新密码为最新密码
+		bool b_up = MysqlMgr::GetInstance()->UpdatePwd(name, pwd);
+		if (!b_up) {
+			std::cout << " update pwd failed" << std::endl;
+			root["error"] = ErrorCodes::PasswdUpFailed;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
+
 		root["error"] = 0;
-		root["uid"] = uid;
 		root["email"] = email;
 		root["user"] = name;
 		root["passwd"] = pwd;

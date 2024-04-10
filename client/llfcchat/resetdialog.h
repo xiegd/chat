@@ -21,6 +21,9 @@ private slots:
 
     void on_varify_btn_clicked();
 
+    void slot_reset_mod_finish(ReqId id, QString res, ErrorCodes err);
+    void on_sure_btn_clicked();
+
 private:
     bool checkUserValid();
     bool checkPassValid();
@@ -29,8 +32,10 @@ private:
     bool checkVarifyValid();
     void AddTipErr(TipErr te,QString tips);
     void DelTipErr(TipErr te);
+    void initHandlers();
     Ui::ResetDialog *ui;
     QMap<TipErr, QString> _tip_errs;
+    QMap<ReqId, std::function<void(const QJsonObject&)>> _handlers;
 signals:
     void switchLogin();
 };

@@ -10,6 +10,10 @@ int MysqlMgr::RegUser(const std::string& name, const std::string& email, const s
 	return _dao.RegUser(name, email, pwd);
 }
 
+bool MysqlMgr::CheckValid(const std::string& name, const std::string& email) {
+	return _dao.CheckValid(name, email);
+}
+
 MysqlMgr::MysqlMgr() {
 }
 

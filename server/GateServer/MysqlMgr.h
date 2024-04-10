@@ -7,6 +7,7 @@ class MysqlMgr: public Singleton<MysqlMgr>
 public:
 	~MysqlMgr();
 	int RegUser(const std::string& name, const std::string& email,  const std::string& pwd);
+	bool CheckValid(const std::string& name, const std::string & email);
 private:
 	MysqlMgr();
 	MysqlDao  _dao;

@@ -56,4 +56,23 @@ int MysqlDao::RegUser(const std::string& name, const std::string& email, const s
 	}
 }
 
+bool MysqlDao::CheckEmail(const std::string& name, const std::string& email) {
+	auto con = pool_->getConnection();
+	try {
+		if (con == nullptr) {
+			pool_->returnConnection(std::move(con));
+			return false;
+		}
+
+
+	}
+	catch (sql::SQLException& e) {
+		pool_->returnConnection(std::move(con));
+		std::cerr << "SQLException: " << e.what();
+		std::cerr << " (MySQL error code: " << e.getErrorCode();
+		std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+		return -1;
+	}
+}
+
 

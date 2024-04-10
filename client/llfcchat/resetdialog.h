@@ -22,8 +22,11 @@ private slots:
     void on_varify_btn_clicked();
 
 private:
+    bool checkUserValid();
+    bool checkPassValid();
     void showTip(QString str,bool b_ok);
     bool checkEmailValid();
+    bool checkVarifyValid();
     void AddTipErr(TipErr te,QString tips);
     void DelTipErr(TipErr te);
     Ui::ResetDialog *ui;

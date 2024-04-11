@@ -413,6 +413,16 @@ ClickLbState ClickedLabel::GetCurState(){
 ```
 将label升级为ClickedLabel，然后在RegisterDialog的构造函数中添加label点击的响应函数
 ``` cpp
+
+//设置浮动显示手形状
+ui->pass_visible->setCursor(Qt::PointingHandCursor);
+ui->confirm_visible->setCursor(Qt::PointingHandCursor);
+
+ui->pass_visible->SetState("unvisible","unvisible_hover","","visible",
+                            "visible_hover","");
+
+ui->confirm_visible->SetState("unvisible","unvisible_hover","","visible",
+                                "visible_hover","");
 //连接点击事件
 
 connect(ui->pass_visible, &ClickedLabel::clicked, this, [this]() {
@@ -537,4 +547,25 @@ void MainWindow::SlotSwitchReg()
     _reg_dlg->show();
 }
 ```
+
+
+切换登录界面
+``` cpp
+//从注册界面返回登录界面
+void MainWindow::SlotSwitchLogin()
+{
+    //创建一个CentralWidget, 并将其设置为MainWindow的中心部件
+    _login_dlg = new LoginDialog(this);
+    _login_dlg->setWindowFlags(Qt::CustomizeWindowHint|Qt::FramelessWindowHint);
+    setCentralWidget(_login_dlg);
+
+   _reg_dlg->hide();
+    _login_dlg->show();
+    //连接登录界面注册信号
+    connect(_login_dlg, &LoginDialog::switchRegister, this, &MainWindow::SlotSwitchReg);
+    //连接登录界面忘记密码信号
+    connect(_login_dlg, &LoginDialog::switchReset, this, &MainWindow::SlotSwitchReset);
+}
+```
+
 这样登录界面和注册界面的切换逻辑就写完了。

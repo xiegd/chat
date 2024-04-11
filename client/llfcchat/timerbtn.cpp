@@ -32,7 +32,7 @@ void TimerBtn::mouseReleaseEvent(QMouseEvent *e)
         this->setEnabled(false);
          this->setText(QString::number(_counter));
         _timer->start(1000);
-
+        emit clicked();
     }
     // 调用基类的mouseReleaseEvent以确保正常的事件处理（如点击效果）
     QPushButton::mouseReleaseEvent(e);

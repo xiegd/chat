@@ -177,6 +177,7 @@ LogicSystem::LogicSystem() {
 			return true;
 		}
 
+		std::cout << "succeed to update password" << pwd << std::endl;
 		root["error"] = 0;
 		root["email"] = email;
 		root["user"] = name;

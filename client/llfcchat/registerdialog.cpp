@@ -95,6 +95,7 @@ RegisterDialog::~RegisterDialog()
 
 void RegisterDialog::on_get_code_clicked()
 {
+    qDebug()<<"receive varify btn clicked ";
     //验证邮箱的地址正则表达式
     auto email = ui->email_edit->text();
     bool valid = checkEmailValid();

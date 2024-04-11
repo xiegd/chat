@@ -78,9 +78,10 @@ bool MysqlDao::CheckEmail(const std::string& name, const std::string& email) {
 		while (res->next()) {
 			std::cout << "Check Email: " << res->getString("email") << std::endl;
 			if (email != res->getString("email")) {
+				pool_->returnConnection(std::move(con));
 				return false;
 			}
-			
+			pool_->returnConnection(std::move(con));
 			return true;
 		}
 	}
@@ -105,13 +106,14 @@ bool MysqlDao::UpdatePwd(const std::string& name, const std::string& newpwd) {
 		std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement("UPDATE user SET pwd = ? WHERE name = ?"));
 
 		// 绑定参数
-		pstmt->setString(1, name);
-		pstmt->setString(2, newpwd);
+		pstmt->setString(2, name);
+		pstmt->setString(1, newpwd);
 
 		// 执行更新
 		int updateCount = pstmt->executeUpdate();
 
 		std::cout << "Updated rows: " << updateCount << std::endl;
+		pool_->returnConnection(std::move(con));
 		return true;
 	}
 	catch (sql::SQLException& e) {

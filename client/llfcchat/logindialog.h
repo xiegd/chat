@@ -15,9 +15,13 @@ public:
     explicit LoginDialog(QWidget *parent = nullptr);
     ~LoginDialog();
 private:
+    bool checkUserValid();
+    bool checkPwdValid();
     Ui::LoginDialog *ui;
 private slots:
     void slot_forget_pwd();
+    void on_login_btn_clicked();
+
 signals:
     void switchRegister();
     void switchReset();

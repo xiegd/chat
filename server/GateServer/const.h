@@ -17,6 +17,8 @@
 #include <jdbc/cppconn/resultset.h>
 #include <jdbc/cppconn/statement.h>
 #include <jdbc/cppconn/exception.h>
+#include <iostream>
+#include <functional>
 
 namespace beast = boost::beast;         // from <boost/beast.hpp>
 namespace http = beast::http;           // from <boost/beast/http.hpp>
@@ -33,6 +35,23 @@ enum ErrorCodes {
 	PasswdErr = 1006,    //密码错误
 	EmailNotMatch = 1007,  //邮箱不匹配
 	PasswdUpFailed = 1008,  //更新密码失败
+	PasswdInvalid = 1009,   //密码更新失败
+};
+
+
+// Defer类
+class Defer {
+public:
+	// 接受一个lambda表达式或者函数指针
+	Defer(std::function<void()> func) : func_(func) {}
+
+	// 析构函数中执行传入的函数
+	~Defer() {
+		func_();
+	}
+
+private:
+	std::function<void()> func_;
 };
 
 #define CODEPREFIX  "code_"

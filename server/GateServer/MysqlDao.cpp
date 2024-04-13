@@ -125,4 +125,43 @@ bool MysqlDao::UpdatePwd(const std::string& name, const std::string& newpwd) {
 	}
 }
 
+bool MysqlDao::CheckPwd(const std::string& name, const std::string& pwd) {
+	auto con = pool_->getConnection();
+	Defer defer([this, &con]() {
+		pool_->returnConnection(std::move(con));
+		});
+
+	try {
+		if (con == nullptr) {
+			return false;
+		}
+
+		// 准备SQL语句
+		std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement("SELECT pwd FROM user WHERE name = ?"));
+		pstmt->setString(1, "name"); // 将username替换为你要查询的用户名
+
+		// 执行查询
+		std::unique_ptr<sql::ResultSet> res(pstmt->executeQuery());
+		std::string origin_pwd = "";
+		// 遍历结果集
+		while (res->next()) {
+			origin_pwd = res->getString("pwd");
+			// 输出查询到的密码
+			std::cout << "Password: " << origin_pwd << std::endl;
+			break;
+		}
+
+		if (pwd != origin_pwd) {
+			return false;
+		}
+		return true;
+	}
+	catch (sql::SQLException& e) {
+		std::cerr << "SQLException: " << e.what();
+		std::cerr << " (MySQL error code: " << e.getErrorCode();
+		std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+		return false;
+	}
+}
+
 

@@ -22,3 +22,7 @@ C++ 聊天项目实战案例，涵盖grpc，并发线程，网络编程，qt开�
 [day08-邮箱认证服务](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day08-%E9%82%AE%E7%AE%B1%E8%AE%A4%E8%AF%81%E6%9C%8D%E5%8A%A1.md)
 
 [day09-redis服务搭建](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day09-redis%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA.md)
+
+[day10-验证服务增加redis](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day10-%E5%A4%9A%E6%9C%8D%E5%8A%A1%E9%AA%8C%E8%AF%81%E7%A0%81%E6%B4%BE%E5%8F%91%E5%8A%9F%E8%83%BD%E8%B0%83%E8%AF%95.md)
+
+[day11-注册功能](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day11-%E6%B3%A8%E5%86%8C%E5%8A%9F%E8%83%BD.md)

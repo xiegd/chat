@@ -645,27 +645,44 @@ class GetChatServerRsp PROTOBUF_FINAL :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kServerIPFieldNumber = 2,
-    kTokenFieldNumber = 3,
+    kHostFieldNumber = 2,
+    kPortFieldNumber = 3,
+    kTokenFieldNumber = 4,
     kErrorFieldNumber = 1,
   };
-  // string serverIP = 2;
-  void clear_serverip();
-  const std::string& serverip() const;
-  void set_serverip(const std::string& value);
-  void set_serverip(std::string&& value);
-  void set_serverip(const char* value);
-  void set_serverip(const char* value, size_t size);
-  std::string* mutable_serverip();
-  std::string* release_serverip();
-  void set_allocated_serverip(std::string* serverip);
+  // string host = 2;
+  void clear_host();
+  const std::string& host() const;
+  void set_host(const std::string& value);
+  void set_host(std::string&& value);
+  void set_host(const char* value);
+  void set_host(const char* value, size_t size);
+  std::string* mutable_host();
+  std::string* release_host();
+  void set_allocated_host(std::string* host);
   private:
-  const std::string& _internal_serverip() const;
-  void _internal_set_serverip(const std::string& value);
-  std::string* _internal_mutable_serverip();
+  const std::string& _internal_host() const;
+  void _internal_set_host(const std::string& value);
+  std::string* _internal_mutable_host();
   public:
 
-  // string token = 3;
+  // string port = 3;
+  void clear_port();
+  const std::string& port() const;
+  void set_port(const std::string& value);
+  void set_port(std::string&& value);
+  void set_port(const char* value);
+  void set_port(const char* value, size_t size);
+  std::string* mutable_port();
+  std::string* release_port();
+  void set_allocated_port(std::string* port);
+  private:
+  const std::string& _internal_port() const;
+  void _internal_set_port(const std::string& value);
+  std::string* _internal_mutable_port();
+  public:
+
+  // string token = 4;
   void clear_token();
   const std::string& token() const;
   void set_token(const std::string& value);
@@ -697,7 +714,8 @@ class GetChatServerRsp PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr serverip_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr host_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr port_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr token_;
   ::PROTOBUF_NAMESPACE_ID::int32 error_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
@@ -972,69 +990,131 @@ inline void GetChatServerRsp::set_error(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:message.GetChatServerRsp.error)
 }
 
-// string serverIP = 2;
-inline void GetChatServerRsp::clear_serverip() {
-  serverip_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+// string host = 2;
+inline void GetChatServerRsp::clear_host() {
+  host_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
-inline const std::string& GetChatServerRsp::serverip() const {
-  // @@protoc_insertion_point(field_get:message.GetChatServerRsp.serverIP)
-  return _internal_serverip();
+inline const std::string& GetChatServerRsp::host() const {
+  // @@protoc_insertion_point(field_get:message.GetChatServerRsp.host)
+  return _internal_host();
 }
-inline void GetChatServerRsp::set_serverip(const std::string& value) {
-  _internal_set_serverip(value);
-  // @@protoc_insertion_point(field_set:message.GetChatServerRsp.serverIP)
+inline void GetChatServerRsp::set_host(const std::string& value) {
+  _internal_set_host(value);
+  // @@protoc_insertion_point(field_set:message.GetChatServerRsp.host)
 }
-inline std::string* GetChatServerRsp::mutable_serverip() {
-  // @@protoc_insertion_point(field_mutable:message.GetChatServerRsp.serverIP)
-  return _internal_mutable_serverip();
+inline std::string* GetChatServerRsp::mutable_host() {
+  // @@protoc_insertion_point(field_mutable:message.GetChatServerRsp.host)
+  return _internal_mutable_host();
 }
-inline const std::string& GetChatServerRsp::_internal_serverip() const {
-  return serverip_.Get();
+inline const std::string& GetChatServerRsp::_internal_host() const {
+  return host_.Get();
 }
-inline void GetChatServerRsp::_internal_set_serverip(const std::string& value) {
+inline void GetChatServerRsp::_internal_set_host(const std::string& value) {
   
-  serverip_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+  host_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
 }
-inline void GetChatServerRsp::set_serverip(std::string&& value) {
+inline void GetChatServerRsp::set_host(std::string&& value) {
   
-  serverip_.Set(
+  host_.Set(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
-  // @@protoc_insertion_point(field_set_rvalue:message.GetChatServerRsp.serverIP)
+  // @@protoc_insertion_point(field_set_rvalue:message.GetChatServerRsp.host)
 }
-inline void GetChatServerRsp::set_serverip(const char* value) {
+inline void GetChatServerRsp::set_host(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
-  serverip_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+  host_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
               GetArena());
-  // @@protoc_insertion_point(field_set_char:message.GetChatServerRsp.serverIP)
+  // @@protoc_insertion_point(field_set_char:message.GetChatServerRsp.host)
 }
-inline void GetChatServerRsp::set_serverip(const char* value,
+inline void GetChatServerRsp::set_host(const char* value,
     size_t size) {
   
-  serverip_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+  host_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
       reinterpret_cast<const char*>(value), size), GetArena());
-  // @@protoc_insertion_point(field_set_pointer:message.GetChatServerRsp.serverIP)
+  // @@protoc_insertion_point(field_set_pointer:message.GetChatServerRsp.host)
 }
-inline std::string* GetChatServerRsp::_internal_mutable_serverip() {
+inline std::string* GetChatServerRsp::_internal_mutable_host() {
   
-  return serverip_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  return host_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
-inline std::string* GetChatServerRsp::release_serverip() {
-  // @@protoc_insertion_point(field_release:message.GetChatServerRsp.serverIP)
-  return serverip_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+inline std::string* GetChatServerRsp::release_host() {
+  // @@protoc_insertion_point(field_release:message.GetChatServerRsp.host)
+  return host_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
-inline void GetChatServerRsp::set_allocated_serverip(std::string* serverip) {
-  if (serverip != nullptr) {
+inline void GetChatServerRsp::set_allocated_host(std::string* host) {
+  if (host != nullptr) {
     
   } else {
     
   }
-  serverip_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), serverip,
+  host_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), host,
       GetArena());
-  // @@protoc_insertion_point(field_set_allocated:message.GetChatServerRsp.serverIP)
+  // @@protoc_insertion_point(field_set_allocated:message.GetChatServerRsp.host)
 }
 
-// string token = 3;
+// string port = 3;
+inline void GetChatServerRsp::clear_port() {
+  port_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline const std::string& GetChatServerRsp::port() const {
+  // @@protoc_insertion_point(field_get:message.GetChatServerRsp.port)
+  return _internal_port();
+}
+inline void GetChatServerRsp::set_port(const std::string& value) {
+  _internal_set_port(value);
+  // @@protoc_insertion_point(field_set:message.GetChatServerRsp.port)
+}
+inline std::string* GetChatServerRsp::mutable_port() {
+  // @@protoc_insertion_point(field_mutable:message.GetChatServerRsp.port)
+  return _internal_mutable_port();
+}
+inline const std::string& GetChatServerRsp::_internal_port() const {
+  return port_.Get();
+}
+inline void GetChatServerRsp::_internal_set_port(const std::string& value) {
+  
+  port_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+}
+inline void GetChatServerRsp::set_port(std::string&& value) {
+  
+  port_.Set(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:message.GetChatServerRsp.port)
+}
+inline void GetChatServerRsp::set_port(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  port_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+              GetArena());
+  // @@protoc_insertion_point(field_set_char:message.GetChatServerRsp.port)
+}
+inline void GetChatServerRsp::set_port(const char* value,
+    size_t size) {
+  
+  port_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:message.GetChatServerRsp.port)
+}
+inline std::string* GetChatServerRsp::_internal_mutable_port() {
+  
+  return port_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline std::string* GetChatServerRsp::release_port() {
+  // @@protoc_insertion_point(field_release:message.GetChatServerRsp.port)
+  return port_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void GetChatServerRsp::set_allocated_port(std::string* port) {
+  if (port != nullptr) {
+    
+  } else {
+    
+  }
+  port_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), port,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:message.GetChatServerRsp.port)
+}
+
+// string token = 4;
 inline void GetChatServerRsp::clear_token() {
   token_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }

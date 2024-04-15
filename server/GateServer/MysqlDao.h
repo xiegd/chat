@@ -15,7 +15,7 @@ public:
 		}
 		catch (sql::SQLException& e) {
 			// ¥¶¿Ì“Ï≥£
-			std::cout << "mysql pool init failed" << std::endl;
+			std::cout << "mysql pool init failed, error is " << e.what()<< std::endl;
 		}
 	}
 
@@ -67,6 +67,13 @@ private:
 	std::atomic<bool> b_stop_;
 };
 
+struct UserInfo {
+	std::string name;
+	std::string pwd;
+	int uid;
+	std::string email;
+};
+
 class MysqlDao
 {
 public:
@@ -75,8 +82,9 @@ public:
 	int RegUser(const std::string& name, const std::string& email, const std::string& pwd);
 	bool CheckEmail(const std::string& name, const std::string & email);
 	bool UpdatePwd(const std::string& name, const std::string& newpwd);
-	bool CheckPwd(const std::string& name, const std::string& pwd);
+	bool CheckPwd(const std::string& name, const std::string& pwd, UserInfo& userInfo);
 private:
 	std::unique_ptr<MySqlPool> pool_;
 };
+
 

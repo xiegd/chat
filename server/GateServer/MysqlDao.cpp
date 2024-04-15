@@ -84,6 +84,7 @@ bool MysqlDao::CheckEmail(const std::string& name, const std::string& email) {
 			pool_->returnConnection(std::move(con));
 			return true;
 		}
+		return true;
 	}
 	catch (sql::SQLException& e) {
 		pool_->returnConnection(std::move(con));
@@ -125,7 +126,7 @@ bool MysqlDao::UpdatePwd(const std::string& name, const std::string& newpwd) {
 	}
 }
 
-bool MysqlDao::CheckPwd(const std::string& name, const std::string& pwd) {
+bool MysqlDao::CheckPwd(const std::string& name, const std::string& pwd, UserInfo& userInfo) {
 	auto con = pool_->getConnection();
 	Defer defer([this, &con]() {
 		pool_->returnConnection(std::move(con));
@@ -137,7 +138,7 @@ bool MysqlDao::CheckPwd(const std::string& name, const std::string& pwd) {
 		}
 
 		// 准备SQL语句
-		std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement("SELECT pwd FROM user WHERE name = ?"));
+		std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement("SELECT * FROM user WHERE name = ?"));
 		pstmt->setString(1, name); // 将username替换为你要查询的用户名
 
 		// 执行查询
@@ -154,6 +155,10 @@ bool MysqlDao::CheckPwd(const std::string& name, const std::string& pwd) {
 		if (pwd != origin_pwd) {
 			return false;
 		}
+		userInfo.name = name;
+		userInfo.email = res->getString("email");
+		userInfo.uid = res->getInt("uid");
+		userInfo.pwd = origin_pwd;
 		return true;
 	}
 	catch (sql::SQLException& e) {

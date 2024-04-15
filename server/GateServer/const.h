@@ -19,6 +19,11 @@
 #include <jdbc/cppconn/exception.h>
 #include <iostream>
 #include <functional>
+#include <grpcpp/grpcpp.h>
+#include "message.grpc.pb.h"
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 namespace beast = boost::beast;         // from <boost/beast.hpp>
 namespace http = beast::http;           // from <boost/beast/http.hpp>
@@ -36,6 +41,7 @@ enum ErrorCodes {
 	EmailNotMatch = 1007,  //邮箱不匹配
 	PasswdUpFailed = 1008,  //更新密码失败
 	PasswdInvalid = 1009,   //密码更新失败
+	RPCGetFailed = 1010,  //获取rpc请求失败
 };
 
 

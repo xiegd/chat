@@ -35,7 +35,7 @@ void LoginDialog::initHttpHandlers()
         }
         auto user = jsonObj["user"].toString();
         showTip(tr("登录成功"), true);
-        qDebug()<< "email is " << user ;
+        qDebug()<< "user is " << user ;
     });
 }
 

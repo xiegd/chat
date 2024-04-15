@@ -11,15 +11,17 @@ using message::GetChatServerRsp;
 using message::StatusService;
 
 struct ChatServer {
-	std::string ip;
+	std::string host;
+	std::string port;
 };
 class StatusServiceImpl final : public StatusService::Service
 {
 public:
 	StatusServiceImpl();
-	Status GetChatServerIP(ServerContext* context, const GetChatServerReq* request,
+	Status GetChatServer(ServerContext* context, const GetChatServerReq* request,
 		GetChatServerRsp* reply) override;
 
 	std::vector<ChatServer> _servers;
+	int _server_index;
 };
 

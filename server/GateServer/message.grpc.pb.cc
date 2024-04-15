@@ -82,5 +82,66 @@ VarifyService::Service::~Service() {
 }
 
 
+static const char* StatusService_method_names[] = {
+  "/message.StatusService/GetChatServerIP",
+};
+
+std::unique_ptr< StatusService::Stub> StatusService::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
+  (void)options;
+  std::unique_ptr< StatusService::Stub> stub(new StatusService::Stub(channel));
+  return stub;
+}
+
+StatusService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
+  : channel_(channel), rpcmethod_GetChatServerIP_(StatusService_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  {}
+
+::grpc::Status StatusService::Stub::GetChatServerIP(::grpc::ClientContext* context, const ::message::GetChatServerReq& request, ::message::GetChatServerRsp* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::message::GetChatServerReq, ::message::GetChatServerRsp, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_GetChatServerIP_, context, request, response);
+}
+
+void StatusService::Stub::experimental_async::GetChatServerIP(::grpc::ClientContext* context, const ::message::GetChatServerReq* request, ::message::GetChatServerRsp* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::message::GetChatServerReq, ::message::GetChatServerRsp, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_GetChatServerIP_, context, request, response, std::move(f));
+}
+
+void StatusService::Stub::experimental_async::GetChatServerIP(::grpc::ClientContext* context, const ::message::GetChatServerReq* request, ::message::GetChatServerRsp* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_GetChatServerIP_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::message::GetChatServerRsp>* StatusService::Stub::PrepareAsyncGetChatServerIPRaw(::grpc::ClientContext* context, const ::message::GetChatServerReq& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::message::GetChatServerRsp, ::message::GetChatServerReq, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_GetChatServerIP_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::message::GetChatServerRsp>* StatusService::Stub::AsyncGetChatServerIPRaw(::grpc::ClientContext* context, const ::message::GetChatServerReq& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncGetChatServerIPRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
+StatusService::Service::Service() {
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      StatusService_method_names[0],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< StatusService::Service, ::message::GetChatServerReq, ::message::GetChatServerRsp, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](StatusService::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::message::GetChatServerReq* req,
+             ::message::GetChatServerRsp* resp) {
+               return service->GetChatServerIP(ctx, req, resp);
+             }, this)));
+}
+
+StatusService::Service::~Service() {
+}
+
+::grpc::Status StatusService::Service::GetChatServerIP(::grpc::ServerContext* context, const ::message::GetChatServerReq* request, ::message::GetChatServerRsp* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+
 }  // namespace message
 

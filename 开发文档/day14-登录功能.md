@@ -447,4 +447,172 @@ private:
 ```
 ## StatusServer状态服务
 
-我们要实现状态服务，主要是用来监听其他服务器的查询请求
+我们要实现状态服务，主要是用来监听其他服务器的查询请求, 用visual studio创建项目，名字为StatusServer.
+
+在主函数所在文件StatusServer.cpp中实现如下逻辑
+``` cpp
+#include <iostream>
+#include <json/json.h>
+#include <json/value.h>
+#include <json/reader.h>
+#include "const.h"
+#include "ConfigMgr.h"
+#include "hiredis.h"
+#include "RedisMgr.h"
+#include "MysqlMgr.h"
+#include "AsioIOServicePool.h"
+#include <iostream>
+#include <memory>
+#include <string>
+#include <thread>
+#include <boost/asio.hpp>
+#include "StatusServiceImpl.h"
+void RunServer() {
+	auto & cfg = ConfigMgr::Inst();
+	
+	std::string server_address(cfg["StatusServer"]["Host"]+":"+ cfg["StatusServer"]["Port"]);
+	StatusServiceImpl service;
+
+	grpc::ServerBuilder builder;
+	// 监听端口和添加服务
+	builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
+	builder.RegisterService(&service);
+
+	// 构建并启动gRPC服务器
+	std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
+	std::cout << "Server listening on " << server_address << std::endl;
+
+	// 创建Boost.Asio的io_context
+	boost::asio::io_context io_context;
+	// 创建signal_set用于捕获SIGINT
+	boost::asio::signal_set signals(io_context, SIGINT, SIGTERM);
+
+	// 设置异步等待SIGINT信号
+	signals.async_wait([&server](const boost::system::error_code& error, int signal_number) {
+		if (!error) {
+			std::cout << "Shutting down server..." << std::endl;
+			server->Shutdown(); // 优雅地关闭服务器
+		}
+		});
+
+	// 在单独的线程中运行io_context
+	std::thread([&io_context]() { io_context.run(); }).detach();
+
+	// 等待服务器关闭
+	server->Wait();
+	io_context.stop(); // 停止io_context
+}
+
+int main(int argc, char** argv) {
+	try {
+		RunServer();
+	}
+	catch (std::exception const& e) {
+		std::cerr << "Error: " << e.what() << std::endl;
+		return EXIT_FAILURE;
+	}
+
+	return 0;
+}
+
+```
+在开始逻辑之前，我们需要先更新下config.ini文件
+``` ini
+[StatusServer]
+Port = 50052
+Host = 0.0.0.0
+[Mysql]
+Host = 81.68.86.146
+Port = 3308
+User = root
+Passwd = 123456
+Schema = llfc
+[Redis]
+Host = 81.68.86.146
+Port = 6380
+Passwd = 123456
+[ChatServer1]
+Host = 127.0.0.1
+Port = 8090
+[ChatServer2]
+Host = 127.0.0.1
+Port = 8091
+```
+然后我们将GateServer之前生成的pb文件和proto文件拷贝到StatusServer中。并且加入到项目中。
+
+我们在项目中添加一个新的类StatusServiceImpl，该类主要继承自StatusService::Service。
+``` cpp
+#include <grpcpp/grpcpp.h>
+#include "message.grpc.pb.h"
+
+using grpc::Server;
+using grpc::ServerBuilder;
+using grpc::ServerContext;
+using grpc::Status;
+using message::GetChatServerReq;
+using message::GetChatServerRsp;
+using message::StatusService;
+
+struct ChatServer {
+	std::string host;
+	std::string port;
+};
+class StatusServiceImpl final : public StatusService::Service
+{
+public:
+	StatusServiceImpl();
+	Status GetChatServer(ServerContext* context, const GetChatServerReq* request,
+		GetChatServerRsp* reply) override;
+
+	std::vector<ChatServer> _servers;
+	int _server_index;
+};
+
+```
+具体实现
+``` cpp
+#include "StatusServiceImpl.h"
+#include "ConfigMgr.h"
+#include "const.h"
+
+std::string generate_unique_string() {
+	// 创建UUID对象
+	boost::uuids::uuid uuid = boost::uuids::random_generator()();
+
+	// 将UUID转换为字符串
+	std::string unique_string = to_string(uuid);
+
+	return unique_string;
+}
+
+Status StatusServiceImpl::GetChatServer(ServerContext* context, const GetChatServerReq* request, GetChatServerRsp* reply)
+{
+	std::string prefix("llfc status server has received :  ");
+	_server_index = (_server_index++) % (_servers.size());
+	auto &server = _servers[_server_index];
+	reply->set_host(server.host);
+	reply->set_port(server.port);
+	reply->set_error(ErrorCodes::Success);
+	reply->set_token(generate_unique_string());
+	return Status::OK;
+}
+
+StatusServiceImpl::StatusServiceImpl():_server_index(0)
+{
+	auto& cfg = ConfigMgr::Inst();
+	ChatServer server;
+	server.port = cfg["ChatServer1"]["Port"];
+	server.host = cfg["ChatServer1"]["Host"];
+	_servers.push_back(server);
+
+	server.port = cfg["ChatServer2"]["Port"];
+	server.host = cfg["ChatServer2"]["Host"];
+	_servers.push_back(server);
+}
+```
+其余的文件为了保持复用，我们不重复开发，将GateServer中的RedisMgr,MysqlMgr,Singleton,IOSerivePool等统统拷贝过来并添加到项目中。
+
+## 联调测试
+我们启动StatusServer，GateServer以及QT客户端，输入密码和用户名，点击登陆，会看到前端收到登陆成功的消息
+
+![https://cdn.llfc.club/1713248019373.jpg](https://cdn.llfc.club/1713248019373.jpg)

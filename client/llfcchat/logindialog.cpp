@@ -2,6 +2,7 @@
 #include "ui_logindialog.h"
 #include <QDebug>
 #include "httpmgr.h"
+#include "tcpmgr.h"
 
 LoginDialog::LoginDialog(QWidget *parent) :
     QDialog(parent),
@@ -16,6 +17,11 @@ LoginDialog::LoginDialog(QWidget *parent) :
     //连接登录回包信号
     connect(HttpMgr::GetInstance().get(), &HttpMgr::sig_login_mod_finish, this,
             &LoginDialog::slot_login_mod_finish);
+
+    //连接tcp连接请求的信号和槽函数
+    connect(this, &LoginDialog::sig_connect_tcp, TcpMgr::GetInstance().get(), &TcpMgr::slot_tcp_connect);
+    //连接tcp管理者发出的连接成功信号
+    connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_con_success, this, &LoginDialog::slot_tcp_con_finish);
 }
 
 LoginDialog::~LoginDialog()
@@ -31,11 +37,14 @@ void LoginDialog::initHttpHandlers()
         int error = jsonObj["error"].toInt();
         if(error != ErrorCodes::SUCCESS){
             showTip(tr("参数错误"),false);
+            enableBtn(true);
             return;
         }
         auto user = jsonObj["user"].toString();
         showTip(tr("登录成功"), true);
         qDebug()<< "user is " << user ;
+        //发送信号通知tcpMgr发送长链接, todo...
+        //emit sig_connect_tcp
     });
 }
 
@@ -79,6 +88,12 @@ bool LoginDialog::checkPwdValid(){
     return true;
 }
 
+bool LoginDialog::enableBtn(bool enabled)
+{
+    ui->login_btn->setEnabled(enabled);
+    ui->reg_btn->setEnabled(enabled);
+}
+
 void LoginDialog::on_login_btn_clicked()
 {
     qDebug()<<"login btn clicked";
@@ -90,6 +105,7 @@ void LoginDialog::on_login_btn_clicked()
         return ;
     }
 
+    enableBtn(false);
     auto user = ui->user_edit->text();
     auto pwd = ui->pass_edit->text();
     //发送http请求登录
@@ -126,4 +142,9 @@ void LoginDialog::slot_login_mod_finish(ReqId id, QString res, ErrorCodes err)
     _handlers[id](jsonDoc.object());
 
     return;
+}
+
+void LoginDialog::slot_tcp_con_finish()
+{
+   enableBtn(true);
 }

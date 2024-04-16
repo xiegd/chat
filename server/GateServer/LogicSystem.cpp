@@ -189,7 +189,7 @@ LogicSystem::LogicSystem() {
 		return true;
 		});
 
-	//重置回调逻辑
+	//用户登录逻辑
 	RegPost("/user_login", [](std::shared_ptr<HttpConnection> connection) {
 		auto body_str = boost::beast::buffers_to_string(connection->_request.body().data());
 		std::cout << "receive body is " << body_str << std::endl;

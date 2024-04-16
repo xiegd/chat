@@ -92,7 +92,7 @@ void LoginDialog::on_login_btn_clicked()
 
     auto user = ui->user_edit->text();
     auto pwd = ui->pass_edit->text();
-    //发送http请求获取验证码
+    //发送http请求登录
     QJsonObject json_obj;
     json_obj["user"] = user;
     json_obj["passwd"] = xorString(pwd);

@@ -5,7 +5,7 @@ TcpMgr::TcpMgr()
     QObject::connect(&_socket, &QTcpSocket::connected, [&]() {
            qDebug() << "Connected to server!";
            // 连接建立后发送消息
-            emit sig_con_success();
+            emit sig_con_success(true);
        });
 
        QObject::connect(&_socket, &QTcpSocket::readyRead, [&]() {
@@ -24,6 +24,29 @@ TcpMgr::TcpMgr()
         QObject::connect(&_socket, static_cast<void (QTcpSocket::*)(QTcpSocket::SocketError)>(&QTcpSocket::error),
                             [&](QTcpSocket::SocketError socketError) {
                qDebug() << "Error:" << _socket.errorString() ;
+               switch (socketError) {
+                   case QTcpSocket::ConnectionRefusedError:
+                       qDebug() << "Connection Refused!";
+                       emit sig_con_success(false);
+                       break;
+                   case QTcpSocket::RemoteHostClosedError:
+                       qDebug() << "Remote Host Closed Connection!";
+                       break;
+                   case QTcpSocket::HostNotFoundError:
+                       qDebug() << "Host Not Found!";
+                       emit sig_con_success(false);
+                       break;
+                   case QTcpSocket::SocketTimeoutError:
+                       qDebug() << "Connection Timeout!";
+                       emit sig_con_success(false);
+                       break;
+                   case QTcpSocket::NetworkError:
+                       qDebug() << "Network Error!";
+                       break;
+                   default:
+                       qDebug() << "Other Error!";
+                       break;
+               }
          });
 
         // 处理连接断开

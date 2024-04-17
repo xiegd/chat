@@ -3,6 +3,8 @@
 #include <QDebug>
 #include "httpmgr.h"
 #include "tcpmgr.h"
+#include <QRegExp>
+#include <QRegularExpression>
 
 LoginDialog::LoginDialog(QWidget *parent) :
     QDialog(parent),
@@ -41,10 +43,16 @@ void LoginDialog::initHttpHandlers()
             return;
         }
         auto user = jsonObj["user"].toString();
-        showTip(tr("登录成功"), true);
-        qDebug()<< "user is " << user ;
-        //发送信号通知tcpMgr发送长链接, todo...
-        //emit sig_connect_tcp
+
+        //发送信号通知tcpMgr发送长链接
+        ServerInfo si;
+        si.Uid = jsonObj["uid"].toInt();
+        si.Host = jsonObj["host"].toString();
+        si.Port = jsonObj["port"].toString();
+        si.Token = jsonObj["token"].toString();
+        qDebug()<< "user is " << user << " uid is " << si.Uid <<" host is "
+                << si.Host << " Port is " << si.Port << " Token is " << si.Token;
+        emit sig_connect_tcp(si);
     });
 }
 
@@ -72,9 +80,10 @@ bool LoginDialog::checkUserValid(){
     auto user = ui->user_edit->text();
     if(user.isEmpty()){
         qDebug() << "User empty " ;
+        AddTipErr(TipErr::TIP_USER_ERR, tr("用户名不能为空"));
         return false;
     }
-
+    DelTipErr(TipErr::TIP_USER_ERR);
     return true;
 }
 
@@ -82,8 +91,23 @@ bool LoginDialog::checkPwdValid(){
     auto pwd = ui->pass_edit->text();
     if(pwd.length() < 6 || pwd.length() > 15){
         qDebug() << "Pass length invalid";
+        //提示长度不准确
+        AddTipErr(TipErr::TIP_PWD_ERR, tr("密码长度应为6~15"));
         return false;
     }
+
+    // 创建一个正则表达式对象，按照上述密码要求
+    // 这个正则表达式解释：
+    // ^[a-zA-Z0-9!@#$%^&*]{6,15}$ 密码长度至少6，可以是字母、数字和特定的特殊字符
+    QRegularExpression regExp("^[a-zA-Z0-9!@#$%^&*]{6,15}$");
+    bool match = regExp.match(pwd).hasMatch();
+    if(!match){
+        //提示字符非法
+        AddTipErr(TipErr::TIP_PWD_ERR, tr("不能包含非法字符"));
+        return false;;
+    }
+
+    DelTipErr(TipErr::TIP_PWD_ERR);
 
     return true;
 }
@@ -144,7 +168,27 @@ void LoginDialog::slot_login_mod_finish(ReqId id, QString res, ErrorCodes err)
     return;
 }
 
-void LoginDialog::slot_tcp_con_finish()
+void LoginDialog::slot_tcp_con_finish(bool bsuccess)
 {
    enableBtn(true);
+   if(bsuccess){
+      showTip(tr("聊天服务器登陆成功"),false);
+   }else{
+      showTip(tr("网络异常"),false);
+   }
+
+}
+
+void LoginDialog::AddTipErr(TipErr te,QString tips){
+    _tip_errs[te] = tips;
+    showTip(tips, false);
+}
+void LoginDialog::DelTipErr(TipErr te){
+    _tip_errs.remove(te);
+    if(_tip_errs.empty()){
+      ui->err_tip->clear();
+      return;
+    }
+
+    showTip(_tip_errs.first(), false);
 }

@@ -61,7 +61,7 @@ struct ServerInfo{
     QString Host;
     QString Port;
     QString Token;
-    QString Uid;
+    int Uid;
 };
 
 #endif // GLOBAL_H

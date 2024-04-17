@@ -21,6 +21,7 @@ public:
 	Status GetChatServer(ServerContext* context, const GetChatServerReq* request,
 		GetChatServerRsp* reply) override;
 
+private:
 	std::vector<ChatServer> _servers;
 	int _server_index;
 };

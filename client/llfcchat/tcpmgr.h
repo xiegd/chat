@@ -14,7 +14,7 @@ private:
 public slots:
     void slot_tcp_connect(ServerInfo);
 signals:
-    void sig_con_success();
+    void sig_con_success(bool bsuccess);
 };
 
 #endif // TCPMGR_H

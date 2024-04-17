@@ -25,8 +25,12 @@ public:
 		GetChatServerRsp* reply) override;
 	
 private:
+	void insertTokens(int uid, std::string token);
+	bool checkToken(int uid, std::string token);
 	ChatServer getChatServer();
 	std::unordered_map<std::string, ChatServer> _servers;
-	std::mutex _mtx;
+	std::mutex _server_mtx;
+	std::unordered_map<int, std::string> _tokens;
+	std::mutex _token_mtx;
 };
 

@@ -41,7 +41,7 @@ StatusServiceImpl::StatusServiceImpl()
 }
 
 ChatServer StatusServiceImpl::getChatServer() {
-	std::lock_guard<std::mutex> guard(_mtx);
+	std::lock_guard<std::mutex> guard(_token_mtx);
 	auto minServer = _servers.begin()->second;
 	// 使用范围基于for循环
 	for (const auto& server : _servers) {
@@ -51,4 +51,26 @@ ChatServer StatusServiceImpl::getChatServer() {
 	}
 
 	return minServer;
+}
+
+void StatusServiceImpl::insertTokens(int uid, std::string token)
+{
+	std::lock_guard<std::mutex> guard(_token_mtx);
+	_tokens[uid] = token;
+}
+
+bool StatusServiceImpl::checkToken(int uid, std::string token)
+{
+	std::lock_guard<std::mutex> guard(_token_mtx);
+	auto iter = _tokens.find(uid);
+	if (iter == _tokens.end()) {
+		return false;
+	}
+
+	if (iter->second != token) {
+		return false;
+	}
+
+	_tokens.erase(uid);
+	return true;
 }

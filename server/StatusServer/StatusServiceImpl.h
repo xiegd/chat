@@ -1,6 +1,7 @@
 #pragma once
 #include <grpcpp/grpcpp.h>
 #include "message.grpc.pb.h"
+#include <mutex>
 
 using grpc::Server;
 using grpc::ServerBuilder;
@@ -13,6 +14,8 @@ using message::StatusService;
 struct ChatServer {
 	std::string host;
 	std::string port;
+	std::string name;
+	int con_count;
 };
 class StatusServiceImpl final : public StatusService::Service
 {
@@ -20,9 +23,10 @@ public:
 	StatusServiceImpl();
 	Status GetChatServer(ServerContext* context, const GetChatServerReq* request,
 		GetChatServerRsp* reply) override;
-
+	
 private:
-	std::vector<ChatServer> _servers;
-	int _server_index;
+	ChatServer getChatServer();
+	std::unordered_map<std::string, ChatServer> _servers;
+	std::mutex _mtx;
 };
 

@@ -25,8 +25,14 @@ public:
 	void Send(std::string msg, short msgid);
 	void Close();
 	std::shared_ptr<CSession> SharedSelf();
+	void AsyncReadBody(int length);
+	void AsyncReadHead(int total_len);
 private:
-	void HandleRead(const boost::system::error_code& error, size_t  bytes_transferred, std::shared_ptr<CSession> shared_self);
+	void asyncReadFull(std::size_t maxLength, std::function<void(const boost::system::error_code& , std::size_t)> handler);
+	void asyncReadLen(std::size_t  read_len, std::size_t total_len,
+		std::function<void(const boost::system::error_code&, std::size_t)> handler);
+	
+	
 	void HandleWrite(const boost::system::error_code& error, std::shared_ptr<CSession> shared_self);
 	tcp::socket _socket;
 	std::string _uuid;

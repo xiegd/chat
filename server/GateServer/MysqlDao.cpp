@@ -9,7 +9,7 @@ MysqlDao::MysqlDao()
 	const auto& pwd = cfg["Mysql"]["Passwd"];
 	const auto& schema = cfg["Mysql"]["Schema"];
 	const auto& user = cfg["Mysql"]["User"];
-	pool_.reset(new MySqlPool(host+":"+port, user, pwd,schema, 1));
+	pool_.reset(new MySqlPool(host+":"+port, user, pwd,schema, 5));
 }
 
 MysqlDao::~MysqlDao(){
@@ -25,7 +25,7 @@ int MysqlDao::RegUser(const std::string& name, const std::string& email, const s
 			return false;
 		}
 		// 准备调用存储过程
-		unique_ptr < sql::PreparedStatement > stmt(con->prepareStatement("CALL reg_user(?,?,?,@result)"));
+		unique_ptr < sql::PreparedStatement > stmt(con->_con->prepareStatement("CALL reg_user(?,?,?,@result)"));
 		// 设置输入参数
 		stmt->setString(1, name);
 		stmt->setString(2, email);
@@ -37,7 +37,7 @@ int MysqlDao::RegUser(const std::string& name, const std::string& email, const s
 		stmt->execute();
 		// 如果存储过程设置了会话变量或有其他方式获取输出参数的值，你可以在这里执行SELECT查询来获取它们
 	   // 例如，如果存储过程设置了一个会话变量@result来存储输出结果，可以这样获取：
-	   unique_ptr<sql::Statement> stmtResult(con->createStatement());
+	   unique_ptr<sql::Statement> stmtResult(con->_con->createStatement());
 	  unique_ptr<sql::ResultSet> res(stmtResult->executeQuery("SELECT @result AS result"));
 	  if (res->next()) {
 	       int result = res->getInt("result");
@@ -66,7 +66,7 @@ bool MysqlDao::CheckEmail(const std::string& name, const std::string& email) {
 		}
 
 		// 准备查询语句
-		std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement("SELECT email FROM user WHERE name = ?"));
+		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("SELECT email FROM user WHERE name = ?"));
 
 		// 绑定参数
 		pstmt->setString(1, name);
@@ -104,7 +104,7 @@ bool MysqlDao::UpdatePwd(const std::string& name, const std::string& newpwd) {
 		}
 
 		// 准备查询语句
-		std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement("UPDATE user SET pwd = ? WHERE name = ?"));
+		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("UPDATE user SET pwd = ? WHERE name = ?"));
 
 		// 绑定参数
 		pstmt->setString(2, name);
@@ -138,7 +138,7 @@ bool MysqlDao::CheckPwd(const std::string& name, const std::string& pwd, UserInf
 		}
 
 		// 准备SQL语句
-		std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement("SELECT * FROM user WHERE name = ?"));
+		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("SELECT * FROM user WHERE name = ?"));
 		pstmt->setString(1, name); // 将username替换为你要查询的用户名
 
 		// 执行查询

@@ -1,6 +1,6 @@
 #include "tcpmgr.h"
 #include <QAbstractSocket>
-TcpMgr::TcpMgr()
+TcpMgr::TcpMgr():_host(""),_port(0)
 {
     QObject::connect(&_socket, &QTcpSocket::connected, [&]() {
            qDebug() << "Connected to server!";
@@ -53,6 +53,8 @@ TcpMgr::TcpMgr()
         QObject::connect(&_socket, &QTcpSocket::disconnected, [&]() {
             qDebug() << "Disconnected from server.";
         });
+
+        QObject::connect(this, &TcpMgr::sig_send_data, this, &TcpMgr::slot_send_data);
 }
 
 void TcpMgr::slot_tcp_connect(ServerInfo si)
@@ -60,7 +62,36 @@ void TcpMgr::slot_tcp_connect(ServerInfo si)
     qDebug()<< "receive tcp connect signal";
     // 尝试连接到服务器
     qDebug() << "Connecting to server...";
-    _socket.connectToHost(si.Host, static_cast<uint16_t>(si.Port.toUInt()));
+    _host = si.Host;
+    _port = static_cast<uint16_t>(si.Port.toUInt());
+    _socket.connectToHost(si.Host, _port);
+}
+
+void TcpMgr::slot_send_data(ReqId reqId, QString data)
+{
+    uint16_t id = reqId;
+
+    // 将字符串转换为UTF-8编码的字节数组
+    QByteArray dataBytes = data.toUtf8();
+
+    // 计算长度（使用网络字节序转换）
+    quint16 len = static_cast<quint16>(data.size());
+
+    // 创建一个QByteArray用于存储要发送的所有数据
+    QByteArray block;
+    QDataStream out(&block, QIODevice::WriteOnly);
+
+    // 设置数据流使用网络字节序
+    out.setByteOrder(QDataStream::BigEndian);
+
+    // 写入ID和长度
+    out << id << len;
+
+    // 添加字符串数据
+    block.append(data);
+
+    // 发送数据
+    _socket.write(block);
 }
 
 

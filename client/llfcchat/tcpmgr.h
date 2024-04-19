@@ -11,10 +11,14 @@ public:
     TcpMgr();
 private:
     QTcpSocket _socket;
+    QString _host;
+    uint16_t _port;
 public slots:
     void slot_tcp_connect(ServerInfo);
+    void slot_send_data(ReqId reqId, QString data);
 signals:
     void sig_con_success(bool bsuccess);
+    void sig_send_data(ReqId reqId, QString data);
 };
 
 #endif // TCPMGR_H

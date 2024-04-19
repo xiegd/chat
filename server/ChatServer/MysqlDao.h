@@ -5,7 +5,7 @@
 class SqlConnection {
 public:
 	SqlConnection(sql::Connection* con, int64_t lasttime):_con(con), _last_oper_time(lasttime){}
-	sql::Connection* _con;
+	unique_ptr<sql::Connection> _con;
 	int64_t _last_oper_time;
 };
 
@@ -43,16 +43,17 @@ public:
 	void checkConnection() {
 		std::lock_guard<std::mutex> guard(mutex_);
 		int poolsize = pool_.size();
+		// 获取当前时间戳
+		auto currentTime = std::chrono::system_clock::now().time_since_epoch();
+		// 将时间戳转换为秒
+		long long timestamp = std::chrono::duration_cast<std::chrono::seconds>(currentTime).count();
 		for (int i = 0; i < poolsize; i++) {
 			auto con = std::move(pool_.front());
 			pool_.pop();
 			Defer defer([this, &con]() {
 				pool_.push(std::move(con));
 			});
-			// 获取当前时间戳
-			auto currentTime = std::chrono::system_clock::now().time_since_epoch();
-			// 将时间戳转换为秒
-			long long timestamp = std::chrono::duration_cast<std::chrono::seconds>(currentTime).count();
+
 			if (timestamp - con->_last_oper_time < 5) {
 				continue;
 			}
@@ -66,7 +67,11 @@ public:
 			catch (sql::SQLException& e) {
 				std::cout << "Error keeping connection alive: " << e.what() << std::endl;
 				// 重新创建连接并替换旧的连接
-				assert(false);
+				sql::mysql::MySQL_Driver* driver = sql::mysql::get_mysql_driver_instance();
+				auto* newcon = driver->connect(url_, user_, pass_);
+				newcon->setSchema(schema_);
+				con->_con.reset(newcon);
+				con->_last_oper_time = timestamp;
 			}
 		}
 	}

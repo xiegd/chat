@@ -38,10 +38,11 @@ void RunServer() {
 	boost::asio::signal_set signals(io_context, SIGINT, SIGTERM);
 
 	// 设置异步等待SIGINT信号
-	signals.async_wait([&server](const boost::system::error_code& error, int signal_number) {
+	signals.async_wait([&server, &io_context](const boost::system::error_code& error, int signal_number) {
 		if (!error) {
 			std::cout << "Shutting down server..." << std::endl;
 			server->Shutdown(); // 优雅地关闭服务器
+			io_context.stop(); // 停止io_context
 		}
 		});
 
@@ -50,7 +51,7 @@ void RunServer() {
 
 	// 等待服务器关闭
 	server->Wait();
-	io_context.stop(); // 停止io_context
+
 }
 
 int main(int argc, char** argv) {

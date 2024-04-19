@@ -54,6 +54,7 @@ void LogicSystem::DealMsg() {
 		auto call_back_iter = _fun_callbacks.find(msg_node->_recvnode->_msg_id);
 		if (call_back_iter == _fun_callbacks.end()) {
 			_msg_que.pop();
+			std::cout << "msg id [" << msg_node->_recvnode->_msg_id << "] handler not found" << std::endl;
 			continue;
 		}
 		call_back_iter->second(msg_node->_session, msg_node->_recvnode->_msg_id, 
@@ -63,17 +64,17 @@ void LogicSystem::DealMsg() {
 }
 
 void LogicSystem::RegisterCallBacks() {
-	_fun_callbacks[MSG_HELLO_WORD] = std::bind(&LogicSystem::HelloWordCallBack, this,
+	_fun_callbacks[MSG_CHAT_LOGIN] = std::bind(&LogicSystem::LoginHandler, this,
 		placeholders::_1, placeholders::_2, placeholders::_3);
 }
 
-void LogicSystem::HelloWordCallBack(shared_ptr<CSession> session, const short &msg_id, const string &msg_data) {
+void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short &msg_id, const string &msg_data) {
 	Json::Reader reader;
 	Json::Value root;
 	reader.parse(msg_data, root);
-	std::cout << "recevie msg id  is " << root["id"].asInt() << " msg data is "
-		<< root["data"].asString() << endl;
-	root["data"] = "server has received msg, msg data is " + root["data"].asString();
+	std::cout << "user login uid is  " << root["uid"].asInt() << " user token  is "
+		<< root["token"].asString() << endl;
+
 	std::string return_str = root.toStyledString();
-	session->Send(return_str, root["id"].asInt());
+	session->Send(return_str, msg_id);
 }

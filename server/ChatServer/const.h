@@ -74,5 +74,5 @@ private:
 
 
 enum MSG_IDS {
-	MSG_HELLO_WORD = 1001
+	MSG_CHAT_LOGIN = 1005 , //ÓÃ»§µÇÂ½
 };

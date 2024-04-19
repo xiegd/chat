@@ -13,6 +13,10 @@ private:
     QTcpSocket _socket;
     QString _host;
     uint16_t _port;
+    QByteArray _buffer;
+    bool _b_recv_pending;
+    quint16 _message_id;
+    quint16 _message_len;
 public slots:
     void slot_tcp_connect(ServerInfo);
     void slot_send_data(ReqId reqId, QString data);

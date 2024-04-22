@@ -20,6 +20,26 @@ GetChatServerRsp StatusGrpcClient::GetChatServer(int uid)
 	}
 }
 
+GetTokenRsp StatusGrpcClient::GetToken(int uid)
+{
+	ClientContext context;
+	GetTokenRsp reply;
+	GetTokenReq request;
+	request.set_uid(uid);
+	auto stub = pool_->getConnection();
+	Status status = stub->GetToken(&context, request, &reply);
+	Defer defer([&stub, this]() {
+		pool_->returnConnection(std::move(stub));
+		});
+	if (status.ok()) {
+		return reply;
+	}
+	else {
+		//reply.set_error(ErrorCodes::RPCFailed);
+		return reply;
+	}
+}
+
 StatusGrpcClient::StatusGrpcClient()
 {
 	auto& gCfgMgr = ConfigMgr::Inst();

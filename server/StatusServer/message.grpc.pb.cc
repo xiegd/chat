@@ -84,6 +84,7 @@ VarifyService::Service::~Service() {
 
 static const char* StatusService_method_names[] = {
   "/message.StatusService/GetChatServer",
+  "/message.StatusService/GetToken",
 };
 
 std::unique_ptr< StatusService::Stub> StatusService::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -94,6 +95,7 @@ std::unique_ptr< StatusService::Stub> StatusService::NewStub(const std::shared_p
 
 StatusService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
   : channel_(channel), rpcmethod_GetChatServer_(StatusService_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_GetToken_(StatusService_method_names[1], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status StatusService::Stub::GetChatServer(::grpc::ClientContext* context, const ::message::GetChatServerReq& request, ::message::GetChatServerRsp* response) {
@@ -119,6 +121,29 @@ void StatusService::Stub::experimental_async::GetChatServer(::grpc::ClientContex
   return result;
 }
 
+::grpc::Status StatusService::Stub::GetToken(::grpc::ClientContext* context, const ::message::GetTokenReq& request, ::message::GetTokenRsp* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::message::GetTokenReq, ::message::GetTokenRsp, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_GetToken_, context, request, response);
+}
+
+void StatusService::Stub::experimental_async::GetToken(::grpc::ClientContext* context, const ::message::GetTokenReq* request, ::message::GetTokenRsp* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::message::GetTokenReq, ::message::GetTokenRsp, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_GetToken_, context, request, response, std::move(f));
+}
+
+void StatusService::Stub::experimental_async::GetToken(::grpc::ClientContext* context, const ::message::GetTokenReq* request, ::message::GetTokenRsp* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_GetToken_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::message::GetTokenRsp>* StatusService::Stub::PrepareAsyncGetTokenRaw(::grpc::ClientContext* context, const ::message::GetTokenReq& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::message::GetTokenRsp, ::message::GetTokenReq, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_GetToken_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::message::GetTokenRsp>* StatusService::Stub::AsyncGetTokenRaw(::grpc::ClientContext* context, const ::message::GetTokenReq& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncGetTokenRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
 StatusService::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       StatusService_method_names[0],
@@ -130,12 +155,29 @@ StatusService::Service::Service() {
              ::message::GetChatServerRsp* resp) {
                return service->GetChatServer(ctx, req, resp);
              }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      StatusService_method_names[1],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< StatusService::Service, ::message::GetTokenReq, ::message::GetTokenRsp, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](StatusService::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::message::GetTokenReq* req,
+             ::message::GetTokenRsp* resp) {
+               return service->GetToken(ctx, req, resp);
+             }, this)));
 }
 
 StatusService::Service::~Service() {
 }
 
 ::grpc::Status StatusService::Service::GetChatServer(::grpc::ServerContext* context, const ::message::GetChatServerReq* request, ::message::GetChatServerRsp* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status StatusService::Service::GetToken(::grpc::ServerContext* context, const ::message::GetTokenReq* request, ::message::GetTokenRsp* response) {
   (void) context;
   (void) request;
   (void) response;

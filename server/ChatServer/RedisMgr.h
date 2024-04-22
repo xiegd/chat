@@ -5,7 +5,7 @@
 class RedisConPool {
 public:
 	RedisConPool(size_t poolSize, const char* host, int port, const char* pwd)
-		: poolSize_(poolSize), host_(host), port_(port), b_stop_(false){
+		: poolSize_(poolSize), host_(host), port_(port), b_stop_(false), pwd_(pwd){
 		for (size_t i = 0; i < poolSize_; ++i) {
 			auto* context = redisConnect(host, port);
 			if (context == nullptr || context->err != 0) {
@@ -29,11 +29,19 @@ public:
 			connections_.push(context);
 		}
 
+		check_thread_ = std::thread([this]() {
+			std::this_thread::sleep_for(std::chrono::seconds(60)); // 每隔 30 秒发送一次 PING 命令
+			checkThread();
+			});
+
+		check_thread_.detach();
 	}
 
 	~RedisConPool() {
 		std::lock_guard<std::mutex> lock(mutex_);
 		while (!connections_.empty()) {
+			auto* context = connections_.front();
+			redisFree(context);
 			connections_.pop();
 		}
 	}
@@ -70,13 +78,52 @@ public:
 	}
 
 private:
+	void checkThread() {
+		std::lock_guard<std::mutex> lock(mutex_);
+		auto pool_size = connections_.size();
+		for (int i = 0; i < pool_size; i++) {
+			auto* context = connections_.front();
+			connections_.pop();
+			try {
+				auto reply = (redisReply*)redisCommand(context, "PING");
+				freeReplyObject(reply);
+				connections_.push(context);
+			}
+			catch(std::exception& exp){
+				std::cout << "Error keeping connection alive: " << exp.what() << std::endl;
+				redisFree(context);
+				context = redisConnect(host_, port_);
+				if (context == nullptr || context->err != 0) {
+					if (context != nullptr) {
+						redisFree(context);
+					}
+					continue;
+				}
+
+				auto reply = (redisReply*)redisCommand(context, "AUTH %s", pwd_);
+				if (reply->type == REDIS_REPLY_ERROR) {
+					std::cout << "认证失败" << std::endl;
+					//执行成功 释放redisCommand执行后返回的redisReply所占用的内存
+					freeReplyObject(reply);
+					continue;
+				}
+
+				//执行成功 释放redisCommand执行后返回的redisReply所占用的内存
+				freeReplyObject(reply);
+				std::cout << "认证成功" << std::endl;
+				connections_.push(context);
+			}
+		}
+	}
 	atomic<bool> b_stop_;
 	size_t poolSize_;
 	const char* host_;
+	const char* pwd_;
 	int port_;
 	std::queue<redisContext*> connections_;
 	std::mutex mutex_;
 	std::condition_variable cond_;
+	std::thread  check_thread_;
 };
 
 class RedisMgr: public Singleton<RedisMgr>, 

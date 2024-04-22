@@ -21,7 +21,6 @@ int MysqlDao::RegUser(const std::string& name, const std::string& email, const s
 	auto con = pool_->getConnection();
 	try {
 		if (con == nullptr) {
-			pool_->returnConnection(std::move(con));
 			return false;
 		}
 		// 准备调用存储过程
@@ -61,7 +60,6 @@ bool MysqlDao::CheckEmail(const std::string& name, const std::string& email) {
 	auto con = pool_->getConnection();
 	try {
 		if (con == nullptr) {
-			pool_->returnConnection(std::move(con));
 			return false;
 		}
 
@@ -99,7 +97,6 @@ bool MysqlDao::UpdatePwd(const std::string& name, const std::string& newpwd) {
 	auto con = pool_->getConnection();
 	try {
 		if (con == nullptr) {
-			pool_->returnConnection(std::move(con));
 			return false;
 		}
 
@@ -128,14 +125,16 @@ bool MysqlDao::UpdatePwd(const std::string& name, const std::string& newpwd) {
 
 bool MysqlDao::CheckPwd(const std::string& name, const std::string& pwd, UserInfo& userInfo) {
 	auto con = pool_->getConnection();
+	if (con == nullptr) {
+		return false;
+	}
+
 	Defer defer([this, &con]() {
 		pool_->returnConnection(std::move(con));
 		});
 
 	try {
-		if (con == nullptr) {
-			return false;
-		}
+	
 
 		// 准备SQL语句
 		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("SELECT * FROM user WHERE name = ?"));

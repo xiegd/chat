@@ -7,6 +7,15 @@ const RedisCli = new Redis({
   host: config_module.redis_host,       // Redis服务器主机名
   port: config_module.redis_port,        // Redis服务器端口号
   password: config_module.redis_passwd, // Redis密码
+
+  retryStrategy: (times) => {
+    // 重试策略：每隔一段时间重试一次
+    const delay = Math.min(times * 50, 2000);
+    return delay;
+  },
+
+  enableOfflineQueue: false, // 禁用离线队列
+  enableReadyCheck: true,    // 启用连接就绪检查
 });
 
 

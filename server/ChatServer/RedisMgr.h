@@ -1,7 +1,10 @@
 #pragma once
 #include "const.h"
 #include "hiredis.h"
-
+#include <queue>
+#include <atomic>
+#include <mutex>
+#include "Singleton.h"
 class RedisConPool {
 public:
 	RedisConPool(size_t poolSize, const char* host, int port, const char* pwd)
@@ -115,7 +118,7 @@ private:
 			}
 		}
 	}
-	atomic<bool> b_stop_;
+	std::atomic<bool> b_stop_;
 	size_t poolSize_;
 	const char* host_;
 	const char* pwd_;

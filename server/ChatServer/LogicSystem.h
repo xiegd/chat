@@ -10,6 +10,8 @@
 #include <json/json.h>
 #include <json/value.h>
 #include <json/reader.h>
+#include <unordered_map>
+#include "data.h"
 
 typedef  function<void(shared_ptr<CSession>, const short &msg_id, const string &msg_data)> FunCallBack;
 class LogicSystem:public Singleton<LogicSystem>
@@ -29,5 +31,6 @@ private:
 	std::condition_variable _consume;
 	bool _b_stop;
 	std::map<short, FunCallBack> _fun_callbacks;
+	std::unordered_map<int, std::shared_ptr<UserInfo>> _users;
 };
 

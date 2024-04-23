@@ -1,5 +1,7 @@
 #include "LogicSystem.h"
 #include "StatusGrpcClient.h"
+#include "MysqlMgr.h"
+#include "const.h"
 
 using namespace std;
 
@@ -73,14 +75,40 @@ void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short &msg_id
 	Json::Reader reader;
 	Json::Value root;
 	reader.parse(msg_data, root);
-	std::cout << "user login uid is  " << root["uid"].asInt() << " user token  is "
+	auto uid = root["uid"].asInt();
+	std::cout << "user login uid is  " << uid << " user token  is "
 		<< root["token"].asString() << endl;
 	//从状态服务器获取token匹配是否准确
-	auto rsp = StatusGrpcClient::GetInstance()->Login(root["uid"].asInt(), root["token"].asString());
+	auto rsp = StatusGrpcClient::GetInstance()->Login(uid, root["token"].asString());
 	Json::Value  rtvalue;
+	Defer defer([this, &rtvalue, session, msg_id]() {
+		std::string return_str = rtvalue.toStyledString();
+		session->Send(return_str, msg_id);
+	});
+
 	rtvalue["error"] = rsp.error();
-	rtvalue["uid"] = rsp.uid();
+	if (rsp.error() != ErrorCodes::Success) {
+		return;
+	}
+
+	//内存中查询用户信息
+	auto find_iter = _users.find(uid);
+	std::shared_ptr<UserInfo> user_info = nullptr;
+	if (find_iter == _users.end()) {
+		//查询数据库
+		user_info = MysqlMgr::GetInstance()->GetUser(uid);
+		if (user_info == nullptr) {
+			rtvalue["error"] = ErrorCodes::UidInvalid;
+			return;
+		}
+
+		_users[uid] = user_info;
+	}
+	else {
+		user_info = find_iter->second;
+	}
+
+	rtvalue["uid"] = uid;
 	rtvalue["token"] = rsp.token();
-	std::string return_str = rtvalue.toStyledString();
-	session->Send(return_str, msg_id);
+	rtvalue["email"] = user_info->email;
 }

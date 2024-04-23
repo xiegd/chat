@@ -24,7 +24,7 @@ int MysqlDao::RegUser(const std::string& name, const std::string& email, const s
 			return false;
 		}
 		// 准备调用存储过程
-		unique_ptr < sql::PreparedStatement > stmt(con->_con->prepareStatement("CALL reg_user(?,?,?,@result)"));
+		std::unique_ptr < sql::PreparedStatement > stmt(con->_con->prepareStatement("CALL reg_user(?,?,?,@result)"));
 		// 设置输入参数
 		stmt->setString(1, name);
 		stmt->setString(2, email);
@@ -36,11 +36,11 @@ int MysqlDao::RegUser(const std::string& name, const std::string& email, const s
 		stmt->execute();
 		// 如果存储过程设置了会话变量或有其他方式获取输出参数的值，你可以在这里执行SELECT查询来获取它们
 	   // 例如，如果存储过程设置了一个会话变量@result来存储输出结果，可以这样获取：
-	   unique_ptr<sql::Statement> stmtResult(con->_con->createStatement());
-	  unique_ptr<sql::ResultSet> res(stmtResult->executeQuery("SELECT @result AS result"));
+	   std::unique_ptr<sql::Statement> stmtResult(con->_con->createStatement());
+	  std::unique_ptr<sql::ResultSet> res(stmtResult->executeQuery("SELECT @result AS result"));
 	  if (res->next()) {
 	       int result = res->getInt("result");
-	      cout << "Result: " << result << endl;
+	      std::cout << "Result: " << result << std::endl;
 		  pool_->returnConnection(std::move(con));
 		  return result;
 	  }
@@ -168,4 +168,41 @@ bool MysqlDao::CheckPwd(const std::string& name, const std::string& pwd, UserInf
 	}
 }
 
+std::shared_ptr<UserInfo> MysqlDao::GetUser(int uid)
+{
+	auto con = pool_->getConnection();
+	if (con == nullptr) {
+		return nullptr;
+	}
+
+	Defer defer([this, &con]() {
+		pool_->returnConnection(std::move(con));
+		});
+
+	try {
+		// 准备SQL语句
+		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("SELECT * FROM user WHERE uid = ?"));
+		pstmt->setInt(1, uid); // 将uid替换为你要查询的uid
+
+		// 执行查询
+		std::unique_ptr<sql::ResultSet> res(pstmt->executeQuery());
+		std::shared_ptr<UserInfo> user_ptr = nullptr;
+		// 遍历结果集
+		while (res->next()) {
+			user_ptr.reset(new UserInfo);
+			user_ptr->pwd = res->getString("pwd");
+			user_ptr->email = res->getString("email");
+			user_ptr->name= res->getString("name");
+			user_ptr->uid = uid;
+			break;
+		}
+		return user_ptr;
+	}
+	catch (sql::SQLException& e) {
+		std::cerr << "SQLException: " << e.what();
+		std::cerr << " (MySQL error code: " << e.getErrorCode();
+		std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+		return nullptr;
+	}
+}
 

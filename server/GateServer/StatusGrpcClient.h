@@ -9,6 +9,8 @@ using grpc::ClientContext;
 
 using message::GetChatServerReq;
 using message::GetChatServerRsp;
+using message::LoginRsp;
+using message::LoginReq;
 using message::StatusService;
 
 class StatusConPool {
@@ -81,7 +83,7 @@ public:
 
 	}
 	GetChatServerRsp GetChatServer(int uid);
-
+	LoginRsp Login(int uid, std::string token);
 private:
 	StatusGrpcClient();
 	std::unique_ptr<StatusConPool> pool_;

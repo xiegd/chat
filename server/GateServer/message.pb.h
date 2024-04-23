@@ -61,26 +61,26 @@ extern GetChatServerReqDefaultTypeInternal _GetChatServerReq_default_instance_;
 class GetChatServerRsp;
 class GetChatServerRspDefaultTypeInternal;
 extern GetChatServerRspDefaultTypeInternal _GetChatServerRsp_default_instance_;
-class GetTokenReq;
-class GetTokenReqDefaultTypeInternal;
-extern GetTokenReqDefaultTypeInternal _GetTokenReq_default_instance_;
-class GetTokenRsp;
-class GetTokenRspDefaultTypeInternal;
-extern GetTokenRspDefaultTypeInternal _GetTokenRsp_default_instance_;
 class GetVarifyReq;
 class GetVarifyReqDefaultTypeInternal;
 extern GetVarifyReqDefaultTypeInternal _GetVarifyReq_default_instance_;
 class GetVarifyRsp;
 class GetVarifyRspDefaultTypeInternal;
 extern GetVarifyRspDefaultTypeInternal _GetVarifyRsp_default_instance_;
+class LoginReq;
+class LoginReqDefaultTypeInternal;
+extern LoginReqDefaultTypeInternal _LoginReq_default_instance_;
+class LoginRsp;
+class LoginRspDefaultTypeInternal;
+extern LoginRspDefaultTypeInternal _LoginRsp_default_instance_;
 }  // namespace message
 PROTOBUF_NAMESPACE_OPEN
 template<> ::message::GetChatServerReq* Arena::CreateMaybeMessage<::message::GetChatServerReq>(Arena*);
 template<> ::message::GetChatServerRsp* Arena::CreateMaybeMessage<::message::GetChatServerRsp>(Arena*);
-template<> ::message::GetTokenReq* Arena::CreateMaybeMessage<::message::GetTokenReq>(Arena*);
-template<> ::message::GetTokenRsp* Arena::CreateMaybeMessage<::message::GetTokenRsp>(Arena*);
 template<> ::message::GetVarifyReq* Arena::CreateMaybeMessage<::message::GetVarifyReq>(Arena*);
 template<> ::message::GetVarifyRsp* Arena::CreateMaybeMessage<::message::GetVarifyRsp>(Arena*);
+template<> ::message::LoginReq* Arena::CreateMaybeMessage<::message::LoginReq>(Arena*);
+template<> ::message::LoginRsp* Arena::CreateMaybeMessage<::message::LoginRsp>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace message {
 
@@ -731,23 +731,23 @@ class GetChatServerRsp PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
-class GetTokenReq PROTOBUF_FINAL :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:message.GetTokenReq) */ {
+class LoginReq PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:message.LoginReq) */ {
  public:
-  inline GetTokenReq() : GetTokenReq(nullptr) {}
-  virtual ~GetTokenReq();
+  inline LoginReq() : LoginReq(nullptr) {}
+  virtual ~LoginReq();
 
-  GetTokenReq(const GetTokenReq& from);
-  GetTokenReq(GetTokenReq&& from) noexcept
-    : GetTokenReq() {
+  LoginReq(const LoginReq& from);
+  LoginReq(LoginReq&& from) noexcept
+    : LoginReq() {
     *this = ::std::move(from);
   }
 
-  inline GetTokenReq& operator=(const GetTokenReq& from) {
+  inline LoginReq& operator=(const LoginReq& from) {
     CopyFrom(from);
     return *this;
   }
-  inline GetTokenReq& operator=(GetTokenReq&& from) noexcept {
+  inline LoginReq& operator=(LoginReq&& from) noexcept {
     if (GetArena() == from.GetArena()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -765,20 +765,20 @@ class GetTokenReq PROTOBUF_FINAL :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const GetTokenReq& default_instance();
+  static const LoginReq& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const GetTokenReq* internal_default_instance() {
-    return reinterpret_cast<const GetTokenReq*>(
-               &_GetTokenReq_default_instance_);
+  static inline const LoginReq* internal_default_instance() {
+    return reinterpret_cast<const LoginReq*>(
+               &_LoginReq_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     4;
 
-  friend void swap(GetTokenReq& a, GetTokenReq& b) {
+  friend void swap(LoginReq& a, LoginReq& b) {
     a.Swap(&b);
   }
-  inline void Swap(GetTokenReq* other) {
+  inline void Swap(LoginReq* other) {
     if (other == this) return;
     if (GetArena() == other->GetArena()) {
       InternalSwap(other);
@@ -786,7 +786,7 @@ class GetTokenReq PROTOBUF_FINAL :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(GetTokenReq* other) {
+  void UnsafeArenaSwap(LoginReq* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -794,17 +794,17 @@ class GetTokenReq PROTOBUF_FINAL :
 
   // implements Message ----------------------------------------------
 
-  inline GetTokenReq* New() const final {
-    return CreateMaybeMessage<GetTokenReq>(nullptr);
+  inline LoginReq* New() const final {
+    return CreateMaybeMessage<LoginReq>(nullptr);
   }
 
-  GetTokenReq* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<GetTokenReq>(arena);
+  LoginReq* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<LoginReq>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const GetTokenReq& from);
-  void MergeFrom(const GetTokenReq& from);
+  void CopyFrom(const LoginReq& from);
+  void MergeFrom(const LoginReq& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -818,150 +818,13 @@ class GetTokenReq PROTOBUF_FINAL :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(GetTokenReq* other);
+  void InternalSwap(LoginReq* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "message.GetTokenReq";
+    return "message.LoginReq";
   }
   protected:
-  explicit GetTokenReq(::PROTOBUF_NAMESPACE_ID::Arena* arena);
-  private:
-  static void ArenaDtor(void* object);
-  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
-  public:
-
-  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
-  private:
-  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
-    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_message_2eproto);
-    return ::descriptor_table_message_2eproto.file_level_metadata[kIndexInFileMessages];
-  }
-
-  public:
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kUidFieldNumber = 1,
-  };
-  // int32 uid = 1;
-  void clear_uid();
-  ::PROTOBUF_NAMESPACE_ID::int32 uid() const;
-  void set_uid(::PROTOBUF_NAMESPACE_ID::int32 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_uid() const;
-  void _internal_set_uid(::PROTOBUF_NAMESPACE_ID::int32 value);
-  public:
-
-  // @@protoc_insertion_point(class_scope:message.GetTokenReq)
- private:
-  class _Internal;
-
-  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
-  typedef void InternalArenaConstructable_;
-  typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::int32 uid_;
-  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  friend struct ::TableStruct_message_2eproto;
-};
-// -------------------------------------------------------------------
-
-class GetTokenRsp PROTOBUF_FINAL :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:message.GetTokenRsp) */ {
- public:
-  inline GetTokenRsp() : GetTokenRsp(nullptr) {}
-  virtual ~GetTokenRsp();
-
-  GetTokenRsp(const GetTokenRsp& from);
-  GetTokenRsp(GetTokenRsp&& from) noexcept
-    : GetTokenRsp() {
-    *this = ::std::move(from);
-  }
-
-  inline GetTokenRsp& operator=(const GetTokenRsp& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline GetTokenRsp& operator=(GetTokenRsp&& from) noexcept {
-    if (GetArena() == from.GetArena()) {
-      if (this != &from) InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
-    return GetMetadataStatic().descriptor;
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
-    return GetMetadataStatic().reflection;
-  }
-  static const GetTokenRsp& default_instance();
-
-  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const GetTokenRsp* internal_default_instance() {
-    return reinterpret_cast<const GetTokenRsp*>(
-               &_GetTokenRsp_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    5;
-
-  friend void swap(GetTokenRsp& a, GetTokenRsp& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(GetTokenRsp* other) {
-    if (other == this) return;
-    if (GetArena() == other->GetArena()) {
-      InternalSwap(other);
-    } else {
-      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(GetTokenRsp* other) {
-    if (other == this) return;
-    GOOGLE_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  inline GetTokenRsp* New() const final {
-    return CreateMaybeMessage<GetTokenRsp>(nullptr);
-  }
-
-  GetTokenRsp* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<GetTokenRsp>(arena);
-  }
-  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const GetTokenRsp& from);
-  void MergeFrom(const GetTokenRsp& from);
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
-  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
-      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  inline void SharedCtor();
-  inline void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(GetTokenRsp* other);
-  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
-  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "message.GetTokenRsp";
-  }
-  protected:
-  explicit GetTokenRsp(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  explicit LoginReq(::PROTOBUF_NAMESPACE_ID::Arena* arena);
   private:
   static void ArenaDtor(void* object);
   inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
@@ -1009,7 +872,7 @@ class GetTokenRsp PROTOBUF_FINAL :
   void _internal_set_uid(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // @@protoc_insertion_point(class_scope:message.GetTokenRsp)
+  // @@protoc_insertion_point(class_scope:message.LoginReq)
  private:
   class _Internal;
 
@@ -1017,6 +880,172 @@ class GetTokenRsp PROTOBUF_FINAL :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr token_;
+  ::PROTOBUF_NAMESPACE_ID::int32 uid_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_message_2eproto;
+};
+// -------------------------------------------------------------------
+
+class LoginRsp PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:message.LoginRsp) */ {
+ public:
+  inline LoginRsp() : LoginRsp(nullptr) {}
+  virtual ~LoginRsp();
+
+  LoginRsp(const LoginRsp& from);
+  LoginRsp(LoginRsp&& from) noexcept
+    : LoginRsp() {
+    *this = ::std::move(from);
+  }
+
+  inline LoginRsp& operator=(const LoginRsp& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline LoginRsp& operator=(LoginRsp&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const LoginRsp& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const LoginRsp* internal_default_instance() {
+    return reinterpret_cast<const LoginRsp*>(
+               &_LoginRsp_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  friend void swap(LoginRsp& a, LoginRsp& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(LoginRsp* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(LoginRsp* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline LoginRsp* New() const final {
+    return CreateMaybeMessage<LoginRsp>(nullptr);
+  }
+
+  LoginRsp* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<LoginRsp>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const LoginRsp& from);
+  void MergeFrom(const LoginRsp& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(LoginRsp* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "message.LoginRsp";
+  }
+  protected:
+  explicit LoginRsp(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_message_2eproto);
+    return ::descriptor_table_message_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kTokenFieldNumber = 3,
+    kErrorFieldNumber = 1,
+    kUidFieldNumber = 2,
+  };
+  // string token = 3;
+  void clear_token();
+  const std::string& token() const;
+  void set_token(const std::string& value);
+  void set_token(std::string&& value);
+  void set_token(const char* value);
+  void set_token(const char* value, size_t size);
+  std::string* mutable_token();
+  std::string* release_token();
+  void set_allocated_token(std::string* token);
+  private:
+  const std::string& _internal_token() const;
+  void _internal_set_token(const std::string& value);
+  std::string* _internal_mutable_token();
+  public:
+
+  // int32 error = 1;
+  void clear_error();
+  ::PROTOBUF_NAMESPACE_ID::int32 error() const;
+  void set_error(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_error() const;
+  void _internal_set_error(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 uid = 2;
+  void clear_uid();
+  ::PROTOBUF_NAMESPACE_ID::int32 uid() const;
+  void set_uid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_uid() const;
+  void _internal_set_uid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:message.LoginRsp)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr token_;
+  ::PROTOBUF_NAMESPACE_ID::int32 error_;
   ::PROTOBUF_NAMESPACE_ID::int32 uid_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_message_2eproto;
@@ -1478,104 +1507,80 @@ inline void GetChatServerRsp::set_allocated_token(std::string* token) {
 
 // -------------------------------------------------------------------
 
-// GetTokenReq
+// LoginReq
 
 // int32 uid = 1;
-inline void GetTokenReq::clear_uid() {
+inline void LoginReq::clear_uid() {
   uid_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 GetTokenReq::_internal_uid() const {
+inline ::PROTOBUF_NAMESPACE_ID::int32 LoginReq::_internal_uid() const {
   return uid_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 GetTokenReq::uid() const {
-  // @@protoc_insertion_point(field_get:message.GetTokenReq.uid)
+inline ::PROTOBUF_NAMESPACE_ID::int32 LoginReq::uid() const {
+  // @@protoc_insertion_point(field_get:message.LoginReq.uid)
   return _internal_uid();
 }
-inline void GetTokenReq::_internal_set_uid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void LoginReq::_internal_set_uid(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
   uid_ = value;
 }
-inline void GetTokenReq::set_uid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void LoginReq::set_uid(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_uid(value);
-  // @@protoc_insertion_point(field_set:message.GetTokenReq.uid)
-}
-
-// -------------------------------------------------------------------
-
-// GetTokenRsp
-
-// int32 uid = 1;
-inline void GetTokenRsp::clear_uid() {
-  uid_ = 0;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 GetTokenRsp::_internal_uid() const {
-  return uid_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 GetTokenRsp::uid() const {
-  // @@protoc_insertion_point(field_get:message.GetTokenRsp.uid)
-  return _internal_uid();
-}
-inline void GetTokenRsp::_internal_set_uid(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  
-  uid_ = value;
-}
-inline void GetTokenRsp::set_uid(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_uid(value);
-  // @@protoc_insertion_point(field_set:message.GetTokenRsp.uid)
+  // @@protoc_insertion_point(field_set:message.LoginReq.uid)
 }
 
 // string token = 2;
-inline void GetTokenRsp::clear_token() {
+inline void LoginReq::clear_token() {
   token_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
-inline const std::string& GetTokenRsp::token() const {
-  // @@protoc_insertion_point(field_get:message.GetTokenRsp.token)
+inline const std::string& LoginReq::token() const {
+  // @@protoc_insertion_point(field_get:message.LoginReq.token)
   return _internal_token();
 }
-inline void GetTokenRsp::set_token(const std::string& value) {
+inline void LoginReq::set_token(const std::string& value) {
   _internal_set_token(value);
-  // @@protoc_insertion_point(field_set:message.GetTokenRsp.token)
+  // @@protoc_insertion_point(field_set:message.LoginReq.token)
 }
-inline std::string* GetTokenRsp::mutable_token() {
-  // @@protoc_insertion_point(field_mutable:message.GetTokenRsp.token)
+inline std::string* LoginReq::mutable_token() {
+  // @@protoc_insertion_point(field_mutable:message.LoginReq.token)
   return _internal_mutable_token();
 }
-inline const std::string& GetTokenRsp::_internal_token() const {
+inline const std::string& LoginReq::_internal_token() const {
   return token_.Get();
 }
-inline void GetTokenRsp::_internal_set_token(const std::string& value) {
+inline void LoginReq::_internal_set_token(const std::string& value) {
   
   token_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
 }
-inline void GetTokenRsp::set_token(std::string&& value) {
+inline void LoginReq::set_token(std::string&& value) {
   
   token_.Set(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
-  // @@protoc_insertion_point(field_set_rvalue:message.GetTokenRsp.token)
+  // @@protoc_insertion_point(field_set_rvalue:message.LoginReq.token)
 }
-inline void GetTokenRsp::set_token(const char* value) {
+inline void LoginReq::set_token(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
   token_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
               GetArena());
-  // @@protoc_insertion_point(field_set_char:message.GetTokenRsp.token)
+  // @@protoc_insertion_point(field_set_char:message.LoginReq.token)
 }
-inline void GetTokenRsp::set_token(const char* value,
+inline void LoginReq::set_token(const char* value,
     size_t size) {
   
   token_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
       reinterpret_cast<const char*>(value), size), GetArena());
-  // @@protoc_insertion_point(field_set_pointer:message.GetTokenRsp.token)
+  // @@protoc_insertion_point(field_set_pointer:message.LoginReq.token)
 }
-inline std::string* GetTokenRsp::_internal_mutable_token() {
+inline std::string* LoginReq::_internal_mutable_token() {
   
   return token_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
-inline std::string* GetTokenRsp::release_token() {
-  // @@protoc_insertion_point(field_release:message.GetTokenRsp.token)
+inline std::string* LoginReq::release_token() {
+  // @@protoc_insertion_point(field_release:message.LoginReq.token)
   return token_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
-inline void GetTokenRsp::set_allocated_token(std::string* token) {
+inline void LoginReq::set_allocated_token(std::string* token) {
   if (token != nullptr) {
     
   } else {
@@ -1583,7 +1588,113 @@ inline void GetTokenRsp::set_allocated_token(std::string* token) {
   }
   token_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), token,
       GetArena());
-  // @@protoc_insertion_point(field_set_allocated:message.GetTokenRsp.token)
+  // @@protoc_insertion_point(field_set_allocated:message.LoginReq.token)
+}
+
+// -------------------------------------------------------------------
+
+// LoginRsp
+
+// int32 error = 1;
+inline void LoginRsp::clear_error() {
+  error_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 LoginRsp::_internal_error() const {
+  return error_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 LoginRsp::error() const {
+  // @@protoc_insertion_point(field_get:message.LoginRsp.error)
+  return _internal_error();
+}
+inline void LoginRsp::_internal_set_error(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  error_ = value;
+}
+inline void LoginRsp::set_error(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_error(value);
+  // @@protoc_insertion_point(field_set:message.LoginRsp.error)
+}
+
+// int32 uid = 2;
+inline void LoginRsp::clear_uid() {
+  uid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 LoginRsp::_internal_uid() const {
+  return uid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 LoginRsp::uid() const {
+  // @@protoc_insertion_point(field_get:message.LoginRsp.uid)
+  return _internal_uid();
+}
+inline void LoginRsp::_internal_set_uid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  uid_ = value;
+}
+inline void LoginRsp::set_uid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_uid(value);
+  // @@protoc_insertion_point(field_set:message.LoginRsp.uid)
+}
+
+// string token = 3;
+inline void LoginRsp::clear_token() {
+  token_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline const std::string& LoginRsp::token() const {
+  // @@protoc_insertion_point(field_get:message.LoginRsp.token)
+  return _internal_token();
+}
+inline void LoginRsp::set_token(const std::string& value) {
+  _internal_set_token(value);
+  // @@protoc_insertion_point(field_set:message.LoginRsp.token)
+}
+inline std::string* LoginRsp::mutable_token() {
+  // @@protoc_insertion_point(field_mutable:message.LoginRsp.token)
+  return _internal_mutable_token();
+}
+inline const std::string& LoginRsp::_internal_token() const {
+  return token_.Get();
+}
+inline void LoginRsp::_internal_set_token(const std::string& value) {
+  
+  token_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+}
+inline void LoginRsp::set_token(std::string&& value) {
+  
+  token_.Set(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:message.LoginRsp.token)
+}
+inline void LoginRsp::set_token(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  token_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+              GetArena());
+  // @@protoc_insertion_point(field_set_char:message.LoginRsp.token)
+}
+inline void LoginRsp::set_token(const char* value,
+    size_t size) {
+  
+  token_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:message.LoginRsp.token)
+}
+inline std::string* LoginRsp::_internal_mutable_token() {
+  
+  return token_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline std::string* LoginRsp::release_token() {
+  // @@protoc_insertion_point(field_release:message.LoginRsp.token)
+  return token_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void LoginRsp::set_allocated_token(std::string* token) {
+  if (token != nullptr) {
+    
+  } else {
+    
+  }
+  token_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), token,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:message.LoginRsp.token)
 }
 
 #ifdef __GNUC__

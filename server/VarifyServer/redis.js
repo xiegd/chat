@@ -24,7 +24,21 @@ const RedisCli = new Redis({
  */
 RedisCli.on("error", function (err) {
   console.log("RedisCli connect error");
-  RedisCli.quit();
+  if (RedisCli.status === "end") {
+    console.log("RedisCli connection already closed");
+  } else {
+    RedisCli.quit((err, reply) => {
+      try{
+        if (err) {
+          console.error("Error quitting RedisCli:", err);
+        } else {
+          console.log("RedisCli connection closed");
+        }
+      }catch(error){
+        console.log("rediscli quit exception ,err is ", error)
+      }
+    });
+  }
 });
 
 /**
@@ -95,7 +109,17 @@ async function SetRedisExpire(key,value, exptime){
  * 退出函数
  */
 function Quit(){
-    RedisCli.quit();
+  RedisCli.quit((err, reply) => {
+    try{
+      if (err) {
+        console.error("Error quitting RedisCli:", err);
+      } else {
+        console.log("RedisCli connection closed");
+      }
+    }catch(error){
+      console.log("rediscli quit exception ,err is ", error)
+    }
+  })
 }
 
 module.exports = {GetRedis, QueryRedis, Quit, SetRedisExpire,}

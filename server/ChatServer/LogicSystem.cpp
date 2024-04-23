@@ -1,4 +1,5 @@
 #include "LogicSystem.h"
+#include "StatusGrpcClient.h"
 
 using namespace std;
 
@@ -74,7 +75,12 @@ void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short &msg_id
 	reader.parse(msg_data, root);
 	std::cout << "user login uid is  " << root["uid"].asInt() << " user token  is "
 		<< root["token"].asString() << endl;
-
-	std::string return_str = root.toStyledString();
+	//从状态服务器获取token匹配是否准确
+	auto rsp = StatusGrpcClient::GetInstance()->Login(root["uid"].asInt(), root["token"].asString());
+	Json::Value  rtvalue;
+	rtvalue["error"] = rsp.error();
+	rtvalue["uid"] = rsp.uid();
+	rtvalue["token"] = rsp.token();
+	std::string return_str = rtvalue.toStyledString();
 	session->Send(return_str, msg_id);
 }

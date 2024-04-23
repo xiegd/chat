@@ -84,7 +84,7 @@ VarifyService::Service::~Service() {
 
 static const char* StatusService_method_names[] = {
   "/message.StatusService/GetChatServer",
-  "/message.StatusService/GetToken",
+  "/message.StatusService/Login",
 };
 
 std::unique_ptr< StatusService::Stub> StatusService::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -95,7 +95,7 @@ std::unique_ptr< StatusService::Stub> StatusService::NewStub(const std::shared_p
 
 StatusService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
   : channel_(channel), rpcmethod_GetChatServer_(StatusService_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_GetToken_(StatusService_method_names[1], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_Login_(StatusService_method_names[1], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status StatusService::Stub::GetChatServer(::grpc::ClientContext* context, const ::message::GetChatServerReq& request, ::message::GetChatServerRsp* response) {
@@ -121,25 +121,25 @@ void StatusService::Stub::experimental_async::GetChatServer(::grpc::ClientContex
   return result;
 }
 
-::grpc::Status StatusService::Stub::GetToken(::grpc::ClientContext* context, const ::message::GetTokenReq& request, ::message::GetTokenRsp* response) {
-  return ::grpc::internal::BlockingUnaryCall< ::message::GetTokenReq, ::message::GetTokenRsp, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_GetToken_, context, request, response);
+::grpc::Status StatusService::Stub::Login(::grpc::ClientContext* context, const ::message::LoginReq& request, ::message::LoginRsp* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::message::LoginReq, ::message::LoginRsp, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_Login_, context, request, response);
 }
 
-void StatusService::Stub::experimental_async::GetToken(::grpc::ClientContext* context, const ::message::GetTokenReq* request, ::message::GetTokenRsp* response, std::function<void(::grpc::Status)> f) {
-  ::grpc::internal::CallbackUnaryCall< ::message::GetTokenReq, ::message::GetTokenRsp, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_GetToken_, context, request, response, std::move(f));
+void StatusService::Stub::experimental_async::Login(::grpc::ClientContext* context, const ::message::LoginReq* request, ::message::LoginRsp* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::message::LoginReq, ::message::LoginRsp, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_Login_, context, request, response, std::move(f));
 }
 
-void StatusService::Stub::experimental_async::GetToken(::grpc::ClientContext* context, const ::message::GetTokenReq* request, ::message::GetTokenRsp* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_GetToken_, context, request, response, reactor);
+void StatusService::Stub::experimental_async::Login(::grpc::ClientContext* context, const ::message::LoginReq* request, ::message::LoginRsp* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_Login_, context, request, response, reactor);
 }
 
-::grpc::ClientAsyncResponseReader< ::message::GetTokenRsp>* StatusService::Stub::PrepareAsyncGetTokenRaw(::grpc::ClientContext* context, const ::message::GetTokenReq& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::message::GetTokenRsp, ::message::GetTokenReq, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_GetToken_, context, request);
+::grpc::ClientAsyncResponseReader< ::message::LoginRsp>* StatusService::Stub::PrepareAsyncLoginRaw(::grpc::ClientContext* context, const ::message::LoginReq& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::message::LoginRsp, ::message::LoginReq, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_Login_, context, request);
 }
 
-::grpc::ClientAsyncResponseReader< ::message::GetTokenRsp>* StatusService::Stub::AsyncGetTokenRaw(::grpc::ClientContext* context, const ::message::GetTokenReq& request, ::grpc::CompletionQueue* cq) {
+::grpc::ClientAsyncResponseReader< ::message::LoginRsp>* StatusService::Stub::AsyncLoginRaw(::grpc::ClientContext* context, const ::message::LoginReq& request, ::grpc::CompletionQueue* cq) {
   auto* result =
-    this->PrepareAsyncGetTokenRaw(context, request, cq);
+    this->PrepareAsyncLoginRaw(context, request, cq);
   result->StartCall();
   return result;
 }
@@ -158,12 +158,12 @@ StatusService::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       StatusService_method_names[1],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
-      new ::grpc::internal::RpcMethodHandler< StatusService::Service, ::message::GetTokenReq, ::message::GetTokenRsp, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+      new ::grpc::internal::RpcMethodHandler< StatusService::Service, ::message::LoginReq, ::message::LoginRsp, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
           [](StatusService::Service* service,
              ::grpc::ServerContext* ctx,
-             const ::message::GetTokenReq* req,
-             ::message::GetTokenRsp* resp) {
-               return service->GetToken(ctx, req, resp);
+             const ::message::LoginReq* req,
+             ::message::LoginRsp* resp) {
+               return service->Login(ctx, req, resp);
              }, this)));
 }
 
@@ -177,7 +177,7 @@ StatusService::Service::~Service() {
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
-::grpc::Status StatusService::Service::GetToken(::grpc::ServerContext* context, const ::message::GetTokenReq* request, ::message::GetTokenRsp* response) {
+::grpc::Status StatusService::Service::Login(::grpc::ServerContext* context, const ::message::LoginReq* request, ::message::LoginRsp* response) {
   (void) context;
   (void) request;
   (void) response;

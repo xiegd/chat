@@ -27,11 +27,12 @@ message GetChatServerRsp {
   string token = 4;
 }
 
-message GetTokenReq{
+message LoginReq{
 	int32 uid = 1;
+	string token= 2;
 }
 
-message GetTokenRsp {
+message LoginRsp {
 	int32 error = 1;
 	int32 uid = 2;
 	string token = 3;
@@ -39,5 +40,5 @@ message GetTokenRsp {
 
 service StatusService {
 	rpc GetChatServer (GetChatServerReq) returns (GetChatServerRsp) {}
-	rpc GetToken(GetTokenReq) returns(GetTokenRsp);
+	rpc Login(LoginReq) returns(LoginRsp);
 }

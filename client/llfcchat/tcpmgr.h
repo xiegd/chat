@@ -3,6 +3,7 @@
 #include <QTcpSocket>
 #include "singleton.h"
 #include "global.h"
+#include <functional>
 class TcpMgr:public QObject, public Singleton<TcpMgr>,
         public std::enable_shared_from_this<TcpMgr>
 {
@@ -10,6 +11,8 @@ class TcpMgr:public QObject, public Singleton<TcpMgr>,
 public:
     TcpMgr();
 private:
+    void initHandlers();
+    void handleMsg(ReqId id, int len, QByteArray data);
     QTcpSocket _socket;
     QString _host;
     uint16_t _port;
@@ -17,6 +20,7 @@ private:
     bool _b_recv_pending;
     quint16 _message_id;
     quint16 _message_len;
+    QMap<ReqId, std::function<void(ReqId id, int len, QByteArray data)>> _handlers;
 public slots:
     void slot_tcp_connect(ServerInfo);
     void slot_send_data(ReqId reqId, QString data);

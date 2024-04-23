@@ -81,9 +81,9 @@ void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short &msg_id
 	//从状态服务器获取token匹配是否准确
 	auto rsp = StatusGrpcClient::GetInstance()->Login(uid, root["token"].asString());
 	Json::Value  rtvalue;
-	Defer defer([this, &rtvalue, session, msg_id]() {
+	Defer defer([this, &rtvalue, session]() {
 		std::string return_str = rtvalue.toStyledString();
-		session->Send(return_str, msg_id);
+		session->Send(return_str, MSG_CHAT_LOGIN_RSP);
 	});
 
 	rtvalue["error"] = rsp.error();
@@ -110,5 +110,5 @@ void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short &msg_id
 
 	rtvalue["uid"] = uid;
 	rtvalue["token"] = rsp.token();
-	rtvalue["email"] = user_info->email;
+	rtvalue["name"] = user_info->name;
 }

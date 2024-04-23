@@ -44,9 +44,10 @@ TcpMgr::TcpMgr():_host(""),_port(0),_b_recv_pending(false),_message_id(0),_messa
                _b_recv_pending = false;
                // 读取消息体
                QByteArray messageBody = _buffer.mid(0, _message_len);
-                qDebug() << "receive body msg is " << messageBody ;
+               qDebug() << "receive body msg is " << messageBody ;
 
                _buffer = _buffer.mid(_message_len);
+               handleMsg(ReqId(_message_id),_message_len, messageBody);
            }
 
        });
@@ -90,8 +91,28 @@ TcpMgr::TcpMgr():_host(""),_port(0),_b_recv_pending(false),_message_id(0),_messa
         QObject::connect(&_socket, &QTcpSocket::disconnected, [&]() {
             qDebug() << "Disconnected from server.";
         });
-
+        //连接发送信号用来发送数据
         QObject::connect(this, &TcpMgr::sig_send_data, this, &TcpMgr::slot_send_data);
+        //注册消息
+        initHandlers();
+}
+
+void TcpMgr::initHandlers()
+{
+    _handlers.insert(ID_CHAT_LOGIN_RSP, [](ReqId id, int len, QByteArray data){
+        qDebug()<< "handle id is "<< id << " data is " << data;
+    });
+}
+
+void TcpMgr::handleMsg(ReqId id, int len, QByteArray data)
+{
+   auto find_iter =  _handlers.find(id);
+   if(find_iter == _handlers.end()){
+        qDebug()<< "not found id ["<< id << "] to handle";
+        return ;
+   }
+
+   find_iter.value()(id,len,data);
 }
 
 void TcpMgr::slot_tcp_connect(ServerInfo si)

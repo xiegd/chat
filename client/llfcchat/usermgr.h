@@ -10,7 +10,8 @@ class UserMgr:public QObject,public Singleton<UserMgr>,
     Q_OBJECT
 public:
     ~ UserMgr();
-    void SetUserInfo()
+    void SetName(std::string name);
+    void SetUid(std::string uid);
 private:
     UserMgr();
 };

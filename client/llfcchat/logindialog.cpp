@@ -121,6 +121,7 @@ bool LoginDialog::enableBtn(bool enabled)
 {
     ui->login_btn->setEnabled(enabled);
     ui->reg_btn->setEnabled(enabled);
+    return true;
 }
 
 void LoginDialog::on_login_btn_clicked()

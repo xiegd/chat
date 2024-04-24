@@ -4,13 +4,16 @@
 #include "singleton.h"
 #include "global.h"
 #include <functional>
+#include <QObject>
 class TcpMgr:public QObject, public Singleton<TcpMgr>,
         public std::enable_shared_from_this<TcpMgr>
 {
     Q_OBJECT
 public:
-    TcpMgr();
+   ~ TcpMgr();
 private:
+    friend class Singleton<TcpMgr>;
+    TcpMgr();
     void initHandlers();
     void handleMsg(ReqId id, int len, QByteArray data);
     QTcpSocket _socket;
@@ -27,6 +30,8 @@ public slots:
 signals:
     void sig_con_success(bool bsuccess);
     void sig_send_data(ReqId reqId, QString data);
+    void sig_swich_chatdlg();
+    void sig_login_failed(int);
 };
 
 #endif // TCPMGR_H

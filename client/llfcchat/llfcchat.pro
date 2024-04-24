@@ -26,6 +26,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        chatdialog.cpp \
         clickedlabel.cpp \
         global.cpp \
         httpmgr.cpp \
@@ -39,6 +40,7 @@ SOURCES += \
         usermgr.cpp
 
 HEADERS += \
+        chatdialog.h \
         clickedlabel.h \
         global.h \
         httpmgr.h \
@@ -52,6 +54,7 @@ HEADERS += \
         usermgr.h
 
 FORMS += \
+        chatdialog.ui \
         logindialog.ui \
         mainwindow.ui \
         registerdialog.ui \

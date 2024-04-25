@@ -16,6 +16,7 @@ public:
     ~ChatDialog();
 
 private:
+    void addChatUserList();
     Ui::ChatDialog *ui;
 };
 

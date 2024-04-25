@@ -27,6 +27,8 @@ CONFIG += c++11
 
 SOURCES += \
         chatdialog.cpp \
+        chatuserlist.cpp \
+        chatuserwid.cpp \
         clickedbtn.cpp \
         clickedlabel.cpp \
         global.cpp \
@@ -42,6 +44,8 @@ SOURCES += \
 
 HEADERS += \
         chatdialog.h \
+        chatuserlist.h \
+        chatuserwid.h \
         clickedbtn.h \
         clickedlabel.h \
         global.h \
@@ -57,6 +61,7 @@ HEADERS += \
 
 FORMS += \
         chatdialog.ui \
+        chatuserwid.ui \
         logindialog.ui \
         mainwindow.ui \
         registerdialog.ui \

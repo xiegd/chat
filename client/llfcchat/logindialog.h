@@ -16,6 +16,7 @@ public:
     explicit LoginDialog(QWidget *parent = nullptr);
     ~LoginDialog();
 private:
+    void initHead();
     void initHttpHandlers();
     void showTip(QString str,bool b_ok);
     bool checkUserValid();

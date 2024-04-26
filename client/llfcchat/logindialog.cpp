@@ -77,7 +77,7 @@ void LoginDialog::initHttpHandlers()
             enableBtn(true);
             return;
         }
-        auto user = jsonObj["user"].toString();
+        auto email = jsonObj["email"].toString();
 
         //发送信号通知tcpMgr发送长链接
         ServerInfo si;
@@ -88,7 +88,7 @@ void LoginDialog::initHttpHandlers()
 
         _uid = si.Uid;
         _token = si.Token;
-        qDebug()<< "user is " << user << " uid is " << si.Uid <<" host is "
+        qDebug()<< "email is " << email << " uid is " << si.Uid <<" host is "
                 << si.Host << " Port is " << si.Port << " Token is " << si.Token;
         emit sig_connect_tcp(si);
     });
@@ -115,13 +115,13 @@ void LoginDialog::slot_forget_pwd()
 
 bool LoginDialog::checkUserValid(){
 
-    auto user = ui->user_edit->text();
-    if(user.isEmpty()){
-        qDebug() << "User empty " ;
-        AddTipErr(TipErr::TIP_USER_ERR, tr("用户名不能为空"));
+    auto email = ui->email_edit->text();
+    if(email.isEmpty()){
+        qDebug() << "email empty " ;
+        AddTipErr(TipErr::TIP_EMAIL_ERR, tr("邮箱不能为空"));
         return false;
     }
-    DelTipErr(TipErr::TIP_USER_ERR);
+    DelTipErr(TipErr::TIP_EMAIL_ERR);
     return true;
 }
 
@@ -141,7 +141,7 @@ bool LoginDialog::checkPwdValid(){
     bool match = regExp.match(pwd).hasMatch();
     if(!match){
         //提示字符非法
-        AddTipErr(TipErr::TIP_PWD_ERR, tr("不能包含非法字符"));
+        AddTipErr(TipErr::TIP_PWD_ERR, tr("不能包含非法字符且长度为(6~15)"));
         return false;;
     }
 
@@ -169,11 +169,11 @@ void LoginDialog::on_login_btn_clicked()
     }
 
     enableBtn(false);
-    auto user = ui->user_edit->text();
+    auto email = ui->email_edit->text();
     auto pwd = ui->pass_edit->text();
     //发送http请求登录
     QJsonObject json_obj;
-    json_obj["user"] = user;
+    json_obj["email"] = email;
     json_obj["passwd"] = xorString(pwd);
     HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix+"/user_login"),
                                         json_obj, ReqId::ID_LOGIN_USER,Modules::LOGINMOD);

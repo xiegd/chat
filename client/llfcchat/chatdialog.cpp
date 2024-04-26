@@ -5,10 +5,11 @@
 #include <QDebug>
 #include <vector>
 #include <QRandomGenerator>
+#include "loadingdlg.h"
 
 ChatDialog::ChatDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ChatDialog)
+    ui(new Ui::ChatDialog),_b_loading(false)
 {
     ui->setupUi(this);
 
@@ -43,6 +44,9 @@ ChatDialog::ChatDialog(QWidget *parent) :
         clearAction->setIcon(QIcon(":/res/close_transparent.png")); // 清除文本后，切换回透明图标
     });
 
+
+    //连接加载信号和槽
+    connect(ui->chat_user_list, &ChatUserList::sig_loading_chat_user, this, &ChatDialog::slot_loading_chat_user);
 
     addChatUserList();
 }
@@ -81,7 +85,7 @@ std::vector<QString> names = {
 void ChatDialog::addChatUserList()
 {
     // 创建QListWidgetItem，并设置自定义的widget
-    for(int i = 0; i < 100; i++){
+    for(int i = 0; i < 13; i++){
         int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
         int str_i = randomValue%strs.size();
         int head_i = randomValue%heads.size();
@@ -90,10 +94,27 @@ void ChatDialog::addChatUserList()
         auto *chat_user_wid = new ChatUserWid();
         chat_user_wid->SetInfo(names[name_i], heads[head_i], strs[str_i]);
         QListWidgetItem *item = new QListWidgetItem;
-        qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
+        //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
         item->setSizeHint(chat_user_wid->sizeHint());
         ui->chat_user_list->addItem(item);
         ui->chat_user_list->setItemWidget(item, chat_user_wid);
     }
 
+}
+
+void ChatDialog::slot_loading_chat_user()
+{
+    if(_b_loading){
+        return;
+    }
+
+    _b_loading = true;
+    LoadingDlg *loadingDialog = new LoadingDlg(this);
+    loadingDialog->show();
+    qDebug() << "add new data to list.....";
+    addChatUserList();
+    // 加载完成后关闭对话框
+    loadingDialog->deleteLater();
+
+    _b_loading = false;
 }

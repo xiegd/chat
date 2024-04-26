@@ -16,5 +16,6 @@
         <file>res/head_4.jpg</file>
         <file>res/head_5.jpg</file>
         <file>res/ice.png</file>
+        <file>res/loading.gif</file>
     </qresource>
 </RCC>

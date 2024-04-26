@@ -33,6 +33,7 @@ SOURCES += \
         clickedlabel.cpp \
         global.cpp \
         httpmgr.cpp \
+        loadingdlg.cpp \
         logindialog.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -50,6 +51,7 @@ HEADERS += \
         clickedlabel.h \
         global.h \
         httpmgr.h \
+        loadingdlg.h \
         logindialog.h \
         mainwindow.h \
         registerdialog.h \
@@ -62,6 +64,7 @@ HEADERS += \
 FORMS += \
         chatdialog.ui \
         chatuserwid.ui \
+        loadingdlg.ui \
         logindialog.ui \
         mainwindow.ui \
         registerdialog.ui \

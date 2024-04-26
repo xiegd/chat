@@ -18,6 +18,11 @@ public:
 private:
     void addChatUserList();
     Ui::ChatDialog *ui;
+    bool _b_loading;
+
+public slots:
+    void slot_loading_chat_user();
+
 };
 
 #endif // CHATDIALOG_H

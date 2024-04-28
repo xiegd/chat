@@ -49,6 +49,13 @@ ChatDialog::ChatDialog(QWidget *parent) :
     connect(ui->chat_user_list, &ChatUserList::sig_loading_chat_user, this, &ChatDialog::slot_loading_chat_user);
 
     addChatUserList();
+
+    //设置按钮样式
+    ui->receive_btn->SetState("normal","hover","press");
+    ui->send_btn->SetState("normal","hover","press");
+
+    //设置图标样式
+    ui->emo_lb->SetState("normal","hover","press","normal","hover","press");
 }
 
 ChatDialog::~ChatDialog()

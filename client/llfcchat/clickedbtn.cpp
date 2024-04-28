@@ -16,6 +16,9 @@ void ClickedBtn::SetState(QString normal, QString hover, QString press)
     _hover = hover;
     _normal = normal;
     _press = press;
+    setProperty("state",normal);
+    repolish(this);
+    update();
 }
 
 void ClickedBtn::enterEvent(QEvent *event)

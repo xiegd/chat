@@ -38,7 +38,7 @@ protected:
             QScrollBar *scrollBar = this->verticalScrollBar();
             int maxScrollValue = scrollBar->maximum();
             int currentValue = scrollBar->value();
-            int pageSize = 10; // 每页加载的联系人数量
+            //int pageSize = 10; // 每页加载的联系人数量
 
             if (maxScrollValue - currentValue <= 0) {
                 // 滚动到底部，加载新的联系人

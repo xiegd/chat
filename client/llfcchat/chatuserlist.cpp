@@ -3,6 +3,7 @@
 
 ChatUserList::ChatUserList(QWidget *parent)
 {
+    Q_UNUSED(parent);
      this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
      this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     // 安装事件过滤器

@@ -6,6 +6,12 @@
 #include <vector>
 #include <QRandomGenerator>
 #include "loadingdlg.h"
+#include "global.h"
+#include "ChatItemBase.h"
+#include "TextBubble.h"
+#include "PictureBubble.h"
+#include "MessageTextEdit.h"
+
 
 ChatDialog::ChatDialog(QWidget *parent) :
     QDialog(parent),
@@ -63,6 +69,7 @@ ChatDialog::~ChatDialog()
 {
     delete ui;
 }
+
 
 std::vector<QString>  strs ={"hello world !",
                              "nice to meet u",
@@ -125,4 +132,39 @@ void ChatDialog::slot_loading_chat_user()
     loadingDialog->deleteLater();
 
     _b_loading = false;
+}
+
+void ChatDialog::on_send_btn_clicked()
+{
+    auto pTextEdit = ui->chatEdit;
+    ChatRole role = ChatRole::Self;
+    QString userName = QStringLiteral("恋恋风辰");
+    QString userIcon = "C:/Users/zj/Desktop/icon.png";
+
+    const QVector<MsgInfo>& msgList = pTextEdit->getMsgList();
+    for(int i=0; i<msgList.size(); ++i)
+    {
+        QString type = msgList[i].msgFlag;
+        ChatItemBase *pChatItem = new ChatItemBase(role);
+        pChatItem->setUserName(userName);
+        pChatItem->setUserIcon(QPixmap(userIcon));
+        QWidget *pBubble = nullptr;
+        if(type == "text")
+        {
+            pBubble = new TextBubble(role, msgList[i].content);
+        }
+        else if(type == "image")
+        {
+            pBubble = new PictureBubble(QPixmap(msgList[i].content) , role);
+        }
+        else if(type == "file")
+        {
+
+        }
+        if(pBubble != nullptr)
+        {
+            pChatItem->setWidget(pBubble);
+           // ui->chatView->appendChatItem(pChatItem);
+        }
+    }
 }

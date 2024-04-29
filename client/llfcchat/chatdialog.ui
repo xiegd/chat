@@ -191,7 +191,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="chat_data_list" native="true">
+    <widget class="QWidget" name="chat_data_wid" native="true">
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <property name="spacing">
        <number>0</number>
@@ -240,7 +240,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="data_wid" native="true"/>
+       <widget class="ChatView" name="chat_data_list" native="true"/>
       </item>
       <item>
        <widget class="QWidget" name="tool_wid" native="true">
@@ -356,7 +356,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QTextEdit" name="chatEdit">
+       <widget class="MessageTextEdit" name="chatEdit">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -501,6 +501,17 @@
    <class>ChatUserList</class>
    <extends>QListWidget</extends>
    <header>chatuserlist.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MessageTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>MessageTextEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ChatView</class>
+   <extends>QWidget</extends>
+   <header>chatview.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -270,3 +270,7 @@ LoadingDlg{
 #file_lb[state='press']{
     border-image: url(:/res/filedir_press.png);
 }
+
+ChatView{
+     background: black;
+}

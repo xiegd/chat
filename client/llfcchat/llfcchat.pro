@@ -26,6 +26,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        BubbleFrame.cpp \
+        ChatItemBase.cpp \
+        ChatView.cpp \
+        MessageTextEdit.cpp \
+        PictureBubble.cpp \
+        TextBubble.cpp \
         chatdialog.cpp \
         chatuserlist.cpp \
         chatuserwid.cpp \
@@ -44,6 +50,12 @@ SOURCES += \
         usermgr.cpp
 
 HEADERS += \
+        BubbleFrame.h \
+        ChatItemBase.h \
+        ChatView.h \
+        MessageTextEdit.h \
+        PictureBubble.h \
+        TextBubble.h \
         chatdialog.h \
         chatuserlist.h \
         chatuserwid.h \

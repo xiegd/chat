@@ -23,6 +23,10 @@ private:
 public slots:
     void slot_loading_chat_user();
 
+private slots:
+    void on_send_btn_clicked();
 };
+
+
 
 #endif // CHATDIALOG_H

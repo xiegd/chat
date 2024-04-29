@@ -270,6 +270,22 @@
           <number>2</number>
          </property>
          <item>
+          <spacer name="horizontalSpacer_7">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>5</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
           <widget class="ClickedLabel" name="emo_lb">
            <property name="minimumSize">
             <size>
@@ -289,7 +305,23 @@
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="file_lb">
+          <spacer name="horizontalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>5</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="ClickedLabel" name="file_lb">
            <property name="minimumSize">
             <size>
              <width>30</width>
@@ -303,7 +335,7 @@
             </size>
            </property>
            <property name="text">
-            <string>sdfd</string>
+            <string/>
            </property>
           </widget>
          </item>

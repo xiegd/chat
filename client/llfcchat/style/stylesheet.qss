@@ -259,4 +259,14 @@ LoadingDlg{
     border-image: url(:/res/smile_press.png);
 }
 
+#file_lb[state='normal']{
+    border-image: url(:/res/filedir.png);
+}
 
+#file_lb[state='hover']{
+    border-image: url(:/res/filedir_hover.png);
+}
+
+#file_lb[state='press']{
+    border-image: url(:/res/filedir_press.png);
+}

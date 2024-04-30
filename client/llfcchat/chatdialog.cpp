@@ -164,7 +164,7 @@ void ChatDialog::on_send_btn_clicked()
         if(pBubble != nullptr)
         {
             pChatItem->setWidget(pBubble);
-           // ui->chatView->appendChatItem(pChatItem);
+            ui->chat_data_list->appendChatItem(pChatItem);
         }
     }
 }

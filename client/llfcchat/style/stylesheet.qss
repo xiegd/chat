@@ -271,6 +271,20 @@ LoadingDlg{
     border-image: url(:/res/filedir_press.png);
 }
 
-ChatView{
+#chat_data_list{
      background: black;
+}
+
+#chat_bg{
+    background: #f0f0f0;
+}
+
+#chat_area{
+    border: none;
+}
+
+#chat_user_name{
+    color:rgb(153,153,153);
+    font-size: 14px;
+    font-family: "Microsoft YaHei";
 }

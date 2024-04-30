@@ -3,6 +3,7 @@
 #include <QScrollArea>
 #include <QVBoxLayout>
 #include <QTimer>
+
 class ChatView : public QWidget
 {
     Q_OBJECT
@@ -14,7 +15,7 @@ public:
 
 protected:
     bool eventFilter(QObject *o, QEvent *e) override;
-    virtual void paintEvent(QPaintEvent* event) override;
+    void paintEvent(QPaintEvent *event) override;
 private slots:
     void onVScrollBarMoved(int min, int max);
 

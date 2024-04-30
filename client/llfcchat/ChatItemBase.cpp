@@ -7,10 +7,11 @@ ChatItemBase::ChatItemBase(ChatRole role, QWidget *parent)
     , m_role(role)
 {
     m_pNameLabel    = new QLabel();
+    m_pNameLabel->setObjectName("chat_user_name");
     QFont font;
     font.setPointSize(9);
     m_pNameLabel->setFont(font);
-    m_pNameLabel->setFixedHeight(16);
+    m_pNameLabel->setFixedHeight(20);
     m_pIconLabel    = new QLabel();
     m_pIconLabel->setScaledContents(true);
     m_pIconLabel->setFixedSize(42, 42);

@@ -17,10 +17,11 @@ ChatView::ChatView(QWidget *parent)
     pMainLayout->setMargin(0);
 
     m_pScrollArea = new QScrollArea();
+    m_pScrollArea->setObjectName("chat_area");
     pMainLayout->addWidget(m_pScrollArea);
 
     QWidget *w = new QWidget(this);
-    w->setPalette(QColor(215, 215, 215));
+    w->setObjectName("chat_bg");
     w->setAutoFillBackground(true);
     QVBoxLayout *pHLayout_1 = new QVBoxLayout();
     pHLayout_1->addWidget(new QWidget(), 100000);
@@ -85,6 +86,7 @@ void ChatView::paintEvent(QPaintEvent *event)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
+
 void ChatView::onVScrollBarMoved(int min, int max)
 {
     if(isAppended) //添加item可能调用多次
@@ -101,12 +103,12 @@ void ChatView::onVScrollBarMoved(int min, int max)
 
 void ChatView::initStyleSheet()
 {
-    QScrollBar *scrollBar = m_pScrollArea->verticalScrollBar();
-    scrollBar->setStyleSheet("QScrollBar{background:transparent;}"
-                             "QScrollBar:vertical{background:transparent;width:8px;}"
-                             "QScrollBar::handle:vertical{background:red; border-radius:4px;min-height:20px;}"
-                             "QScrollBar::add-line:vertical{height:0px}"
-                             "QScrollBar::sub-line:vertical{height:0px}"
-                             "QScrollBar::add-page:vertical {background:transparent;}"
-                             "QScrollBar::sub-page:vertical {background:transparent;}");
+//    QScrollBar *scrollBar = m_pScrollArea->verticalScrollBar();
+//    scrollBar->setStyleSheet("QScrollBar{background:transparent;}"
+//                             "QScrollBar:vertical{background:transparent;width:8px;}"
+//                             "QScrollBar::handle:vertical{background:red; border-radius:4px;min-height:20px;}"
+//                             "QScrollBar::add-line:vertical{height:0px}"
+//                             "QScrollBar::sub-line:vertical{height:0px}"
+//                             "QScrollBar::add-page:vertical {background:transparent;}"
+//                             "QScrollBar::sub-page:vertical {background:transparent;}");
 }

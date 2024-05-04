@@ -168,4 +168,51 @@ bool MysqlDao::CheckPwd(const std::string& email, const std::string& pwd, UserIn
 	}
 }
 
+bool MysqlDao::TestProcedure(const std::string& email, int& uid, string& name) {
+	auto con = pool_->getConnection();
+	try {
+		if (con == nullptr) {
+			return false;
+		}
 
+		Defer defer([this, &con]() {
+			pool_->returnConnection(std::move(con));
+			});
+		// 准备调用存储过程
+		unique_ptr < sql::PreparedStatement > stmt(con->_con->prepareStatement("CALL test_procedure(?,@userId,@userName)"));
+		// 设置输入参数
+		stmt->setString(1, email);
+		
+		// 由于PreparedStatement不直接支持注册输出参数，我们需要使用会话变量或其他方法来获取输出参数的值
+
+		  // 执行存储过程
+		stmt->execute();
+		// 如果存储过程设置了会话变量或有其他方式获取输出参数的值，你可以在这里执行SELECT查询来获取它们
+	   // 例如，如果存储过程设置了一个会话变量@result来存储输出结果，可以这样获取：
+		unique_ptr<sql::Statement> stmtResult(con->_con->createStatement());
+		unique_ptr<sql::ResultSet> res(stmtResult->executeQuery("SELECT @userId AS uid"));
+		if (!(res->next())) {
+			return false;
+		}
+		
+		uid = res->getInt("uid");
+		cout << "uid: " << uid << endl;
+		
+		stmtResult.reset(con->_con->createStatement());
+		res.reset(stmtResult->executeQuery("SELECT @userName AS name"));
+		if (!(res->next())) {
+			return false;
+		}
+		
+		name = res->getString("name");
+		cout << "name: " << name << endl;
+		return true;
+
+	}
+	catch (sql::SQLException& e) {
+		std::cerr << "SQLException: " << e.what();
+		std::cerr << " (MySQL error code: " << e.getErrorCode();
+		std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+		return false;
+	}
+}

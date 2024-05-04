@@ -26,3 +26,9 @@ C++ 聊天项目实战案例，涵盖grpc，并发线程，网络编程，qt开�
 [day10-验证服务增加redis](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day10-%E5%A4%9A%E6%9C%8D%E5%8A%A1%E9%AA%8C%E8%AF%81%E7%A0%81%E6%B4%BE%E5%8F%91%E5%8A%9F%E8%83%BD%E8%B0%83%E8%AF%95.md)
 
 [day11-注册功能](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day11-%E6%B3%A8%E5%86%8C%E5%8A%9F%E8%83%BD.md)
+
+[day12-注册界面完善](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day12-%E6%B3%A8%E5%86%8C%E7%95%8C%E9%9D%A2%E5%AE%8C%E5%96%84.md)
+
+[day13-重置界面](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day13-%E9%87%8D%E7%BD%AE%E7%95%8C%E9%9D%A2.md)
+
+[day14-登录功能和状态服务](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day14-%E7%99%BB%E5%BD%95%E5%8A%9F%E8%83%BD.md#statusserver%E7%8A%B6%E6%80%81%E6%9C%8D%E5%8A%A1)

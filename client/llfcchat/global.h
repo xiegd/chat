@@ -79,4 +79,6 @@ struct MsgInfo{
     QPixmap pixmap;//文件和图片的缩略图
 };
 
+
+
 #endif // GLOBAL_H

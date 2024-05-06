@@ -45,6 +45,7 @@ SOURCES += \
         mainwindow.cpp \
         registerdialog.cpp \
         resetdialog.cpp \
+        statelabel.cpp \
         tcpmgr.cpp \
         timerbtn.cpp \
         usermgr.cpp
@@ -69,6 +70,7 @@ HEADERS += \
         registerdialog.h \
         resetdialog.h \
         singleton.h \
+        statelabel.h \
         tcpmgr.h \
         timerbtn.h \
         usermgr.h

@@ -63,11 +63,34 @@ ChatDialog::ChatDialog(QWidget *parent) :
     //设置图标样式
     ui->emo_lb->SetState("normal","hover","press","normal","hover","press");
     ui->file_lb->SetState("normal","hover","press","normal","hover","press");
+
+    QPixmap pixmap(":/res/head_1.jpg"); // 加载图片
+    ui->side_head_lb->setPixmap(pixmap); // 将图片设置到QLabel上
+    QPixmap scaledPixmap = pixmap.scaled( ui->side_head_lb->size(), Qt::KeepAspectRatio); // 将图片缩放到label的大小
+    ui->side_head_lb->setPixmap(scaledPixmap); // 将缩放后的图片设置到QLabel上
+    ui->side_head_lb->setScaledContents(true); // 设置QLabel自动缩放图片内容以适应大小
+
+    ui->side_chat_lb->setProperty("state","normal");
+
+    ui->side_chat_lb->SetState("normal","hover","pressed","selected_normal","selected_hover","selected_pressed");
+
+    ui->side_contact_lb->SetState("normal","hover","pressed","selected_normal","selected_hover","selected_pressed");
+
+    AddLBGroup(ui->side_chat_lb);
+    AddLBGroup(ui->side_contact_lb);
+
+    connect(ui->side_chat_lb, &StateLabel::clicked, this, &ChatDialog::slot_side_chat);
+    connect(ui->side_contact_lb, &StateLabel::clicked, this, &ChatDialog::slot_side_contact);
 }
 
 ChatDialog::~ChatDialog()
 {
     delete ui;
+}
+
+void ChatDialog::AddLBGroup(StateLabel* lb)
+{
+    _lb_list.push_back(lb);
 }
 
 
@@ -117,6 +140,17 @@ void ChatDialog::addChatUserList()
 
 }
 
+void ChatDialog::ClearLabelState(StateLabel *lb)
+{
+    for(auto & ele: _lb_list){
+        if(ele == lb){
+            continue;
+        }
+
+        ele->ClearState();
+    }
+}
+
 void ChatDialog::slot_loading_chat_user()
 {
     if(_b_loading){
@@ -134,12 +168,23 @@ void ChatDialog::slot_loading_chat_user()
     _b_loading = false;
 }
 
+void ChatDialog::slot_side_chat()
+{
+    qDebug()<< "receive side chat clicked";
+    ClearLabelState(ui->side_chat_lb);
+}
+
+void ChatDialog::slot_side_contact(){
+    qDebug()<< "receive side contact clicked";
+    ClearLabelState(ui->side_contact_lb);
+}
+
 void ChatDialog::on_send_btn_clicked()
 {
     auto pTextEdit = ui->chatEdit;
     ChatRole role = ChatRole::Self;
     QString userName = QStringLiteral("恋恋风辰");
-    QString userIcon = "C:/Users/zj/Desktop/icon.png";
+    QString userIcon = ":/res/head_1.jpg";
 
     const QVector<MsgInfo>& msgList = pTextEdit->getMsgList();
     for(int i=0; i<msgList.size(); ++i)

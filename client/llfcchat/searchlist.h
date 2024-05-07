@@ -39,7 +39,8 @@ protected:
 
         return QListWidget::eventFilter(watched, event);
     }
-
+private:
+    void addTipItem();
 signals:
 
 };

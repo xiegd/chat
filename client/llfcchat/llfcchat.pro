@@ -32,13 +32,17 @@ SOURCES += \
         MessageTextEdit.cpp \
         PictureBubble.cpp \
         TextBubble.cpp \
+        adduseritem.cpp \
         chatdialog.cpp \
         chatuserlist.cpp \
         chatuserwid.cpp \
         clickedbtn.cpp \
         clickedlabel.cpp \
+        customizeedit.cpp \
         global.cpp \
         httpmgr.cpp \
+        invaliditem.cpp \
+        listitembase.cpp \
         loadingdlg.cpp \
         logindialog.cpp \
         main.cpp \
@@ -58,13 +62,17 @@ HEADERS += \
         MessageTextEdit.h \
         PictureBubble.h \
         TextBubble.h \
+        adduseritem.h \
         chatdialog.h \
         chatuserlist.h \
         chatuserwid.h \
         clickedbtn.h \
         clickedlabel.h \
+        customizeedit.h \
         global.h \
         httpmgr.h \
+        invaliditem.h \
+        listitembase.h \
         loadingdlg.h \
         logindialog.h \
         mainwindow.h \
@@ -78,6 +86,7 @@ HEADERS += \
         usermgr.h
 
 FORMS += \
+        adduseritem.ui \
         chatdialog.ui \
         chatuserwid.ui \
         loadingdlg.ui \

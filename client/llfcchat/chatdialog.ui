@@ -232,7 +232,7 @@
           <number>9</number>
          </property>
          <item>
-          <widget class="QLineEdit" name="search_edit">
+          <widget class="CustomizeEdit" name="search_edit">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -284,6 +284,9 @@
          </item>
         </layout>
        </widget>
+      </item>
+      <item>
+       <widget class="SearchList" name="search_list"/>
       </item>
       <item>
        <widget class="ChatUserList" name="chat_user_list">
@@ -631,6 +634,16 @@
    <class>StateLabel</class>
    <extends>QLabel</extends>
    <header>statelabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>CustomizeEdit</class>
+   <extends>QLineEdit</extends>
+   <header>customizeedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SearchList</class>
+   <extends>QListWidget</extends>
+   <header>searchlist.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

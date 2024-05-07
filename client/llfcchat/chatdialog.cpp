@@ -11,11 +11,12 @@
 #include "TextBubble.h"
 #include "PictureBubble.h"
 #include "MessageTextEdit.h"
+#include "chatuserlist.h"
 
 
 ChatDialog::ChatDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ChatDialog),_b_loading(false)
+    ui(new Ui::ChatDialog),_b_loading(false),_mode(ChatUIMode::ChatMode)
 {
     ui->setupUi(this);
 
@@ -48,6 +49,7 @@ ChatDialog::ChatDialog(QWidget *parent) :
     connect(clearAction, &QAction::triggered, [this, clearAction]() {
         ui->search_edit->clear();
         clearAction->setIcon(QIcon(":/res/close_transparent.png")); // 清除文本后，切换回透明图标
+        ui->search_edit->clearFocus();
     });
 
 
@@ -81,11 +83,46 @@ ChatDialog::ChatDialog(QWidget *parent) :
 
     connect(ui->side_chat_lb, &StateLabel::clicked, this, &ChatDialog::slot_side_chat);
     connect(ui->side_contact_lb, &StateLabel::clicked, this, &ChatDialog::slot_side_contact);
+
+    //链接搜索框输入变化
+    connect(ui->search_edit, &QLineEdit::textChanged, this, &ChatDialog::slot_text_changed);
+
+    ShowSearch(false);
+
+    //检测鼠标点击位置判断是否要清空搜索框
+    this->installEventFilter(this); // 安装事件过滤器
 }
 
 ChatDialog::~ChatDialog()
 {
     delete ui;
+}
+
+bool ChatDialog::eventFilter(QObject *watched, QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress) {
+       QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+       handleGlobalMousePress(mouseEvent);
+    }
+    return QDialog::eventFilter(watched, event);
+}
+
+void ChatDialog::handleGlobalMousePress(QMouseEvent *event)
+{
+    // 实现点击位置的判断和处理逻辑
+    // 先判断是否处于聊天模式，如聊天模式则忽略鼠标事件
+    if( _mode == ChatUIMode::ChatMode){
+        return;
+    }
+
+    // 将鼠标点击位置转换为搜索列表坐标系中的位置
+    QPoint posInSearchList = ui->search_list->mapFromGlobal(event->globalPos());
+    // 判断点击位置是否在聊天列表的范围内
+    if (!ui->search_list->rect().contains(posInSearchList)) {
+        // 如果不在聊天列表内，清空输入框
+        ui->search_edit->clear();
+        ShowSearch(false);
+    }
 }
 
 void ChatDialog::AddLBGroup(StateLabel* lb)
@@ -151,6 +188,19 @@ void ChatDialog::ClearLabelState(StateLabel *lb)
     }
 }
 
+void ChatDialog::ShowSearch(bool bsearch)
+{
+    if(bsearch){
+        ui->chat_user_list->hide();
+        ui->search_list->show();
+        _mode = ChatUIMode::SearchMode;
+    }else{
+        ui->chat_user_list->show();
+        ui->search_list->hide();
+        _mode = ChatUIMode::ChatMode;
+    }
+}
+
 void ChatDialog::slot_loading_chat_user()
 {
     if(_b_loading){
@@ -177,6 +227,18 @@ void ChatDialog::slot_side_chat()
 void ChatDialog::slot_side_contact(){
     qDebug()<< "receive side contact clicked";
     ClearLabelState(ui->side_contact_lb);
+}
+
+void ChatDialog::slot_text_changed(const QString &str)
+{
+    qDebug()<< "receive slot text changed str is " << str;
+    ShowSearch(true);
+}
+
+void ChatDialog::slot_focus_out()
+{
+    qDebug()<< "receive focus out signal";
+    ShowSearch(false);
 }
 
 void ChatDialog::on_send_btn_clicked()

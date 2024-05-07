@@ -31,5 +31,7 @@
         <file>res/contact_list.png</file>
         <file>res/contact_list_hover.png</file>
         <file>res/contact_list_press.png</file>
+        <file>res/addtip.png</file>
+        <file>res/right_tip.png</file>
     </qresource>
 </RCC>

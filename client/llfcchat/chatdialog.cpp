@@ -209,6 +209,7 @@ void ChatDialog::slot_loading_chat_user()
 
     _b_loading = true;
     LoadingDlg *loadingDialog = new LoadingDlg(this);
+    loadingDialog->setModal(true);
     loadingDialog->show();
     qDebug() << "add new data to list.....";
     addChatUserList();

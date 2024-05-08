@@ -1,8 +1,9 @@
 #ifndef INVALIDITEM_H
 #define INVALIDITEM_H
 #include <QWidget>
+#include "listitembase.h"
 
-class InvalidItem : public QWidget
+class InvalidItem : public ListItemBase
 {
     Q_OBJECT
 public:

@@ -41,6 +41,9 @@ protected:
     }
 private:
     void addTipItem();
+
+private slots:
+    void slot_item_clicked(QListWidgetItem *item);
 signals:
 
 };

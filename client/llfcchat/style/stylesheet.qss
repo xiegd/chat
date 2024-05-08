@@ -378,3 +378,7 @@ LoadingDlg{
   font-family: "Microsoft YaHei";
   font-size: 12pt;
 }
+
+#FindSuccessDlg{
+   background-color: #ffffff;
+}

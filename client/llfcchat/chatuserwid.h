@@ -2,12 +2,12 @@
 #define CHATUSERWID_H
 
 #include <QWidget>
-
+#include "listitembase.h"
 namespace Ui {
 class ChatUserWid;
 }
 
-class ChatUserWid : public QWidget
+class ChatUserWid : public ListItemBase
 {
     Q_OBJECT
 

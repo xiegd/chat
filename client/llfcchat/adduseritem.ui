@@ -48,7 +48,7 @@
    <item>
     <widget class="QLabel" name="message_tip">
      <property name="text">
-      <string>查找uid/nickname</string>
+      <string>查找 uid/nick</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

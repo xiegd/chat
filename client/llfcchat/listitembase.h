@@ -8,10 +8,6 @@ class ListItemBase : public QWidget
     Q_OBJECT
 public:
     explicit ListItemBase(QWidget *parent = nullptr);
-    QSize sizeHint() const override {
-        return QSize(0, 0); // 返回自定义的尺寸
-    }
-
     void SetItemType(ListItemType itemType);
 
     ListItemType GetItemType();

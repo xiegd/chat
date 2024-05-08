@@ -91,6 +91,7 @@ enum ListItemType{
     ContactUserItem, //联系人用户
     SearchUserItem, //搜索到的用户
     AddUserTipItem, //提示添加用户
+    InvalidItem,  //不可点击条目
 };
 
 #endif // GLOBAL_H

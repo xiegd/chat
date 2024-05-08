@@ -2,11 +2,11 @@
 #include "ui_chatuserwid.h"
 
 ChatUserWid::ChatUserWid(QWidget *parent) :
-    QWidget(parent),
+    ListItemBase(parent),
     ui(new Ui::ChatUserWid)
 {
     ui->setupUi(this);
-
+    SetItemType(ListItemType::ChatUserItem);
 }
 
 ChatUserWid::~ChatUserWid()

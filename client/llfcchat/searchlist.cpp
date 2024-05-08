@@ -2,6 +2,7 @@
 #include<QScrollBar>
 #include "adduseritem.h"
 #include "invaliditem.h"
+#include "findsuccessdlg.h"
 
 SearchList::SearchList(QWidget *parent):QListWidget(parent)
 {
@@ -10,6 +11,9 @@ SearchList::SearchList(QWidget *parent):QListWidget(parent)
      this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     // 安装事件过滤器
     this->viewport()->installEventFilter(this);
+    //连接点击的信号和槽
+    connect(this, &QListWidget::itemClicked, this, &SearchList::slot_item_clicked);
+    //添加条目
     addTipItem();
 }
 
@@ -22,6 +26,7 @@ void SearchList::addTipItem()
     this->addItem(item_tmp);
     invalid_item->setObjectName("invalid_item");
     this->setItemWidget(item_tmp, invalid_item);
+    item_tmp->setFlags(item_tmp->flags() & ~Qt::ItemIsSelectable);
 
 
     auto *add_user_item = new AddUserItem();
@@ -30,5 +35,42 @@ void SearchList::addTipItem()
     item->setSizeHint(add_user_item->sizeHint());
     this->addItem(item);
     this->setItemWidget(item, add_user_item);
+
+}
+
+void SearchList::slot_item_clicked(QListWidgetItem *item)
+{
+    QWidget *widget = this->itemWidget(item); // 获取自定义widget对象
+    if(!widget){
+        qDebug()<< "slot item clicked widget is nullptr";
+        return;
+    }
+
+    // 对自定义widget进行操作， 将item 转化为基类ListItemBase
+    ListItemBase *customItem = qobject_cast<ListItemBase*>(widget);
+    if(!customItem){
+        qDebug()<< "slot item clicked widget is nullptr";
+        return;
+    }
+
+    auto itemType = customItem->GetItemType();
+    if(itemType == ListItemType::InvalidItem){
+        qDebug()<< "slot invalid item clicked ";
+        return;
+    }
+
+    // 创建对话框
+    QDialog* dialog = new FindSuccessDlg(this);
+    // 显示对话框
+    dialog->show();
+    // 连接关闭信号
+    connect(dialog, &QDialog::accepted, this, [=]() {
+        // 执行后续逻辑
+        // ...
+    });
+    connect(dialog, &QDialog::rejected, this, [=]() {
+        // 执行后续逻辑
+        // ...
+    });
 
 }

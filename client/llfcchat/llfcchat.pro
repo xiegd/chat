@@ -33,6 +33,7 @@ SOURCES += \
         PictureBubble.cpp \
         TextBubble.cpp \
         adduseritem.cpp \
+        applyfriend.cpp \
         chatdialog.cpp \
         chatuserlist.cpp \
         chatuserwid.cpp \
@@ -64,6 +65,7 @@ HEADERS += \
         PictureBubble.h \
         TextBubble.h \
         adduseritem.h \
+        applyfriend.h \
         chatdialog.h \
         chatuserlist.h \
         chatuserwid.h \
@@ -89,6 +91,7 @@ HEADERS += \
 
 FORMS += \
         adduseritem.ui \
+        applyfriend.ui \
         chatdialog.ui \
         chatuserwid.ui \
         findsuccessdlg.ui \

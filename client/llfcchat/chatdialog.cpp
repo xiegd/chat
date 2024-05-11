@@ -122,6 +122,7 @@ void ChatDialog::handleGlobalMousePress(QMouseEvent *event)
         // 如果不在聊天列表内，清空输入框
         ui->search_edit->clear();
         ShowSearch(false);
+        ui->search_list->CloseFindDlg();
     }
 }
 

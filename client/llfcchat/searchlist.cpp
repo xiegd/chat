@@ -4,7 +4,7 @@
 #include "invaliditem.h"
 #include "findsuccessdlg.h"
 
-SearchList::SearchList(QWidget *parent):QListWidget(parent)
+SearchList::SearchList(QWidget *parent):QListWidget(parent),_find_dlg(nullptr)
 {
     Q_UNUSED(parent);
      this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -16,6 +16,15 @@ SearchList::SearchList(QWidget *parent):QListWidget(parent)
     //添加条目
     addTipItem();
 }
+
+void SearchList::CloseFindDlg()
+{
+    if(_find_dlg){
+        _find_dlg->hide();
+        _find_dlg = nullptr;
+    }
+}
+
 
 void SearchList::addTipItem()
 {
@@ -35,7 +44,6 @@ void SearchList::addTipItem()
     item->setSizeHint(add_user_item->sizeHint());
     this->addItem(item);
     this->setItemWidget(item, add_user_item);
-
 }
 
 void SearchList::slot_item_clicked(QListWidgetItem *item)
@@ -59,18 +67,17 @@ void SearchList::slot_item_clicked(QListWidgetItem *item)
         return;
     }
 
-    // 创建对话框
-    QDialog* dialog = new FindSuccessDlg(this);
-    // 显示对话框
-    dialog->show();
-    // 连接关闭信号
-    connect(dialog, &QDialog::accepted, this, [=]() {
-        // 执行后续逻辑
-        // ...
-    });
-    connect(dialog, &QDialog::rejected, this, [=]() {
-        // 执行后续逻辑
-        // ...
-    });
+   if(itemType == ListItemType::AddUserTipItem){
+       if(_find_dlg){
+           return;
+       }
+       // 创建对话框
+       _find_dlg = std::make_shared<FindSuccessDlg>(this);
+       // 显示对话框
+       _find_dlg->show();
+       return;
+   }
 
+   //清除弹出框
+    CloseFindDlg();
 }

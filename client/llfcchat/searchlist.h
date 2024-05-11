@@ -5,13 +5,16 @@
 #include <QEvent>
 #include <QScrollBar>
 #include <QDebug>
+#include <QDialog>
+#include <memory>
 
 class SearchList: public QListWidget
 {
     Q_OBJECT
 public:
     SearchList(QWidget *parent = nullptr);
-
+    void CloseFindDlg();
+    bool AddUserItemClick();
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override {
         // 检查事件是否是鼠标悬浮进入或离开
@@ -41,7 +44,7 @@ protected:
     }
 private:
     void addTipItem();
-
+    std::shared_ptr<QDialog> _find_dlg;
 private slots:
     void slot_item_clicked(QListWidgetItem *item);
 signals:

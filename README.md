@@ -32,3 +32,9 @@ C++ 聊天项目实战案例，涵盖grpc，并发线程，网络编程，qt开�
 [day13-重置界面](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day13-%E9%87%8D%E7%BD%AE%E7%95%8C%E9%9D%A2.md)
 
 [day14-登录功能和状态服务](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day14-%E7%99%BB%E5%BD%95%E5%8A%9F%E8%83%BD.md#statusserver%E7%8A%B6%E6%80%81%E6%9C%8D%E5%8A%A1)
+
+[day15-客户端TCP管理类](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day15-%E5%AE%A2%E6%88%B7%E7%AB%AFTcp%E7%AE%A1%E7%90%86%E7%B1%BB%E8%AE%BE%E8%AE%A1.md)
+
+[day16-asio实现tcp服务器](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day16-asio%E5%AE%9E%E7%8E%B0tcp%E6%9C%8D%E5%8A%A1%E5%99%A8.md)
+
+[day17-登陆服务验证和客户端数据管理](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day16-asio%E5%AE%9E%E7%8E%B0tcp%E6%9C%8D%E5%8A%A1%E5%99%A8.md)

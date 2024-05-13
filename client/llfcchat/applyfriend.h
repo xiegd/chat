@@ -18,6 +18,9 @@ public:
 
 private:
     Ui::ApplyFriend *ui;
+
+public slots:
+    void ShowMoreLabel();
 };
 
 #endif // APPLYFRIEND_H

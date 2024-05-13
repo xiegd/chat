@@ -39,6 +39,7 @@ SOURCES += \
         chatuserwid.cpp \
         clickedbtn.cpp \
         clickedlabel.cpp \
+        clickedoncelabel.cpp \
         customizeedit.cpp \
         findsuccessdlg.cpp \
         global.cpp \
@@ -71,6 +72,7 @@ HEADERS += \
         chatuserwid.h \
         clickedbtn.h \
         clickedlabel.h \
+        clickedoncelabel.h \
         customizeedit.h \
         findsuccessdlg.h \
         global.h \

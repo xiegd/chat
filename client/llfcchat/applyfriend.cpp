@@ -11,6 +11,7 @@ ApplyFriend::ApplyFriend(QWidget *parent) :
     this->setObjectName("ApplyFriend");
     this->setModal(true);
     ui->name_ed->setPlaceholderText(tr("恋恋风辰"));
+    connect(ui->more_lb, &ClickedOnceLabel::clicked, this, &ApplyFriend::ShowMoreLabel);
 }
 
 ApplyFriend::~ApplyFriend()
@@ -19,6 +20,11 @@ ApplyFriend::~ApplyFriend()
 }
 
 void ApplyFriend::InitTestLbs()
+{
+
+}
+
+void ApplyFriend::ShowMoreLabel()
 {
 
 }

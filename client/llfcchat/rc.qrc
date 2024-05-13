@@ -33,5 +33,6 @@
         <file>res/contact_list_press.png</file>
         <file>res/addtip.png</file>
         <file>res/right_tip.png</file>
+        <file>res/arowdown.png</file>
     </qresource>
 </RCC>

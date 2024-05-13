@@ -17,3 +17,8 @@ ApplyFriend::~ApplyFriend()
 {
     delete ui;
 }
+
+void ApplyFriend::InitTestLbs()
+{
+
+}

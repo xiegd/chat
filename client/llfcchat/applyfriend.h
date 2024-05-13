@@ -14,6 +14,7 @@ class ApplyFriend : public QDialog
 public:
     explicit ApplyFriend(QWidget *parent = nullptr);
     ~ApplyFriend();
+    void InitTestLbs();
 
 private:
     Ui::ApplyFriend *ui;

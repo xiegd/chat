@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     //测试用
-    //emit TcpMgr::GetInstance()->sig_swich_chatdlg();
+    emit TcpMgr::GetInstance()->sig_swich_chatdlg();
 }
 
 MainWindow::~MainWindow()

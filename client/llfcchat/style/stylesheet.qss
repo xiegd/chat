@@ -422,10 +422,19 @@ LoadingDlg{
     color:rgb(140,140,140);
     font-size: 14px;
     font-family: "Microsoft YaHei";
+    height: 25px;
 }
 
-#apply_wid #name_ed{
+#apply_wid #name_ed, #apply_wid #back_ed{
     border: 1px solid #f7f7f8;
     font-size: 14px;
     font-family: "Microsoft YaHei";
+}
+
+#apply_wid #more_lb{
+    border-image: url(:/res/arowdown.png);
+}
+
+#lb_list{
+    background: black;
 }

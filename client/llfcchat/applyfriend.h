@@ -15,6 +15,7 @@ public:
     explicit ApplyFriend(QWidget *parent = nullptr);
     ~ApplyFriend();
     void InitTestLbs();
+    QPoint AddTestLbs(QString str, int x, int y);
 
 private:
     Ui::ApplyFriend *ui;

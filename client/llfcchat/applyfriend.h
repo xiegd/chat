@@ -2,6 +2,7 @@
 #define APPLYFRIEND_H
 
 #include <QDialog>
+#include "clickedlabel.h"
 
 namespace Ui {
 class ApplyFriend;
@@ -15,10 +16,12 @@ public:
     explicit ApplyFriend(QWidget *parent = nullptr);
     ~ApplyFriend();
     void InitTestLbs();
-    QPoint AddTestLbs(QString str, int x, int y);
+    bool AddTestLbs(QString str, QPoint cur_point, QPoint &next_point);
 
 private:
     Ui::ApplyFriend *ui;
+    QMap<QString, ClickedLabel*> _add_labels;
+    std::vector<QString> _add_label_keys;
 
 public slots:
     void ShowMoreLabel();

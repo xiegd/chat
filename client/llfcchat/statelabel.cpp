@@ -34,13 +34,13 @@ void StateLabel::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         if(_curstate == ClickLbState::Normal){
-            qDebug()<<"ReleaseEvent , change to normal hover: "<< _normal_hover;
+            //qDebug()<<"ReleaseEvent , change to normal hover: "<< _normal_hover;
             setProperty("state",_normal_hover);
             repolish(this);
             update();
 
         }else{
-            qDebug()<<"ReleaseEvent , change to select hover: "<< _selected_hover;
+            //qDebug()<<"ReleaseEvent , change to select hover: "<< _selected_hover;
             setProperty("state",_selected_hover);
             repolish(this);
             update();
@@ -55,13 +55,13 @@ void StateLabel::mouseReleaseEvent(QMouseEvent *event)
 void StateLabel::enterEvent(QEvent* event) {
     // 在这里处理鼠标悬停进入的逻辑
     if(_curstate == ClickLbState::Normal){
-         qDebug()<<"enter , change to normal hover: "<< _normal_hover;
+         //qDebug()<<"enter , change to normal hover: "<< _normal_hover;
         setProperty("state",_normal_hover);
         repolish(this);
         update();
 
     }else{
-         qDebug()<<"enter , change to selected hover: "<< _selected_hover;
+         //qDebug()<<"enter , change to selected hover: "<< _selected_hover;
         setProperty("state",_selected_hover);
         repolish(this);
         update();
@@ -74,13 +74,13 @@ void StateLabel::enterEvent(QEvent* event) {
 void StateLabel::leaveEvent(QEvent* event){
     // 在这里处理鼠标悬停离开的逻辑
     if(_curstate == ClickLbState::Normal){
-         qDebug()<<"leave , change to normal : "<< _normal;
+        // qDebug()<<"leave , change to normal : "<< _normal;
         setProperty("state",_normal);
         repolish(this);
         update();
 
     }else{
-         qDebug()<<"leave , change to select normal : "<< _selected;
+        // qDebug()<<"leave , change to select normal : "<< _selected;
         setProperty("state",_selected);
         repolish(this);
         update();

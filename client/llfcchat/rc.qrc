@@ -34,5 +34,6 @@
         <file>res/addtip.png</file>
         <file>res/right_tip.png</file>
         <file>res/arowdown.png</file>
+        <file>res/tipclose.png</file>
     </qresource>
 </RCC>

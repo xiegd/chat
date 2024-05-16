@@ -41,7 +41,9 @@ SOURCES += \
         clickedlabel.cpp \
         clickedoncelabel.cpp \
         customizeedit.cpp \
+        customizetextedit.cpp \
         findsuccessdlg.cpp \
+        friendlabel.cpp \
         global.cpp \
         httpmgr.cpp \
         invaliditem.cpp \
@@ -74,7 +76,9 @@ HEADERS += \
         clickedlabel.h \
         clickedoncelabel.h \
         customizeedit.h \
+        customizetextedit.h \
         findsuccessdlg.h \
+        friendlabel.h \
         global.h \
         httpmgr.h \
         invaliditem.h \
@@ -97,6 +101,7 @@ FORMS += \
         chatdialog.ui \
         chatuserwid.ui \
         findsuccessdlg.ui \
+        friendlabel.ui \
         loadingdlg.ui \
         logindialog.ui \
         mainwindow.ui \

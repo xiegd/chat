@@ -25,6 +25,7 @@ private:
 
 public slots:
     void ShowMoreLabel();
+    void SlotLabelEnter();
 };
 
 #endif // APPLYFRIEND_H

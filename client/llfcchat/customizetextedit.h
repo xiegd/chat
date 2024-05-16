@@ -1,13 +1,12 @@
-#ifndef CUSTOMIZEEDIT_H
-#define CUSTOMIZEEDIT_H
-#include <QLineEdit>
-#include <QDebug>
+#ifndef CUSTOMIZETEXTEDIT_H
+#define CUSTOMIZETEXTEDIT_H
+#include <QTextEdit>
 
-class CustomizeEdit: public QLineEdit
+class CustomizeTextEdit:public QTextEdit
 {
     Q_OBJECT
 public:
-    CustomizeEdit(QWidget *parent = nullptr);
+    CustomizeTextEdit(QWidget *parent = nullptr);
 
 protected:
     void focusOutEvent(QFocusEvent *event) override
@@ -15,7 +14,7 @@ protected:
         // 执行失去焦点时的处理逻辑
         //qDebug() << "CustomizeEdit focusout";
         // 调用基类的focusOutEvent()方法，保证基类的行为得到执行
-        QLineEdit::focusOutEvent(event);
+        QTextEdit::focusOutEvent(event);
         //发送失去焦点得信号
         emit sig_foucus_out();
     }
@@ -24,4 +23,4 @@ signals:
     void sig_foucus_out();
 };
 
-#endif // CUSTOMIZEEDIT_H
+#endif // CUSTOMIZETEXTEDIT_H

@@ -337,6 +337,10 @@ LoadingDlg{
     border-image: url(:/res/contact_list_press.png);
 }
 
+#search_edit {
+    border: 2px solid #f1f1f1;
+}
+
 /* 搜索框列表*/
 #search_list {
     background-color: rgb(247,247,248);
@@ -431,12 +435,14 @@ LoadingDlg{
     font-family: "Microsoft YaHei";
 }
 
-#apply_wid #more_lb{
-    border-image: url(:/res/arowdown.png);
+#apply_wid #lb_ed {
+       border: none;
+       font-size: 14px;
+       font-family: "Microsoft YaHei";
 }
 
-#lb_list{
-    background: #d0e7f5;
+#apply_wid #more_lb{
+    border-image: url(:/res/arowdown.png);
 }
 
 #apply_wid #tipslb[state='normal'] {
@@ -481,3 +487,20 @@ LoadingDlg{
     border-radius: 10px;
 }
 
+#input_tip_wid {
+    background: #d3eaf8;
+}
+
+#apply_wid #FriendLabel {
+    background: #daf6e7;
+    color: #48bf56;
+    border-radius: 10px;
+}
+
+#apply_wid #tip_lb {
+    padding: 2px;
+}
+
+#gridWidget {
+   background: #fdfdfd;
+}

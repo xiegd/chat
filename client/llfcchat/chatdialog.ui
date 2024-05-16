@@ -605,6 +605,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>CustomizeEdit</class>
+   <extends>QLineEdit</extends>
+   <header>customizeedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>ClickedLabel</class>
    <extends>QLabel</extends>
    <header>clickedlabel.h</header>
@@ -634,11 +639,6 @@
    <class>StateLabel</class>
    <extends>QLabel</extends>
    <header>statelabel.h</header>
-  </customwidget>
-  <customwidget>
-   <class>CustomizeEdit</class>
-   <extends>QLineEdit</extends>
-   <header>customizeedit.h</header>
   </customwidget>
   <customwidget>
    <class>SearchList</class>

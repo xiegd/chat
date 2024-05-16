@@ -22,6 +22,9 @@ private:
     Ui::ApplyFriend *ui;
     QMap<QString, ClickedLabel*> _add_labels;
     std::vector<QString> _add_label_keys;
+    int row ;
+    int col;
+    int row_width;
 
 public slots:
     void ShowMoreLabel();

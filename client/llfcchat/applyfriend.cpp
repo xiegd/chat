@@ -5,7 +5,7 @@
 
 ApplyFriend::ApplyFriend(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ApplyFriend)
+    ui(new Ui::ApplyFriend),row(0),col(0),row_width(0)
 {
     ui->setupUi(this);
     // 隐藏对话框标题栏
@@ -157,4 +157,6 @@ void ApplyFriend::SlotLabelEnter()
     ui->lb_grid->addWidget(tmplabel,0,0);
     ui->lb_grid->addWidget(ui->lb_ed,0,1);
     ui->lb_ed->clear();
+
+    //todo... 添加宽度统计
 }

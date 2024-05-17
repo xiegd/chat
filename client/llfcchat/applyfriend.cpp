@@ -5,7 +5,7 @@
 
 ApplyFriend::ApplyFriend(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ApplyFriend),row(0),col(0),row_width(0)
+    ui(new Ui::ApplyFriend),_label_point(2,6)
 {
     ui->setupUi(this);
     // 隐藏对话框标题栏
@@ -19,6 +19,9 @@ ApplyFriend::ApplyFriend(QWidget *parent) :
     InitTestLbs();
     //链接输入标签回车事件
     connect(ui->lb_ed, &CustomizeEdit::returnPressed, this, &ApplyFriend::SlotLabelEnter);
+
+    ui->lb_ed->move(2,2);
+    ui->lb_ed->setFixedHeight(20);
 }
 
 ApplyFriend::~ApplyFriend()
@@ -151,12 +154,90 @@ void ApplyFriend::SlotLabelEnter()
         return;
     }
 
-    auto tmplabel = new FriendLabel(this);
-    tmplabel->SetText("hello world!");
+    auto tmplabel = new FriendLabel(ui->gridWidget);
+    tmplabel->SetText(ui->lb_ed->text());
     tmplabel->setObjectName("FriendLabel");
-    ui->lb_grid->addWidget(tmplabel,0,0);
-    ui->lb_grid->addWidget(ui->lb_ed,0,1);
+
+    auto max_width = ui->gridWidget->width();
+    //todo... 添加宽度统计
+    if( _label_point.x() + tmplabel->width() > max_width) {
+        _label_point.setY(_label_point.y()+tmplabel->height()+6);
+        _label_point.setX(2);
+    }else{
+
+    }
+
+
+    tmplabel->move(_label_point);
+    tmplabel->show();
+    _friend_labels[tmplabel->Text()] = tmplabel;
+    _friend_label_keys.push_back(tmplabel->Text());
+
+    connect(tmplabel, &FriendLabel::sig_close, this, &ApplyFriend::SlotRemoveFriendLabel);
+
+     _label_point.setX(_label_point.x() + tmplabel->width()+2);
+
+    if(_label_point.x() + MIN_APPLY_LABEL_ED_LEN > ui->gridWidget->width()){
+        ui->lb_ed->move(2,_label_point.y()+tmplabel->height()+2);
+    }else{
+        ui->lb_ed->move(_label_point);
+    }
+
     ui->lb_ed->clear();
 
-    //todo... 添加宽度统计
+    if(ui->gridWidget->height() < _label_point.y()+tmplabel->height()+2){
+         ui->gridWidget->setFixedHeight(_label_point.y()+tmplabel->height()*2+2);
+    }
+
+}
+
+void ApplyFriend::SlotRemoveFriendLabel(QString name)
+{
+    qDebug() << "receive close signal";
+   auto iter =  _friend_labels.find(name);
+   if(iter == _friend_labels.end()){
+        return;
+   }
+
+   auto old_rect = iter.value()->geometry();
+
+   if(_friend_label_keys.size() == 1){
+       delete  iter.value();
+       _friend_labels.erase(iter);
+       _friend_label_keys.clear();
+       ui->lb_ed->move(old_rect.x(), old_rect.y());
+       return;
+   }
+
+   auto find_index = -1;
+   for(int i = 0; i < _friend_label_keys.size(); i++){
+       if(_friend_label_keys[i] == name){
+            find_index = i;
+       }
+   }
+
+   if(find_index == -1){
+       return;
+   }
+
+  auto last =  _friend_label_keys.back();
+  auto last_iter = _friend_labels.find(last);
+  if(last_iter == _friend_labels.end()){
+    return;
+  }
+
+  auto last_rect = last_iter.value()->geometry();
+
+  last_iter.value()->move(old_rect.x(), old_rect.y());
+
+  _friend_label_keys[find_index] = last;
+
+  _friend_label_keys.pop_back();
+
+   delete  iter.value();
+
+  _friend_labels.erase(iter);
+
+  ui->lb_ed->move(last_rect.x(), last_rect.y());
+
 }

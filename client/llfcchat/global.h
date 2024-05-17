@@ -94,4 +94,7 @@ enum ListItemType{
     InvalidItem,  //不可点击条目
 };
 
+//申请好友标签输入框最低长度
+const int MIN_APPLY_LABEL_ED_LEN = 40;
+
 #endif // GLOBAL_H

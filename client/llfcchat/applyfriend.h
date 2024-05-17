@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "clickedlabel.h"
+#include "friendlabel.h"
 
 namespace Ui {
 class ApplyFriend;
@@ -22,13 +23,13 @@ private:
     Ui::ApplyFriend *ui;
     QMap<QString, ClickedLabel*> _add_labels;
     std::vector<QString> _add_label_keys;
-    int row ;
-    int col;
-    int row_width;
-
+    QPoint _label_point;
+    QMap<QString, FriendLabel*> _friend_labels;
+    std::vector<QString> _friend_label_keys;
 public slots:
     void ShowMoreLabel();
     void SlotLabelEnter();
+    void SlotRemoveFriendLabel(QString);
 };
 
 #endif // APPLYFRIEND_H

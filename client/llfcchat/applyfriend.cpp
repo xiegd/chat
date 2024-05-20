@@ -194,50 +194,77 @@ void ApplyFriend::SlotLabelEnter()
 void ApplyFriend::SlotRemoveFriendLabel(QString name)
 {
     qDebug() << "receive close signal";
-   auto iter =  _friend_labels.find(name);
-   if(iter == _friend_labels.end()){
-        return;
-   }
 
-   auto old_rect = iter.value()->geometry();
+   auto find_iter = _friend_labels.find(name);
 
-   if(_friend_label_keys.size() == 1){
-       delete  iter.value();
-       _friend_labels.erase(iter);
-       _friend_label_keys.clear();
-       ui->lb_ed->move(old_rect.x(), old_rect.y());
+   if(find_iter == _friend_labels.end()){
        return;
    }
 
-   auto find_index = -1;
-   for(int i = 0; i < _friend_label_keys.size(); i++){
-       if(_friend_label_keys[i] == name){
-            find_index = i;
+   auto find_key = _friend_label_keys.end();
+   for(auto iter = _friend_label_keys.begin(); iter != _friend_label_keys.end();
+       iter++){
+       if(*iter == name){
+           find_key = iter;
+           break;
        }
    }
 
-   if(find_index == -1){
-       return;
-   }
 
-  auto last =  _friend_label_keys.back();
-  auto last_iter = _friend_labels.find(last);
-  if(last_iter == _friend_labels.end()){
-    return;
-  }
+//   auto find_iter =  _friend_labels.find(name);
+//   if(find_iter == _friend_labels.end()){
+//        return;
+//   }
 
-  auto last_rect = last_iter.value()->geometry();
+//   auto old_rect = find_iter.value()->geometry();
 
-  last_iter.value()->move(old_rect.x(), old_rect.y());
+//   if(_friend_label_keys.size() == 1){
+//       delete  find_iter.value();
+//       _friend_labels.erase(find_iter);
+//       _friend_label_keys.clear();
+//       ui->lb_ed->move(old_rect.x(), old_rect.y());
+//       _label_point.setX(old_rect.x());
+//       _label_point.setY(old_rect.y());
+//       return;
+//   }
 
-  _friend_label_keys[find_index] = last;
+//   auto find_index = -1;
+//   for(int i = 0; i < _friend_label_keys.size(); i++){
+//       if(_friend_label_keys[i] == name){
+//            find_index = i;
+//            break;
+//       }
+//   }
 
-  _friend_label_keys.pop_back();
+//   if(find_index == -1){
+//       return;
+//   }
 
-   delete  iter.value();
+//  auto last =  _friend_label_keys.back();
+//  auto last_iter = _friend_labels.find(last);
+//  if(last_iter == _friend_labels.end()){
+//    return;
+//  }
 
-  _friend_labels.erase(iter);
+//  auto last_rect = last_iter.value()->geometry();
 
-  ui->lb_ed->move(last_rect.x(), last_rect.y());
+//  //删除的是最后一个就不需要移动最后一个标签了
+//  if(last_iter != find_iter){
+//      last_iter.value()->move(old_rect.x(), old_rect.y());
+//  }
+
+
+//  _friend_label_keys[find_index] = last;
+
+//  _friend_label_keys.pop_back();
+
+//   delete  find_iter.value();
+
+//  _friend_labels.erase(find_iter);
+
+//  ui->lb_ed->move(last_rect.x(), last_rect.y());
+
+//  _label_point.setX(last_rect.x());
+//  _label_point.setY(last_rect.y());
 
 }

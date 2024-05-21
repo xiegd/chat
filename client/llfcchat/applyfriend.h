@@ -20,6 +20,7 @@ public:
     bool AddTestLbs(QString str, QPoint cur_point, QPoint &next_point);
 
 private:
+    void resetLabels();
     Ui::ApplyFriend *ui;
     QMap<QString, ClickedLabel*> _add_labels;
     std::vector<QString> _add_label_keys;
@@ -30,6 +31,7 @@ public slots:
     void ShowMoreLabel();
     void SlotLabelEnter();
     void SlotRemoveFriendLabel(QString);
+    void SlotChangeFriendLabelByTip(QString, ClickLbState);
 };
 
 #endif // APPLYFRIEND_H

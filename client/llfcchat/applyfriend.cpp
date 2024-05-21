@@ -20,8 +20,10 @@ ApplyFriend::ApplyFriend(QWidget *parent) :
     //链接输入标签回车事件
     connect(ui->lb_ed, &CustomizeEdit::returnPressed, this, &ApplyFriend::SlotLabelEnter);
 
+    ui->lb_ed->SetMaxLength(21);
     ui->lb_ed->move(2,2);
     ui->lb_ed->setFixedHeight(20);
+    ui->lb_ed->setMaxLength(10);
 }
 
 ApplyFriend::~ApplyFriend()
@@ -61,7 +63,7 @@ bool ApplyFriend::AddTestLbs(QString str, QPoint cur_point, QPoint &next_point)
                  "selected_hover","selected_pressed");
     lb->setObjectName("tipslb");
     lb->setText(str);
-
+    connect(lb, &ClickedLabel::clicked, this, &ApplyFriend::SlotChangeFriendLabelByTip);
     QFontMetrics fontMetrics(lb->font()); // 获取QLabel控件的字体信息
     int textWidth = fontMetrics.width(lb->text()); // 获取文本的宽度
     int textHeight = fontMetrics.height(); // 获取文本的高度
@@ -85,10 +87,8 @@ bool ApplyFriend::AddTestLbs(QString str, QPoint cur_point, QPoint &next_point)
     next_point.setX(lb->pos().x() + textWidth + 15);
     next_point.setY(lb->pos().y());
 
-   return false;
+    return false;
 }
-
-
 
 void ApplyFriend::ShowMoreLabel()
 {
@@ -148,6 +148,37 @@ void ApplyFriend::ShowMoreLabel()
 
 }
 
+void ApplyFriend::resetLabels()
+{
+    auto max_width = ui->gridWidget->width();
+    auto label_height = 0;
+    for(auto iter = _friend_labels.begin(); iter != _friend_labels.end(); iter++){
+        //todo... 添加宽度统计
+        if( _label_point.x() + iter.value()->width() > max_width) {
+            _label_point.setY(_label_point.y()+iter.value()->height()+6);
+            _label_point.setX(2);
+        }
+
+        iter.value()->move(_label_point);
+        iter.value()->show();
+
+        _label_point.setX(_label_point.x()+iter.value()->width()+2);
+        _label_point.setY(_label_point.y());
+        label_height = iter.value()->height();
+    }
+
+    if(_friend_labels.isEmpty()){
+         ui->lb_ed->move(_label_point);
+         return;
+    }
+
+    if(_label_point.x() + MIN_APPLY_LABEL_ED_LEN > ui->gridWidget->width()){
+        ui->lb_ed->move(2,_label_point.y()+label_height+6);
+    }else{
+         ui->lb_ed->move(_label_point);
+    }
+}
+
 void ApplyFriend::SlotLabelEnter()
 {
     if(ui->lb_ed->text().isEmpty()){
@@ -195,6 +226,9 @@ void ApplyFriend::SlotRemoveFriendLabel(QString name)
 {
     qDebug() << "receive close signal";
 
+    _label_point.setX(2);
+    _label_point.setY(6);
+
    auto find_iter = _friend_labels.find(name);
 
    if(find_iter == _friend_labels.end()){
@@ -210,61 +244,35 @@ void ApplyFriend::SlotRemoveFriendLabel(QString name)
        }
    }
 
-
-//   auto find_iter =  _friend_labels.find(name);
-//   if(find_iter == _friend_labels.end()){
-//        return;
-//   }
-
-//   auto old_rect = find_iter.value()->geometry();
-
-//   if(_friend_label_keys.size() == 1){
-//       delete  find_iter.value();
-//       _friend_labels.erase(find_iter);
-//       _friend_label_keys.clear();
-//       ui->lb_ed->move(old_rect.x(), old_rect.y());
-//       _label_point.setX(old_rect.x());
-//       _label_point.setY(old_rect.y());
-//       return;
-//   }
-
-//   auto find_index = -1;
-//   for(int i = 0; i < _friend_label_keys.size(); i++){
-//       if(_friend_label_keys[i] == name){
-//            find_index = i;
-//            break;
-//       }
-//   }
-
-//   if(find_index == -1){
-//       return;
-//   }
-
-//  auto last =  _friend_label_keys.back();
-//  auto last_iter = _friend_labels.find(last);
-//  if(last_iter == _friend_labels.end()){
-//    return;
-//  }
-
-//  auto last_rect = last_iter.value()->geometry();
-
-//  //删除的是最后一个就不需要移动最后一个标签了
-//  if(last_iter != find_iter){
-//      last_iter.value()->move(old_rect.x(), old_rect.y());
-//  }
+   if(find_key != _friend_label_keys.end()){
+      _friend_label_keys.erase(find_key);
+   }
 
 
-//  _friend_label_keys[find_index] = last;
+   delete find_iter.value();
 
-//  _friend_label_keys.pop_back();
+   _friend_labels.erase(find_iter);
 
-//   delete  find_iter.value();
+   resetLabels();
+}
 
-//  _friend_labels.erase(find_iter);
+void ApplyFriend::SlotChangeFriendLabelByTip(QString lbtext, ClickLbState state)
+{
+    auto find_iter = _friend_labels.find(lbtext);
+    if(find_iter == _friend_labels.end()){
+        return;
+    }
 
-//  ui->lb_ed->move(last_rect.x(), last_rect.y());
+    if(state == ClickLbState::Selected){
+        //编写添加逻辑
+        return;
+    }
 
-//  _label_point.setX(last_rect.x());
-//  _label_point.setY(last_rect.y());
+    if(state == ClickLbState::Normal){
+        //编写删除逻辑
+        return;
+    }
 
 }
+
+

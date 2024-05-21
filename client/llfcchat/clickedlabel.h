@@ -29,7 +29,7 @@ private:
 
     ClickLbState _curstate;
 signals:
-    void clicked(void);
+    void clicked(QString, ClickLbState);
 
 };
 

@@ -19,6 +19,8 @@ ApplyFriend::ApplyFriend(QWidget *parent) :
     InitTestLbs();
     //链接输入标签回车事件
     connect(ui->lb_ed, &CustomizeEdit::returnPressed, this, &ApplyFriend::SlotLabelEnter);
+    connect(ui->lb_ed, &CustomizeEdit::textChanged, this, &ApplyFriend::SlotLabelTextChange);
+    connect(ui->lb_ed, &CustomizeEdit::editingFinished, this, &ApplyFriend::SlotLabelEditFinished);
 
     ui->lb_ed->SetMaxLength(21);
     ui->lb_ed->move(2,2);
@@ -179,47 +181,59 @@ void ApplyFriend::resetLabels()
     }
 }
 
+void ApplyFriend::addLabel(QString name)
+{
+    if (_friend_labels.find(name) != _friend_labels.end()) {
+        return;
+    }
+
+	auto tmplabel = new FriendLabel(ui->gridWidget);
+	tmplabel->SetText(name);
+	tmplabel->setObjectName("FriendLabel");
+
+	auto max_width = ui->gridWidget->width();
+	//todo... 添加宽度统计
+	if (_label_point.x() + tmplabel->width() > max_width) {
+		_label_point.setY(_label_point.y() + tmplabel->height() + 6);
+		_label_point.setX(2);
+	}
+	else {
+
+	}
+
+
+	tmplabel->move(_label_point);
+	tmplabel->show();
+	_friend_labels[tmplabel->Text()] = tmplabel;
+	_friend_label_keys.push_back(tmplabel->Text());
+
+	connect(tmplabel, &FriendLabel::sig_close, this, &ApplyFriend::SlotRemoveFriendLabel);
+
+	_label_point.setX(_label_point.x() + tmplabel->width() + 2);
+
+	if (_label_point.x() + MIN_APPLY_LABEL_ED_LEN > ui->gridWidget->width()) {
+		ui->lb_ed->move(2, _label_point.y() + tmplabel->height() + 2);
+	}
+	else {
+		ui->lb_ed->move(_label_point);
+	}
+
+	ui->lb_ed->clear();
+
+	if (ui->gridWidget->height() < _label_point.y() + tmplabel->height() + 2) {
+		ui->gridWidget->setFixedHeight(_label_point.y() + tmplabel->height() * 2 + 2);
+	}
+}
+
 void ApplyFriend::SlotLabelEnter()
 {
     if(ui->lb_ed->text().isEmpty()){
         return;
     }
 
-    auto tmplabel = new FriendLabel(ui->gridWidget);
-    tmplabel->SetText(ui->lb_ed->text());
-    tmplabel->setObjectName("FriendLabel");
+    addLabel(ui->lb_ed->text());
 
-    auto max_width = ui->gridWidget->width();
-    //todo... 添加宽度统计
-    if( _label_point.x() + tmplabel->width() > max_width) {
-        _label_point.setY(_label_point.y()+tmplabel->height()+6);
-        _label_point.setX(2);
-    }else{
-
-    }
-
-
-    tmplabel->move(_label_point);
-    tmplabel->show();
-    _friend_labels[tmplabel->Text()] = tmplabel;
-    _friend_label_keys.push_back(tmplabel->Text());
-
-    connect(tmplabel, &FriendLabel::sig_close, this, &ApplyFriend::SlotRemoveFriendLabel);
-
-     _label_point.setX(_label_point.x() + tmplabel->width()+2);
-
-    if(_label_point.x() + MIN_APPLY_LABEL_ED_LEN > ui->gridWidget->width()){
-        ui->lb_ed->move(2,_label_point.y()+tmplabel->height()+2);
-    }else{
-        ui->lb_ed->move(_label_point);
-    }
-
-    ui->lb_ed->clear();
-
-    if(ui->gridWidget->height() < _label_point.y()+tmplabel->height()+2){
-         ui->gridWidget->setFixedHeight(_label_point.y()+tmplabel->height()*2+2);
-    }
-
+    ui->input_tip_wid->hide();
 }
 
 void ApplyFriend::SlotRemoveFriendLabel(QString name)
@@ -258,21 +272,33 @@ void ApplyFriend::SlotRemoveFriendLabel(QString name)
 
 void ApplyFriend::SlotChangeFriendLabelByTip(QString lbtext, ClickLbState state)
 {
-    auto find_iter = _friend_labels.find(lbtext);
-    if(find_iter == _friend_labels.end()){
+    auto find_iter = _add_labels.find(lbtext);
+    if(find_iter == _add_labels.end()){
         return;
     }
 
     if(state == ClickLbState::Selected){
         //编写添加逻辑
+        addLabel(lbtext);
         return;
     }
 
     if(state == ClickLbState::Normal){
         //编写删除逻辑
+        SlotRemoveFriendLabel(lbtext);
         return;
     }
 
+}
+
+void ApplyFriend::SlotLabelTextChange(const QString& text)
+{
+    ui->input_tip_wid->hide();
+}
+
+void ApplyFriend::SlotLabelEditFinished()
+{
+    ui->input_tip_wid->hide();
 }
 
 

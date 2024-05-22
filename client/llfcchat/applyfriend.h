@@ -27,11 +27,14 @@ private:
     QPoint _label_point;
     QMap<QString, FriendLabel*> _friend_labels;
     std::vector<QString> _friend_label_keys;
+    void addLabel(QString name);
 public slots:
     void ShowMoreLabel();
     void SlotLabelEnter();
     void SlotRemoveFriendLabel(QString);
     void SlotChangeFriendLabelByTip(QString, ClickLbState);
+    void SlotLabelTextChange(const QString& text);
+    void SlotLabelEditFinished();
 };
 
 #endif // APPLYFRIEND_H

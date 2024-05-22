@@ -24,7 +24,7 @@ void StateLabel::mousePressEvent(QMouseEvent* event)  {
             update();
         }
 
-       // emit clicked();
+        return;
     }
     // 调用基类的mousePressEvent以保证正常的事件处理
     QLabel::mousePressEvent(event);
@@ -46,6 +46,7 @@ void StateLabel::mouseReleaseEvent(QMouseEvent *event)
             update();
         }
         emit clicked();
+        return;
     }
     // 调用基类的mousePressEvent以保证正常的事件处理
     QLabel::mousePressEvent(event);

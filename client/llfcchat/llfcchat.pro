@@ -162,3 +162,5 @@ CONFIG(debug, debug|release) {
     # 使用xcopy命令拷贝文件夹，/E表示拷贝子目录及其内容，包括空目录。/I表示如果目标不存在则创建目录。/Y表示覆盖现有文件而不提示。
      QMAKE_POST_LINK += xcopy /Y /E /I \"$$StaticDir\" \"$$OutputDir\\static\\\"
 }
+
+win32-msvc*:QMAKE_CXXFLAGS += /wd"4819" /utf-8

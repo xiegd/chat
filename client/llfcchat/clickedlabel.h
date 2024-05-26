@@ -16,6 +16,7 @@ public:
                   QString select="", QString select_hover="", QString select_press="");
 
     ClickLbState GetCurState();
+    bool SetCurState(ClickLbState state);
 protected:
 
 private:

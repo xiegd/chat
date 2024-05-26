@@ -498,7 +498,10 @@ LoadingDlg{
 }
 
 #apply_wid #tip_lb {
-    padding: 2px;
+    padding-left: 2px;
+    color:rgb(153,153,153);
+    font-size: 14px;
+    font-family: "Microsoft YaHei";
 }
 
 #gridWidget {

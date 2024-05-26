@@ -107,5 +107,19 @@ ClickLbState ClickedLabel::GetCurState(){
     return _curstate;
 }
 
+bool ClickedLabel::SetCurState(ClickLbState state)
+{
+    _curstate = state;
+    if (_curstate == ClickLbState::Normal) {
+		setProperty("state", _normal);
+		repolish(this);
+    }
+    else if (_curstate == ClickLbState::Selected) {
+		setProperty("state", _selected);
+		repolish(this);
+    }
+
+    return true;
+}
 
 

@@ -15,17 +15,26 @@ ApplyFriend::ApplyFriend(QWidget *parent) :
     ui->name_ed->setPlaceholderText(tr("恋恋风辰"));
     ui->lb_ed->setPlaceholderText("搜索、添加标签");
     ui->back_ed->setPlaceholderText("燃烧的胸毛");
+
+	ui->lb_ed->SetMaxLength(21);
+	ui->lb_ed->move(2, 2);
+	ui->lb_ed->setFixedHeight(20);
+	ui->lb_ed->setMaxLength(10);
+	ui->input_tip_wid->hide();
+
+    _tip_cur_point = QPoint(5, 5);
+
+	_tip_data = { "同学","家人","菜鸟教程","C++ Primer","Rust 程序设计",
+							 "父与子学Python","nodejs开发指南","go 语言开发指南",
+								"游戏伙伴","金融投资","微信读书","拼多多拼友" };
+
     connect(ui->more_lb, &ClickedOnceLabel::clicked, this, &ApplyFriend::ShowMoreLabel);
-    InitTestLbs();
+    InitTipLbs();
     //链接输入标签回车事件
     connect(ui->lb_ed, &CustomizeEdit::returnPressed, this, &ApplyFriend::SlotLabelEnter);
     connect(ui->lb_ed, &CustomizeEdit::textChanged, this, &ApplyFriend::SlotLabelTextChange);
     connect(ui->lb_ed, &CustomizeEdit::editingFinished, this, &ApplyFriend::SlotLabelEditFinished);
-
-    ui->lb_ed->SetMaxLength(21);
-    ui->lb_ed->move(2,2);
-    ui->lb_ed->setFixedHeight(20);
-    ui->lb_ed->setMaxLength(10);
+    connect(ui->tip_lb, &ClickedOnceLabel::clicked, this, &ApplyFriend::SlotAddFirendLabelByClickTip);
 }
 
 ApplyFriend::~ApplyFriend()
@@ -33,63 +42,52 @@ ApplyFriend::~ApplyFriend()
     delete ui;
 }
 
-void ApplyFriend::InitTestLbs()
+void ApplyFriend::InitTipLbs()
 {
-    QList<QString> lables = {"同学","家人","菜鸟教程","C++ Primer","Rust 程序设计",
-                             "父与子学Python","nodejs开发指南","go 语言开发指南",
-                                "游戏伙伴","金融投资","微信读书","拼多多拼友"};
-
-    QPoint cur_point(5,5);
-    auto next_point = cur_point;
     int lines = 1;
-    for(int i = 0; i < lables.size(); i++){
+    for(int i = 0; i < _tip_data.size(); i++){
 
-       bool line_break = AddTestLbs(lables[i],cur_point,next_point);
-       if(line_break){
+		auto* lb = new ClickedLabel(ui->lb_list);
+		lb->SetState("normal", "hover", "pressed", "selected_normal",
+			"selected_hover", "selected_pressed");
+		lb->setObjectName("tipslb");
+		lb->setText(_tip_data[i]);
+		connect(lb, &ClickedLabel::clicked, this, &ApplyFriend::SlotChangeFriendLabelByTip);
+
+		QFontMetrics fontMetrics(lb->font()); // 获取QLabel控件的字体信息
+		int textWidth = fontMetrics.width(lb->text()); // 获取文本的宽度
+		int textHeight = fontMetrics.height(); // 获取文本的高度
+
+		if (_tip_cur_point.x() + textWidth + tip_offset > ui->lb_list->width()) {
             lines++;
-       }
+            if (lines > 2) {
+                delete lb;
+                return;
+            }
+			
+            _tip_cur_point.setX(tip_offset);
+            _tip_cur_point.setY(_tip_cur_point.y() + textHeight + 15);
 
-       if(lines >= 3){
-            break;
-       }
+		}
 
-       cur_point = next_point;
+       auto next_point = _tip_cur_point;
+
+       AddTipLbs(lb, _tip_cur_point,next_point, textWidth, textHeight);
+
+       _tip_cur_point = next_point;
     }
 
 }
 
-bool ApplyFriend::AddTestLbs(QString str, QPoint cur_point, QPoint &next_point)
+
+void ApplyFriend::AddTipLbs(ClickedLabel* lb, QPoint cur_point, QPoint& next_point, int text_width, int text_height)
 {
-    auto *lb = new ClickedLabel(ui->lb_list);
-    lb->SetState("normal","hover","pressed","selected_normal",
-                 "selected_hover","selected_pressed");
-    lb->setObjectName("tipslb");
-    lb->setText(str);
-    connect(lb, &ClickedLabel::clicked, this, &ApplyFriend::SlotChangeFriendLabelByTip);
-    QFontMetrics fontMetrics(lb->font()); // 获取QLabel控件的字体信息
-    int textWidth = fontMetrics.width(lb->text()); // 获取文本的宽度
-    int textHeight = fontMetrics.height(); // 获取文本的高度
-
-    if(cur_point.x() +textWidth > ui->lb_list->width()){
-        cur_point.setX(5);
-        cur_point.setY(cur_point.y()+textHeight+15);
-    }
-
-    lb->move(cur_point);
-    lb->show();
-    _add_labels.insert(str, lb);
-    _add_label_keys.push_back(str);
-
-    if(cur_point.x() +textWidth > ui->lb_list->width()){
-        next_point.setY(lb->pos().y()+ textHeight+15);
-        next_point.setX(5);
-        return true;
-    }
-
-    next_point.setX(lb->pos().x() + textWidth + 15);
-    next_point.setY(lb->pos().y());
-
-    return false;
+	lb->move(cur_point);
+	lb->show();
+	_add_labels.insert(lb->text(), lb);
+	_add_label_keys.push_back(lb->text());
+	next_point.setX(lb->pos().x() + text_width + 15);
+	next_point.setY(lb->pos().y());
 }
 
 void ApplyFriend::ShowMoreLabel()
@@ -97,13 +95,9 @@ void ApplyFriend::ShowMoreLabel()
     qDebug()<< "receive more label clicked";
     ui->more_lb_wid->hide();
 
-    QList<QString> lables = {"同学","家人","菜鸟教程","C++ Primer","Rust 程序设计",
-                             "父与子学Python","nodejs开发指南","go 语言开发指南",
-                                "游戏伙伴","金融投资","微信读书","拼多多拼友"};
-
     ui->lb_list->setFixedWidth(325);
-    QPoint cur_point(5,5);
-    auto next_point = cur_point;
+    _tip_cur_point = QPoint(5, 5);
+    auto next_point = _tip_cur_point;
     int textWidth;
     int textHeight;
     //重拍现有的label
@@ -114,37 +108,53 @@ void ApplyFriend::ShowMoreLabel()
         textWidth = fontMetrics.width(added_lb->text()); // 获取文本的宽度
         textHeight = fontMetrics.height(); // 获取文本的高度
 
-        if(cur_point.x() +textWidth > ui->lb_list->width()){
-            cur_point.setX(5);
-            cur_point.setY(cur_point.y()+textHeight+15);
+        if(_tip_cur_point.x() +textWidth + tip_offset > ui->lb_list->width()){
+            _tip_cur_point.setX(tip_offset);
+            _tip_cur_point.setY(_tip_cur_point.y()+textHeight+15);
         }
-        added_lb->move(cur_point);
-
-        if(cur_point.x() +textWidth > ui->lb_list->width()){
-            next_point.setY(added_lb->pos().y()+ textHeight+15);
-            next_point.setX(5);
-            cur_point = next_point;
-            continue;
-        }
+        added_lb->move(_tip_cur_point);
 
         next_point.setX(added_lb->pos().x() + textWidth + 15);
-        next_point.setY(cur_point.y());
-        cur_point = next_point;
+        next_point.setY(_tip_cur_point.y());
+
+        _tip_cur_point = next_point;
 
     }
 
     //添加未添加的
-    for(int i = 0; i < lables.size(); i++){
-        auto iter = _add_labels.find(lables[i]);
+    for(int i = 0; i < _tip_data.size(); i++){
+        auto iter = _add_labels.find(_tip_data[i]);
         if(iter != _add_labels.end()){
             continue;
         }
 
-        bool line_break = AddTestLbs(lables[i],cur_point,next_point);
-        cur_point = next_point;
+		auto* lb = new ClickedLabel(ui->lb_list);
+		lb->SetState("normal", "hover", "pressed", "selected_normal",
+			"selected_hover", "selected_pressed");
+		lb->setObjectName("tipslb");
+		lb->setText(_tip_data[i]);
+		connect(lb, &ClickedLabel::clicked, this, &ApplyFriend::SlotChangeFriendLabelByTip);
+
+		QFontMetrics fontMetrics(lb->font()); // 获取QLabel控件的字体信息
+		int textWidth = fontMetrics.width(lb->text()); // 获取文本的宽度
+		int textHeight = fontMetrics.height(); // 获取文本的高度
+
+		if (_tip_cur_point.x() + textWidth + tip_offset > ui->lb_list->width()) {
+
+			_tip_cur_point.setX(tip_offset);
+			_tip_cur_point.setY(_tip_cur_point.y() + textHeight + 15);
+
+		}
+
+		auto next_point = _tip_cur_point;
+
+		AddTipLbs(lb, _tip_cur_point, next_point, textWidth, textHeight);
+
+		_tip_cur_point = next_point;
+
     }
 
-   ui->lb_list->setFixedSize(QSize(325, next_point.y()+textHeight+5));
+   ui->lb_list->setFixedHeight(next_point.y() + textHeight + tip_offset);
 
     //qDebug()<<"after resize ui->lb_list size is " <<  ui->lb_list->size();
 
@@ -293,7 +303,21 @@ void ApplyFriend::SlotChangeFriendLabelByTip(QString lbtext, ClickLbState state)
 
 void ApplyFriend::SlotLabelTextChange(const QString& text)
 {
-    ui->input_tip_wid->hide();
+    if (text.isEmpty()) {
+        ui->tip_lb->setText("");
+        ui->input_tip_wid->hide();
+        return;
+    }
+
+    auto iter = std::find(_tip_data.begin(), _tip_data.end(), text);
+    if (iter == _tip_data.end()) {
+        auto new_text = add_prefix + text;
+        ui->tip_lb->setText(new_text);
+        ui->input_tip_wid->show();
+        return;
+    }
+    ui->tip_lb->setText(text);
+    ui->input_tip_wid->show();
 }
 
 void ApplyFriend::SlotLabelEditFinished()
@@ -301,4 +325,46 @@ void ApplyFriend::SlotLabelEditFinished()
     ui->input_tip_wid->hide();
 }
 
+void ApplyFriend::SlotAddFirendLabelByClickTip(QString text)
+{
+    int index = text.indexOf(add_prefix);
+    if (index != -1) {
+        text = text.mid(index + add_prefix.length());
+    }
+    addLabel(text);
+    //标签展示栏也增加一个标签, 并设置绿色选中
+    if (index != -1) {
+        _tip_data.push_back(text);
+    }
+
+	auto* lb = new ClickedLabel(ui->lb_list);
+	lb->SetState("normal", "hover", "pressed", "selected_normal",
+		"selected_hover", "selected_pressed");
+	lb->setObjectName("tipslb");
+	lb->setText(text);
+	connect(lb, &ClickedLabel::clicked, this, &ApplyFriend::SlotChangeFriendLabelByTip);
+    qDebug() << "ui->lb_list->width() is " << ui->lb_list->width();
+    qDebug() << "_tip_cur_point.x() is " << _tip_cur_point.x();
+   
+	QFontMetrics fontMetrics(lb->font()); // 获取QLabel控件的字体信息
+	int textWidth = fontMetrics.width(lb->text()); // 获取文本的宽度
+	int textHeight = fontMetrics.height(); // 获取文本的高度
+    qDebug() << "textWidth is " << textWidth;
+
+	if (_tip_cur_point.x() + textWidth+ tip_offset+3 > ui->lb_list->width()) {
+
+		_tip_cur_point.setX(5);
+		_tip_cur_point.setY(_tip_cur_point.y() + textHeight + 15);
+
+	}
+
+	auto next_point = _tip_cur_point;
+
+	 AddTipLbs(lb, _tip_cur_point, next_point, textWidth,textHeight);
+	_tip_cur_point = next_point;
+
+    ui->lb_list->setFixedHeight(next_point.y() + textHeight + tip_offset);
+
+    lb->SetCurState(ClickLbState::Selected);
+}
 

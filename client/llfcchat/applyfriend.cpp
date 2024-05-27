@@ -146,7 +146,7 @@ void ApplyFriend::ShowMoreLabel()
 
 		}
 
-		auto next_point = _tip_cur_point;
+		 next_point = _tip_cur_point;
 
 		AddTipLbs(lb, _tip_cur_point, next_point, textWidth, textHeight);
 

@@ -18,7 +18,7 @@ public:
     ~ApplyFriend();
     void InitTipLbs();
     void AddTipLbs(ClickedLabel*, QPoint cur_point, QPoint &next_point, int text_width, int text_height);
-
+    bool eventFilter(QObject *obj, QEvent *event);
 private:
     void resetLabels();
     Ui::ApplyFriend *ui;

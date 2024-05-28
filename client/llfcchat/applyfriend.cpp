@@ -2,6 +2,7 @@
 #include "ui_applyfriend.h"
 #include "clickedlabel.h"
 #include "friendlabel.h"
+#include <QScrollBar>
 
 ApplyFriend::ApplyFriend(QWidget *parent) :
     QDialog(parent),
@@ -35,6 +36,10 @@ ApplyFriend::ApplyFriend(QWidget *parent) :
     connect(ui->lb_ed, &CustomizeEdit::textChanged, this, &ApplyFriend::SlotLabelTextChange);
     connect(ui->lb_ed, &CustomizeEdit::editingFinished, this, &ApplyFriend::SlotLabelEditFinished);
     connect(ui->tip_lb, &ClickedOnceLabel::clicked, this, &ApplyFriend::SlotAddFirendLabelByClickTip);
+
+    ui->scrollArea->horizontalScrollBar()->setHidden(true);
+    ui->scrollArea->verticalScrollBar()->setHidden(true);
+    ui->scrollArea->installEventFilter(this);
 }
 
 ApplyFriend::~ApplyFriend()
@@ -87,7 +92,20 @@ void ApplyFriend::AddTipLbs(ClickedLabel* lb, QPoint cur_point, QPoint& next_poi
 	_add_labels.insert(lb->text(), lb);
 	_add_label_keys.push_back(lb->text());
 	next_point.setX(lb->pos().x() + text_width + 15);
-	next_point.setY(lb->pos().y());
+    next_point.setY(lb->pos().y());
+}
+
+bool ApplyFriend::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj == ui->scrollArea && event->type() == QEvent::Enter)
+    {
+        ui->scrollArea->verticalScrollBar()->setHidden(false);
+    }
+    else if (obj == ui->scrollArea && event->type() == QEvent::Leave)
+    {
+        ui->scrollArea->verticalScrollBar()->setHidden(true);
+    }
+    return QObject::eventFilter(obj, event);
 }
 
 void ApplyFriend::ShowMoreLabel()
@@ -154,10 +172,11 @@ void ApplyFriend::ShowMoreLabel()
 
     }
 
+   int diff_height = next_point.y() + textHeight + tip_offset - ui->lb_list->height();
    ui->lb_list->setFixedHeight(next_point.y() + textHeight + tip_offset);
 
     //qDebug()<<"after resize ui->lb_list size is " <<  ui->lb_list->size();
-
+    ui->scrollcontent->setFixedHeight(ui->scrollcontent->height()+diff_height);
 }
 
 void ApplyFriend::resetLabels()
@@ -363,8 +382,11 @@ void ApplyFriend::SlotAddFirendLabelByClickTip(QString text)
 	 AddTipLbs(lb, _tip_cur_point, next_point, textWidth,textHeight);
 	_tip_cur_point = next_point;
 
+    int diff_height = next_point.y() + textHeight + tip_offset - ui->lb_list->height();
     ui->lb_list->setFixedHeight(next_point.y() + textHeight + tip_offset);
 
     lb->SetCurState(ClickLbState::Selected);
+
+    ui->scrollcontent->setFixedHeight(ui->scrollcontent->height()+ diff_height );
 }
 

@@ -422,6 +422,15 @@ LoadingDlg{
     background: #f7f7f8;
 }
 
+#scrollArea{
+    background: #f7f7f8;
+    border: none;
+}
+
+#scrollcontent{
+     background: #f7f7f8;
+}
+
 #apply_wid QLabel{
     color:rgb(140,140,140);
     font-size: 14px;

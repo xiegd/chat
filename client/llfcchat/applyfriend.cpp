@@ -40,10 +40,16 @@ ApplyFriend::ApplyFriend(QWidget *parent) :
     ui->scrollArea->horizontalScrollBar()->setHidden(true);
     ui->scrollArea->verticalScrollBar()->setHidden(true);
     ui->scrollArea->installEventFilter(this);
+    ui->sure_btn->SetState("normal","hover","press");
+    ui->cancel_btn->SetState("normal","hover","press");
+    //连接确认和取消按钮的槽函数
+    connect(ui->cancel_btn, &QPushButton::clicked, this, &ApplyFriend::SlotApplyCancel);
+    connect(ui->sure_btn, &QPushButton::clicked, this, &ApplyFriend::SlotApplySure);
 }
 
 ApplyFriend::~ApplyFriend()
 {
+    qDebug()<< "ApplyFriend destruct";
     delete ui;
 }
 
@@ -388,5 +394,17 @@ void ApplyFriend::SlotAddFirendLabelByClickTip(QString text)
     lb->SetCurState(ClickLbState::Selected);
 
     ui->scrollcontent->setFixedHeight(ui->scrollcontent->height()+ diff_height );
+}
+
+void ApplyFriend::SlotApplySure()
+{
+    this->hide();
+    deleteLater();
+}
+
+void ApplyFriend::SlotApplyCancel()
+{
+    this->hide();
+    deleteLater();
 }
 

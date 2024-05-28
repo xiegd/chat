@@ -43,6 +43,12 @@
    </property>
    <item>
     <widget class="QScrollArea" name="scrollArea">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>500</height>
+      </size>
+     </property>
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
@@ -51,8 +57,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>345</width>
-        <height>361</height>
+        <width>359</width>
+        <height>498</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -390,6 +396,22 @@
                   </property>
                  </widget>
                 </item>
+                <item>
+                 <spacer name="verticalSpacer_4">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
                </layout>
               </widget>
              </item>
@@ -404,7 +426,23 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="widget_2" native="true">
+    <spacer name="verticalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>10</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QWidget" name="apply_sure_wid" native="true">
      <property name="minimumSize">
       <size>
        <width>0</width>
@@ -426,7 +464,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="sure_btn">
+       <widget class="ClickedBtn" name="sure_btn">
         <property name="minimumSize">
          <size>
           <width>100</width>
@@ -458,7 +496,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="cancel_btn">
+       <widget class="ClickedBtn" name="cancel_btn">
         <property name="minimumSize">
          <size>
           <width>100</width>
@@ -511,6 +549,11 @@
    <class>ClickedOnceLabel</class>
    <extends>QLabel</extends>
    <header>clickedoncelabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ClickedBtn</class>
+   <extends>QPushButton</extends>
+   <header>clickedbtn.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

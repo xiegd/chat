@@ -45,6 +45,10 @@ public slots:
     void SlotLabelEditFinished();
    //点击提示后添加好友便签
     void SlotAddFirendLabelByClickTip(QString text);
+    //处理确认回调
+    void SlotApplySure();
+    //处理取消回调
+    void SlotApplyCancel();
 };
 
 #endif // APPLYFRIEND_H

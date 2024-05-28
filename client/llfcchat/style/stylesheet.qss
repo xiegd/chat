@@ -431,6 +431,12 @@ LoadingDlg{
      background: #f7f7f8;
 }
 
+#scrollcontent #apply_lb{
+    font-family: "Microsoft YaHei";
+    font-size: 16px;
+    font-weight: normal;
+}
+
 #apply_wid QLabel{
     color:rgb(140,140,140);
     font-size: 14px;
@@ -540,3 +546,52 @@ LoadingDlg{
 #close_lb[state='select_pressed'] {
     border-image: url(:/res/tipclose.png);
 }
+
+#apply_sure_wid #sure_btn[state='normal']  {
+    background: #f0f0f0;
+    color: #2cb46e;
+    font-size: 16px; /* 设置字体大小 */
+    font-family: "Microsoft YaHei"; /* 设置字体 */
+    border-radius: 20px; /* 设置圆角 */
+}
+
+#apply_sure_wid #sure_btn[state='hover'] {
+    background: #d2d2d2;
+    color: #2cb46e;
+    font-size: 16px; /* 设置字体大小 */
+    font-family: "Microsoft YaHei"; /* 设置字体 */
+    border-radius: 20px; /* 设置圆角 */
+}
+
+#apply_sure_wid #sure_btn[state='press'] {
+    background: #c6c6c6;
+    color: #2cb46e;
+    font-size: 16px; /* 设置字体大小 */
+    font-family: "Microsoft YaHei"; /* 设置字体 */
+    border-radius: 20px; /* 设置圆角 */
+}
+
+#apply_sure_wid #cancel_btn[state='normal']  {
+    background: #f0f0f0;
+    color: #2e2f30;
+    font-size: 16px; /* 设置字体大小 */
+    font-family: "Microsoft YaHei"; /* 设置字体 */
+    border-radius: 20px; /* 设置圆角 */
+}
+
+#apply_sure_wid #cancel_btn[state='hover'] {
+    background: #d2d2d2;
+    color: #2e2f30;
+    font-size: 16px; /* 设置字体大小 */
+    font-family: "Microsoft YaHei"; /* 设置字体 */
+    border-radius: 20px; /* 设置圆角 */
+}
+
+#apply_sure_wid #cancel_btn[state='press'] {
+    background: #c6c6c6;
+    color: #2e2f30;
+    font-size: 16px; /* 设置字体大小 */
+    font-family: "Microsoft YaHei"; /* 设置字体 */
+    border-radius: 20px; /* 设置圆角 */
+}
+

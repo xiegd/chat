@@ -18,6 +18,8 @@ public:
 
     ClickLbState GetCurState();
     void ClearState();
+
+    void SetSelected(bool bselected);
 protected:
 
 private:

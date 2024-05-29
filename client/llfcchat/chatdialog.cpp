@@ -50,6 +50,8 @@ ChatDialog::ChatDialog(QWidget *parent) :
         ui->search_edit->clear();
         clearAction->setIcon(QIcon(":/res/close_transparent.png")); // 清除文本后，切换回透明图标
         ui->search_edit->clearFocus();
+        //清除按钮被按下则不显示搜索框
+        ShowSearch(false);
     });
 
 
@@ -91,6 +93,9 @@ ChatDialog::ChatDialog(QWidget *parent) :
 
     //检测鼠标点击位置判断是否要清空搜索框
     this->installEventFilter(this); // 安装事件过滤器
+
+    //设置聊天label选中状态
+    ui->side_chat_lb->SetSelected(true);
 }
 
 ChatDialog::~ChatDialog()
@@ -224,11 +229,14 @@ void ChatDialog::slot_side_chat()
 {
     qDebug()<< "receive side chat clicked";
     ClearLabelState(ui->side_chat_lb);
+    ui->stackedWidget->setCurrentWidget(ui->chat_page);
 }
 
 void ChatDialog::slot_side_contact(){
     qDebug()<< "receive side contact clicked";
     ClearLabelState(ui->side_contact_lb);
+    //设置
+    ui->stackedWidget->setCurrentWidget(ui->contact_page);
 }
 
 void ChatDialog::slot_text_changed(const QString &str)

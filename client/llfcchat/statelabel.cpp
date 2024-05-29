@@ -116,5 +116,23 @@ void StateLabel::ClearState()
     update();
 }
 
+void StateLabel::SetSelected(bool bselected)
+{
+    if(bselected){
+        _curstate = ClickLbState::Selected;
+        setProperty("state",_selected);
+        repolish(this);
+        update();
+        return;
+    }
+
+    _curstate = ClickLbState::Normal;
+    setProperty("state",_normal);
+    repolish(this);
+    update();
+    return;
+
+}
+
 
 

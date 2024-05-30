@@ -16,7 +16,7 @@
 
 ChatDialog::ChatDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ChatDialog),_b_loading(false),_mode(ChatUIMode::ChatMode)
+    ui(new Ui::ChatDialog),_b_loading(false),_mode(ChatUIMode::ChatMode),_state(ChatUIMode::ChatMode)
 {
     ui->setupUi(this);
 
@@ -96,6 +96,10 @@ ChatDialog::ChatDialog(QWidget *parent) :
 
     //设置聊天label选中状态
     ui->side_chat_lb->SetSelected(true);
+
+    //连接加载联系人的信号和槽函数
+    connect(ui->con_user_list, &ContactUserList::sig_loading_contact_user,
+            this, &ChatDialog::slot_loading_contact_user);
 }
 
 ChatDialog::~ChatDialog()
@@ -115,8 +119,8 @@ bool ChatDialog::eventFilter(QObject *watched, QEvent *event)
 void ChatDialog::handleGlobalMousePress(QMouseEvent *event)
 {
     // 实现点击位置的判断和处理逻辑
-    // 先判断是否处于聊天模式，如聊天模式则忽略鼠标事件
-    if( _mode == ChatUIMode::ChatMode){
+    // 先判断是否处于搜索模式，如果不处于搜索模式则直接返回
+    if( _mode != ChatUIMode::SearchMode){
         return;
     }
 
@@ -198,12 +202,19 @@ void ChatDialog::ShowSearch(bool bsearch)
 {
     if(bsearch){
         ui->chat_user_list->hide();
+        ui->con_user_list->hide();
         ui->search_list->show();
         _mode = ChatUIMode::SearchMode;
-    }else{
+    }else if(_state == ChatUIMode::ChatMode){
         ui->chat_user_list->show();
+        ui->con_user_list->hide();
         ui->search_list->hide();
         _mode = ChatUIMode::ChatMode;
+    }else if(_state == ChatUIMode::ContactMode){
+        ui->chat_user_list->hide();
+        ui->search_list->hide();
+        ui->con_user_list->show();
+        _mode = ChatUIMode::ContactMode;
     }
 }
 
@@ -230,6 +241,8 @@ void ChatDialog::slot_side_chat()
     qDebug()<< "receive side chat clicked";
     ClearLabelState(ui->side_chat_lb);
     ui->stackedWidget->setCurrentWidget(ui->chat_page);
+    _state = ChatUIMode::ChatMode;
+    ShowSearch(false);
 }
 
 void ChatDialog::slot_side_contact(){
@@ -237,6 +250,8 @@ void ChatDialog::slot_side_contact(){
     ClearLabelState(ui->side_contact_lb);
     //设置
     ui->stackedWidget->setCurrentWidget(ui->contact_page);
+    _state = ChatUIMode::ContactMode;
+    ShowSearch(false);
 }
 
 void ChatDialog::slot_text_changed(const QString &str)
@@ -249,6 +264,11 @@ void ChatDialog::slot_focus_out()
 {
     qDebug()<< "receive focus out signal";
     ShowSearch(false);
+}
+
+void ChatDialog::slot_loading_contact_user()
+{
+    qDebug() << "slot loading contact user";
 }
 
 void ChatDialog::on_send_btn_clicked()

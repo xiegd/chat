@@ -31,12 +31,14 @@ private:
     QList<StateLabel*> _lb_list;
     void ShowSearch(bool bsearch = false);
     ChatUIMode _mode;
+    ChatUIMode _state;
 public slots:
     void slot_loading_chat_user();
     void slot_side_chat();
     void slot_side_contact();
     void slot_text_changed(const QString & str);
     void slot_focus_out();
+    void slot_loading_contact_user();
 private slots:
     void on_send_btn_clicked();
 };

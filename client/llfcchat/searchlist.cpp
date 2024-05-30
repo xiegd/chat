@@ -68,9 +68,7 @@ void SearchList::slot_item_clicked(QListWidgetItem *item)
     }
 
    if(itemType == ListItemType::AddUserTipItem){
-       if(_find_dlg){
-           return;
-       }
+
        // 创建对话框
        _find_dlg = std::make_shared<FindSuccessDlg>(this);
        // 显示对话框

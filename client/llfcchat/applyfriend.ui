@@ -546,14 +546,14 @@
    <header>customizeedit.h</header>
   </customwidget>
   <customwidget>
-   <class>ClickedOnceLabel</class>
-   <extends>QLabel</extends>
-   <header>clickedoncelabel.h</header>
-  </customwidget>
-  <customwidget>
    <class>ClickedBtn</class>
    <extends>QPushButton</extends>
    <header>clickedbtn.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ClickedOnceLabel</class>
+   <extends>QLabel</extends>
+   <header>clickedoncelabel.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

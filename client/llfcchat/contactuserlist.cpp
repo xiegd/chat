@@ -1,16 +1,16 @@
-#include "chatuserlist.h"
-#include<QScrollBar>
+#include "contactuserlist.h"
 
-ChatUserList::ChatUserList(QWidget *parent):QListWidget(parent)
+
+ContactUserList::ContactUserList(QWidget *parent)
 {
     Q_UNUSED(parent);
      this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
      this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     // 安装事件过滤器
-    this->viewport()->installEventFilter(this);
+     this->viewport()->installEventFilter(this);
 }
 
-bool ChatUserList::eventFilter(QObject *watched, QEvent *event)
+bool ContactUserList::eventFilter(QObject *watched, QEvent *event)
 {
     // 检查事件是否是鼠标悬浮进入或离开
     if (watched == this->viewport()) {
@@ -40,13 +40,14 @@ bool ChatUserList::eventFilter(QObject *watched, QEvent *event)
 
         if (maxScrollValue - currentValue <= 0) {
             // 滚动到底部，加载新的联系人
-            qDebug()<<"load more chat user";
+            qDebug()<<"load more contact user";
             //发送信号通知聊天界面加载更多聊天内容
-            emit sig_loading_chat_user();
+            emit sig_loading_contact_user();
          }
 
         return true; // 停止事件传递
     }
 
     return QListWidget::eventFilter(watched, event);
+
 }

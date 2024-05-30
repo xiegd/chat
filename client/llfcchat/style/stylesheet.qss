@@ -595,3 +595,8 @@ LoadingDlg{
     border-radius: 20px; /* 设置圆角 */
 }
 
+#con_user_list {
+    background-color: rgb(247,247,248);
+    border: none;
+}
+

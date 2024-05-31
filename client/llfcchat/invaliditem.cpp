@@ -2,5 +2,5 @@
 
 InvalidItem::InvalidItem(QWidget *parent) : ListItemBase(parent)
 {
-    SetItemType(ListItemType::InvalidItem);
+    SetItemType(ListItemType::INVALID_ITEM);
 }

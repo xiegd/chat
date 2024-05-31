@@ -600,3 +600,10 @@ LoadingDlg{
     border: none;
 }
 
+#GroupTipItem QLabel{
+    color: #2e2f30;
+    font-size: 12px; /* 设置字体大小 */
+    font-family: "Microsoft YaHei"; /* 设置字体 */
+    border: none;
+}
+

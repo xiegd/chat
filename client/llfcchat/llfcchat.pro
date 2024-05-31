@@ -46,6 +46,7 @@ SOURCES += \
         findsuccessdlg.cpp \
         friendlabel.cpp \
         global.cpp \
+        grouptipitem.cpp \
         httpmgr.cpp \
         invaliditem.cpp \
         listitembase.cpp \
@@ -82,6 +83,7 @@ HEADERS += \
         findsuccessdlg.h \
         friendlabel.h \
         global.h \
+        grouptipitem.h \
         httpmgr.h \
         invaliditem.h \
         listitembase.h \
@@ -104,6 +106,7 @@ FORMS += \
         chatuserwid.ui \
         findsuccessdlg.ui \
         friendlabel.ui \
+        grouptipitem.ui \
         loadingdlg.ui \
         logindialog.ui \
         mainwindow.ui \

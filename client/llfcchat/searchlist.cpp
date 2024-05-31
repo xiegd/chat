@@ -62,12 +62,12 @@ void SearchList::slot_item_clicked(QListWidgetItem *item)
     }
 
     auto itemType = customItem->GetItemType();
-    if(itemType == ListItemType::InvalidItem){
+    if(itemType == ListItemType::INVALID_ITEM){
         qDebug()<< "slot invalid item clicked ";
         return;
     }
 
-   if(itemType == ListItemType::AddUserTipItem){
+   if(itemType == ListItemType::ADD_USER_TIP_ITEM){
 
        // 创建对话框
        _find_dlg = std::make_shared<FindSuccessDlg>(this);

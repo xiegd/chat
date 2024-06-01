@@ -55,6 +55,7 @@ ChatDialog::ChatDialog(QWidget *parent) :
         ShowSearch(false);
     });
 
+    ui->search_edit->SetMaxLength(15);
 
     //连接加载信号和槽
     connect(ui->chat_user_list, &ChatUserList::sig_loading_chat_user, this, &ChatDialog::slot_loading_chat_user);

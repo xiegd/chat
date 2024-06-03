@@ -87,7 +87,6 @@ background-color:rgb(255,255,255)
     border: none;
 }
 
-
 #chat_user_list::item:selected {
     background-color: #d3d7d4;
     border: none;
@@ -103,11 +102,6 @@ background-color:rgb(255,255,255)
 #chat_user_list::focus {
     border: none;
     outline: none;
-}
-
-ChatUserWid {
-    background-color:rgb(247,247,247);
-    border: none;
 }
 
 #user_chat_lb{

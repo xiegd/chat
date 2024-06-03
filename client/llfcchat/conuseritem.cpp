@@ -6,6 +6,7 @@ ConUserItem::ConUserItem(QWidget *parent) :
     ui(new Ui::ConUserItem)
 {
     ui->setupUi(this);
+    SetItemType(ListItemType::CONTACT_USER_ITEM);
 }
 
 ConUserItem::~ConUserItem()

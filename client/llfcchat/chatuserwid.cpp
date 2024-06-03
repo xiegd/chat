@@ -14,6 +14,11 @@ ChatUserWid::~ChatUserWid()
     delete ui;
 }
 
+QSize ChatUserWid::sizeHint() const
+{
+    return QSize(250, 70); // 返回自定义的尺寸
+}
+
 void ChatUserWid::SetInfo(QString name, QString head, QString msg)
 {
     _name = name;

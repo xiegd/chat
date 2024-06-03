@@ -14,11 +14,7 @@ class ChatUserWid : public ListItemBase
 public:
     explicit ChatUserWid(QWidget *parent = nullptr);
     ~ChatUserWid();
-
-    QSize sizeHint() const override {
-        return QSize(250, 70); // 返回自定义的尺寸
-    }
-
+    QSize sizeHint() const override;
     void SetInfo(QString name, QString head, QString msg);
 
 private:

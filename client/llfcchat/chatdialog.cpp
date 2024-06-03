@@ -13,6 +13,9 @@
 #include "MessageTextEdit.h"
 #include "chatuserlist.h"
 #include "grouptipitem.h"
+#include "invaliditem.h"
+#include "conuseritem.h"
+#include "lineitem.h"
 
 
 ChatDialog::ChatDialog(QWidget *parent) :
@@ -195,32 +198,37 @@ void ChatDialog::addChatUserList()
 void ChatDialog::addContactUserList()
 {
     auto * groupTip = new GroupTipItem();
+    groupTip->setObjectName("GroupTipItem");
     QListWidgetItem *item = new QListWidgetItem;
     item->setSizeHint(groupTip->sizeHint());
     ui->con_user_list->addItem(item);
     ui->con_user_list->setItemWidget(item, groupTip);
-//    auto *groupTip = new GroupTipItem();
-//    QListWidgetItem *item = new QListWidgetItem;
-//    //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
-//    item->setSizeHint(chat_user_wid->sizeHint());
-//    ui->chat_user_list->addItem(item);
-//    ui->chat_user_list->setItemWidget(item, chat_user_wid);
+    item->setFlags(item->flags() & ~Qt::ItemIsSelectable);
 
-//    // 创建QListWidgetItem，并设置自定义的widget
-//    for(int i = 0; i < 13; i++){
-//        int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
-//        int str_i = randomValue%strs.size();
-//        int head_i = randomValue%heads.size();
-//        int name_i = randomValue%names.size();
+    auto *add_user_wid = new ConUserItem();
+    add_user_wid->setObjectName("new_friend_item");
+    add_user_wid->SetInfo(tr("新的朋友"),":/res/add_friend.png");
+    QListWidgetItem *add_item = new QListWidgetItem;
+    //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
+    add_item->setSizeHint(add_user_wid->sizeHint());
+    ui->con_user_list->addItem(add_item);
+    ui->con_user_list->setItemWidget(add_item, add_user_wid);
 
-//        auto *chat_user_wid = new ChatUserWid();
-//        chat_user_wid->SetInfo(names[name_i], heads[head_i], strs[str_i]);
-//        QListWidgetItem *item = new QListWidgetItem;
-//        //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
-//        item->setSizeHint(chat_user_wid->sizeHint());
-//        ui->chat_user_list->addItem(item);
-//        ui->chat_user_list->setItemWidget(item, chat_user_wid);
-//    }
+    // 创建QListWidgetItem，并设置自定义的widget
+    for(int i = 0; i < 13; i++){
+        int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
+        int str_i = randomValue%strs.size();
+        int head_i = randomValue%heads.size();
+        int name_i = randomValue%names.size();
+
+        auto *con_user_wid = new ConUserItem();
+        con_user_wid->SetInfo(names[name_i], heads[head_i]);
+        QListWidgetItem *item = new QListWidgetItem;
+        //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
+        item->setSizeHint(con_user_wid->sizeHint());
+        ui->con_user_list->addItem(item);
+        ui->con_user_list->setItemWidget(item, con_user_wid);
+    }
 }
 
 void ChatDialog::ClearLabelState(StateLabel *lb)

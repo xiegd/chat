@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>GroupTipItem</class>
- <widget class="QWidget" name="GroupTipItem">
+ <class>LineItem</class>
+ <widget class="QWidget" name="LineItem">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>250</width>
-    <height>25</height>
+    <width>400</width>
+    <height>16</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>250</width>
-    <height>25</height>
+    <width>0</width>
+    <height>5</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>250</width>
-    <height>25</height>
+    <width>16777215</width>
+    <height>16</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -30,7 +30,7 @@
     <number>0</number>
    </property>
    <property name="leftMargin">
-    <number>20</number>
+    <number>0</number>
    </property>
    <property name="topMargin">
     <number>0</number>
@@ -42,21 +42,9 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QLabel" name="label">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>16</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>16</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>新的朋友</string>
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>

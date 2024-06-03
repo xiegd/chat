@@ -35,5 +35,6 @@
         <file>res/right_tip.png</file>
         <file>res/arowdown.png</file>
         <file>res/tipclose.png</file>
+        <file>res/add_friend.png</file>
     </qresource>
 </RCC>

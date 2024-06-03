@@ -41,6 +41,7 @@ SOURCES += \
         clickedlabel.cpp \
         clickedoncelabel.cpp \
         contactuserlist.cpp \
+        conuseritem.cpp \
         customizeedit.cpp \
         customizetextedit.cpp \
         findsuccessdlg.cpp \
@@ -49,6 +50,7 @@ SOURCES += \
         grouptipitem.cpp \
         httpmgr.cpp \
         invaliditem.cpp \
+        lineitem.cpp \
         listitembase.cpp \
         loadingdlg.cpp \
         logindialog.cpp \
@@ -78,6 +80,7 @@ HEADERS += \
         clickedlabel.h \
         clickedoncelabel.h \
         contactuserlist.h \
+        conuseritem.h \
         customizeedit.h \
         customizetextedit.h \
         findsuccessdlg.h \
@@ -86,6 +89,7 @@ HEADERS += \
         grouptipitem.h \
         httpmgr.h \
         invaliditem.h \
+        lineitem.h \
         listitembase.h \
         loadingdlg.h \
         logindialog.h \
@@ -104,9 +108,11 @@ FORMS += \
         applyfriend.ui \
         chatdialog.ui \
         chatuserwid.ui \
+        conuseritem.ui \
         findsuccessdlg.ui \
         friendlabel.ui \
         grouptipitem.ui \
+        lineitem.ui \
         loadingdlg.ui \
         logindialog.ui \
         mainwindow.ui \

@@ -94,6 +94,7 @@ enum ListItemType{
     ADD_USER_TIP_ITEM, //提示添加用户
     INVALID_ITEM,  //不可点击条目
     GROUP_TIP_ITEM, //分组提示条目
+    LINE_ITEM,  //分割线
 };
 
 //申请好友标签输入框最低长度

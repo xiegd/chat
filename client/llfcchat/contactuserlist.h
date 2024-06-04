@@ -18,6 +18,7 @@ public slots:
      void slot_item_clicked(QListWidgetItem *item);
 signals:
     void sig_loading_contact_user();
+    void sig_switch_apply_friend_page();
 };
 
 #endif // CONTACTUSERLIST_H

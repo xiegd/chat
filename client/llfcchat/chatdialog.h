@@ -40,8 +40,10 @@ public slots:
     void slot_text_changed(const QString & str);
     void slot_focus_out();
     void slot_loading_contact_user();
+    void slot_switch_apply_friend_page();
+    void slot_friend_info_page();
 private slots:
-    void on_send_btn_clicked();
+
 };
 
 

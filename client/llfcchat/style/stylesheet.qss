@@ -637,7 +637,7 @@ LoadingDlg{
     border-bottom: 1px solid #ede9e7;
 }
 
-#friend_apply_list {
+#apply_friend_list {
     background-color: #f1f2f3;
     border-left: 1px solid #ede9e7;
     border-top: none;

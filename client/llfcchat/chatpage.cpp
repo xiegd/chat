@@ -5,6 +5,7 @@
 #include "ChatItemBase.h"
 #include "TextBubble.h"
 #include "PictureBubble.h"
+#include "applyfrienditem.h"
 
 ChatPage::ChatPage(QWidget *parent) :
     QWidget(parent),
@@ -18,6 +19,7 @@ ChatPage::ChatPage(QWidget *parent) :
     //设置图标样式
     ui->emo_lb->SetState("normal","hover","press","normal","hover","press");
     ui->file_lb->SetState("normal","hover","press","normal","hover","press");
+
 }
 
 ChatPage::~ChatPage()

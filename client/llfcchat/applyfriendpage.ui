@@ -110,7 +110,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="ApplyFriendList" name="friend_apply_list"/>
+       <widget class="ApplyFriendList" name="apply_friend_list"/>
       </item>
      </layout>
     </widget>

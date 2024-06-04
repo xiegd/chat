@@ -1,4 +1,6 @@
 #include "contactuserlist.h"
+#include "global.h"
+#include "listitembase.h"
 
 
 ContactUserList::ContactUserList(QWidget *parent)
@@ -8,6 +10,9 @@ ContactUserList::ContactUserList(QWidget *parent)
      this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     // 安装事件过滤器
      this->viewport()->installEventFilter(this);
+
+    //连接点击的信号和槽
+    connect(this, &QListWidget::itemClicked, this, &ContactUserList::slot_item_clicked);
 }
 
 bool ContactUserList::eventFilter(QObject *watched, QEvent *event)
@@ -51,3 +56,35 @@ bool ContactUserList::eventFilter(QObject *watched, QEvent *event)
     return QListWidget::eventFilter(watched, event);
 
 }
+
+void ContactUserList::slot_item_clicked(QListWidgetItem *item)
+{
+    QWidget *widget = this->itemWidget(item); // 获取自定义widget对象
+    if(!widget){
+        qDebug()<< "slot item clicked widget is nullptr";
+        return;
+    }
+
+    // 对自定义widget进行操作， 将item 转化为基类ListItemBase
+    ListItemBase *customItem = qobject_cast<ListItemBase*>(widget);
+    if(!customItem){
+        qDebug()<< "slot item clicked widget is nullptr";
+        return;
+    }
+
+    auto itemType = customItem->GetItemType();
+    if(itemType == ListItemType::INVALID_ITEM
+            || itemType == ListItemType::GROUP_TIP_ITEM){
+        qDebug()<< "slot invalid item clicked ";
+        return;
+    }
+
+   if(itemType == ListItemType::APPLY_FRIEND_ITEM){
+
+       // 创建对话框，提示用户
+       qDebug()<< "apply friend item clicked ";
+       return;
+   }
+}
+
+

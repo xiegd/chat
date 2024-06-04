@@ -198,7 +198,6 @@ void ChatDialog::addChatUserList()
 void ChatDialog::addContactUserList()
 {
     auto * groupTip = new GroupTipItem();
-    groupTip->setObjectName("GroupTipItem");
     QListWidgetItem *item = new QListWidgetItem;
     item->setSizeHint(groupTip->sizeHint());
     ui->con_user_list->addItem(item);
@@ -208,11 +207,21 @@ void ChatDialog::addContactUserList()
     auto *add_user_wid = new ConUserItem();
     add_user_wid->setObjectName("new_friend_item");
     add_user_wid->SetInfo(tr("新的朋友"),":/res/add_friend.png");
+    add_user_wid->SetItemType(ListItemType::APPLY_FRIEND_ITEM);
     QListWidgetItem *add_item = new QListWidgetItem;
     //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
     add_item->setSizeHint(add_user_wid->sizeHint());
     ui->con_user_list->addItem(add_item);
     ui->con_user_list->setItemWidget(add_item, add_user_wid);
+
+    auto * groupCon = new GroupTipItem();
+    groupCon->SetGroupTip(tr("联系人"));
+    QListWidgetItem *groupitem = new QListWidgetItem;
+    groupitem->setSizeHint(groupCon->sizeHint());
+    ui->con_user_list->addItem(groupitem);
+    ui->con_user_list->setItemWidget(groupitem, groupCon);
+    groupitem->setFlags(groupitem->flags() & ~Qt::ItemIsSelectable);
+
 
     // 创建QListWidgetItem，并设置自定义的widget
     for(int i = 0; i < 13; i++){
@@ -293,7 +302,7 @@ void ChatDialog::slot_side_contact(){
     qDebug()<< "receive side contact clicked";
     ClearLabelState(ui->side_contact_lb);
     //设置
-    ui->stackedWidget->setCurrentWidget(ui->contact_page);
+    ui->stackedWidget->setCurrentWidget(ui->friend_apply_page);
     _state = ChatUIMode::ContactMode;
     ShowSearch(false);
 }

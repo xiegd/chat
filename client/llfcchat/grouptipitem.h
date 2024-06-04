@@ -16,6 +16,7 @@ public:
     explicit GroupTipItem(QWidget *parent = nullptr);
     ~GroupTipItem();
     QSize sizeHint() const override;
+    void SetGroupTip(QString str);
 private:
     QString _tip;
     Ui::GroupTipItem *ui;

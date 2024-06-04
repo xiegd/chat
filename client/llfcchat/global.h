@@ -95,6 +95,7 @@ enum ListItemType{
     INVALID_ITEM,  //不可点击条目
     GROUP_TIP_ITEM, //分组提示条目
     LINE_ITEM,  //分割线
+    APPLY_FRIEND_ITEM, //好友申请
 };
 
 //申请好友标签输入框最低长度

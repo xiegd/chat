@@ -34,6 +34,7 @@ SOURCES += \
         TextBubble.cpp \
         adduseritem.cpp \
         applyfriend.cpp \
+        applyfriendlist.cpp \
         chatdialog.cpp \
         chatuserlist.cpp \
         chatuserwid.cpp \
@@ -73,6 +74,7 @@ HEADERS += \
         TextBubble.h \
         adduseritem.h \
         applyfriend.h \
+        applyfriendlist.h \
         chatdialog.h \
         chatuserlist.h \
         chatuserwid.h \

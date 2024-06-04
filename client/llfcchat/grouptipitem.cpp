@@ -19,4 +19,9 @@ QSize GroupTipItem::sizeHint() const
     return QSize(250, 25); // 返回自定义的尺寸
 }
 
+void GroupTipItem::SetGroupTip(QString str)
+{
+    ui->label->setText(str);
+}
+
 

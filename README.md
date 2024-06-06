@@ -38,3 +38,9 @@ C++ 聊天项目实战案例，涵盖grpc，并发线程，网络编程，qt开�
 [day16-asio实现tcp服务器](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day16-asio%E5%AE%9E%E7%8E%B0tcp%E6%9C%8D%E5%8A%A1%E5%99%A8.md)
 
 [day17-登陆服务验证和客户端数据管理](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day16-asio%E5%AE%9E%E7%8E%B0tcp%E6%9C%8D%E5%8A%A1%E5%99%A8.md)
+
+[day18-聊天主界面](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day18-%E8%81%8A%E5%A4%A9%E4%B8%BB%E7%95%8C%E9%9D%A2.md)
+
+[day19-搜索框和聊天列表](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day19-%E5%AE%9E%E7%8E%B0%E6%90%9C%E7%B4%A2%E6%A1%86%E5%92%8C%E8%81%8A%E5%A4%A9%E5%88%97%E8%A1%A8.md)
+
+[day20-动态加载聊天列表](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day20-%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E8%81%8A%E5%A4%A9%E5%88%97%E8%A1%A8.md)

@@ -303,7 +303,7 @@ LoadingDlg{
 
 ## 视频链接
 
-[https://www.bilibili.com/video/BV13Z421W7WA/?spm_id_from=333.788&vd_source=8be9e83424c2ed2c9b2a3ed1d01385e9](https://www.bilibili.com/video/BV13Z421W7WA/?spm_id_from=333.788&vd_source=8be9e83424c2ed2c9b2a3ed1d01385e9)
+[https://www.bilibili.com/video/BV1xz421h7Ad/?vd_source=8be9e83424c2ed2c9b2a3ed1d01385e9](https://www.bilibili.com/video/BV1xz421h7Ad/?vd_source=8be9e83424c2ed2c9b2a3ed1d01385e9)
 
 ## 源码链接
 

@@ -303,8 +303,16 @@ void ApplyFriend::SlotRemoveFriendLabel(QString name)
    _friend_labels.erase(find_iter);
 
    resetLabels();
+
+   auto find_add = _add_labels.find(name);
+   if(find_add == _add_labels.end()){
+        return;
+   }
+
+   find_add.value()->ResetNormalState();
 }
 
+//点击标已有签添加或删除新联系人的标签
 void ApplyFriend::SlotChangeFriendLabelByTip(QString lbtext, ClickLbState state)
 {
     auto find_iter = _add_labels.find(lbtext);

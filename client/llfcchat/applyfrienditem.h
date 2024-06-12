@@ -15,9 +15,12 @@ class ApplyFriendItem : public ListItemBase
 public:
     explicit ApplyFriendItem(QWidget *parent = nullptr);
     ~ApplyFriendItem();
-
+    void SetInfo(QString name, QString head, QString msg);
 private:
     Ui::ApplyFriendItem *ui;
+    QString _name;
+    QString _head;
+    QString _msg;
 };
 
 #endif // APPLYFRIENDITEM_H

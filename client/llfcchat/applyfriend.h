@@ -22,9 +22,11 @@ public:
 private:
     void resetLabels();
     Ui::ApplyFriend *ui;
+    //已经创建好的标签
     QMap<QString, ClickedLabel*> _add_labels;
     std::vector<QString> _add_label_keys;
     QPoint _label_point;
+    //用来在输入框显示添加新好友的标签
     QMap<QString, FriendLabel*> _friend_labels;
     std::vector<QString> _friend_label_keys;
     void addLabel(QString name);
@@ -35,7 +37,7 @@ public slots:
     void ShowMoreLabel();
     //输入label按下回车触发将标签加入展示栏
     void SlotLabelEnter();
-    //移除展示栏好友便签
+    //点击关闭，移除展示栏好友便签
     void SlotRemoveFriendLabel(QString);
     //通过点击tip实现增加和减少好友便签
     void SlotChangeFriendLabelByTip(QString, ClickLbState);
@@ -43,7 +45,7 @@ public slots:
     void SlotLabelTextChange(const QString& text);
     //输入框输入完成
     void SlotLabelEditFinished();
-   //点击提示后添加好友便签
+   //输入标签显示提示框，点击提示框内容后添加好友便签
     void SlotAddFirendLabelByClickTip(QString text);
     //处理确认回调
     void SlotApplySure();

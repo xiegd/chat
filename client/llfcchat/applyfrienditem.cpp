@@ -8,6 +8,9 @@ ApplyFriendItem::ApplyFriendItem(QWidget *parent) :
     ui->setupUi(this);
     SetItemType(ListItemType::APPLY_FRIEND_ITEM);
     ui->addBtn->SetState("normal","hover", "press");
+    connect(ui->addBtn, &ClickedBtn::clicked,  [this](){
+        emit this->sig_auth_friend(_name);
+    });
 }
 
 ApplyFriendItem::~ApplyFriendItem()
@@ -30,3 +33,5 @@ void ApplyFriendItem::SetInfo(QString name, QString head, QString msg)
     ui->user_name_lb->setText(_name);
     ui->user_chat_lb->setText(_msg);
 }
+
+

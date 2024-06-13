@@ -5,6 +5,7 @@
 #include <QStyleOption>
 #include <QRandomGenerator>
 #include "applyfrienditem.h"
+#include "authenfriend.h"
 
 
 ApplyFriendPage::ApplyFriendPage(QWidget *parent) :
@@ -20,14 +21,19 @@ ApplyFriendPage::ApplyFriendPage(QWidget *parent) :
         int head_i = randomValue%heads.size();
         int name_i = randomValue%names.size();
 
-        auto *chat_user_wid = new ApplyFriendItem();
-        chat_user_wid->SetInfo(names[name_i], heads[head_i], strs[str_i]);
+        auto *apply_item = new ApplyFriendItem();
+        apply_item->SetInfo(names[name_i], heads[head_i], strs[str_i]);
         QListWidgetItem *item = new QListWidgetItem;
         //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
-        item->setSizeHint(chat_user_wid->sizeHint());
+        item->setSizeHint(apply_item->sizeHint());
         item->setFlags(item->flags() & ~Qt::ItemIsEnabled & ~Qt::ItemIsSelectable);
         ui->apply_friend_list->addItem(item);
-        ui->apply_friend_list->setItemWidget(item, chat_user_wid);
+        ui->apply_friend_list->setItemWidget(item, apply_item);
+        //收到审核好友信号
+        connect(apply_item, &ApplyFriendItem::sig_auth_friend, [this](){
+            auto *authFriend =  new AuthenFriend(this);
+            authFriend->setModal(true);
+        });
     }
 }
 

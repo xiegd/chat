@@ -21,6 +21,9 @@ private:
     QString _name;
     QString _head;
     QString _msg;
+
+signals:
+    void sig_auth_friend(QString name);
 };
 
 #endif // APPLYFRIENDITEM_H

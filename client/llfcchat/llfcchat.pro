@@ -37,6 +37,7 @@ SOURCES += \
         applyfrienditem.cpp \
         applyfriendlist.cpp \
         applyfriendpage.cpp \
+        authenfriend.cpp \
         chatdialog.cpp \
         chatpage.cpp \
         chatuserlist.cpp \
@@ -80,6 +81,7 @@ HEADERS += \
         applyfrienditem.h \
         applyfriendlist.h \
         applyfriendpage.h \
+        authenfriend.h \
         chatdialog.h \
         chatpage.h \
         chatuserlist.h \
@@ -116,6 +118,7 @@ FORMS += \
         applyfriend.ui \
         applyfrienditem.ui \
         applyfriendpage.ui \
+        authenfriend.ui \
         chatdialog.ui \
         chatpage.ui \
         chatuserwid.ui \

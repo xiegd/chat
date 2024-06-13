@@ -6,6 +6,7 @@
 #include <QRandomGenerator>
 #include "applyfrienditem.h"
 #include "authenfriend.h"
+#include "applyfriend.h"
 
 
 ApplyFriendPage::ApplyFriendPage(QWidget *parent) :
@@ -33,6 +34,7 @@ ApplyFriendPage::ApplyFriendPage(QWidget *parent) :
         connect(apply_item, &ApplyFriendItem::sig_auth_friend, [this](){
             auto *authFriend =  new AuthenFriend(this);
             authFriend->setModal(true);
+            authFriend->show();
         });
     }
 }

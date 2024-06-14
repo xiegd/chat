@@ -109,7 +109,7 @@
           </widget>
          </item>
          <item>
-          <widget class="StateLabel" name="side_chat_lb">
+          <widget class="StateWidget" name="side_chat_lb" native="true">
            <property name="minimumSize">
             <size>
              <width>30</width>
@@ -121,14 +121,11 @@
              <width>30</width>
              <height>30</height>
             </size>
-           </property>
-           <property name="text">
-            <string/>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="StateLabel" name="side_contact_lb">
+          <widget class="StateWidget" name="side_contact_lb" native="true">
            <property name="minimumSize">
             <size>
              <width>30</width>
@@ -140,14 +137,14 @@
              <width>30</width>
              <height>30</height>
             </size>
-           </property>
-           <property name="text">
-            <string/>
            </property>
           </widget>
          </item>
         </layout>
        </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget" native="true"/>
       </item>
       <item>
        <spacer name="verticalSpacer">
@@ -322,25 +319,7 @@
       <number>0</number>
      </property>
      <widget class="ChatPage" name="chat_page"/>
-     <widget class="ApplyFriendPage" name="friend_apply_page">
-      <layout class="QVBoxLayout" name="verticalLayout_6">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-      </layout>
-     </widget>
+     <widget class="ApplyFriendPage" name="friend_apply_page"/>
     </widget>
    </item>
   </layout>
@@ -362,11 +341,6 @@
    <header>chatuserlist.h</header>
   </customwidget>
   <customwidget>
-   <class>StateLabel</class>
-   <extends>QLabel</extends>
-   <header>statelabel.h</header>
-  </customwidget>
-  <customwidget>
    <class>SearchList</class>
    <extends>QListWidget</extends>
    <header>searchlist.h</header>
@@ -386,6 +360,12 @@
    <class>ChatPage</class>
    <extends>QWidget</extends>
    <header location="global">chatpage.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>StateWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">statewidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -1,7 +1,9 @@
 #include "contactuserlist.h"
 #include "global.h"
 #include "listitembase.h"
-
+#include "grouptipitem.h"
+#include "conuseritem.h"
+#include <QRandomGenerator>
 
 ContactUserList::ContactUserList(QWidget *parent)
 {
@@ -11,8 +13,59 @@ ContactUserList::ContactUserList(QWidget *parent)
     // 安装事件过滤器
      this->viewport()->installEventFilter(this);
 
+    //模拟从数据库或者后端传输过来的数据,进行列表加载
+    addContactUserList();
     //连接点击的信号和槽
     connect(this, &QListWidget::itemClicked, this, &ContactUserList::slot_item_clicked);
+
+}
+
+
+void ContactUserList::addContactUserList()
+{
+    auto * groupTip = new GroupTipItem();
+    QListWidgetItem *item = new QListWidgetItem;
+    item->setSizeHint(groupTip->sizeHint());
+    this->addItem(item);
+    this->setItemWidget(item, groupTip);
+    item->setFlags(item->flags() & ~Qt::ItemIsSelectable);
+
+    auto *add_user_wid = new ConUserItem();
+    add_user_wid->setObjectName("new_friend_item");
+    add_user_wid->SetInfo(tr("新的朋友"),":/res/add_friend.png");
+    add_user_wid->SetItemType(ListItemType::APPLY_FRIEND_ITEM);
+    QListWidgetItem *add_item = new QListWidgetItem;
+    //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
+    add_item->setSizeHint(add_user_wid->sizeHint());
+    this->addItem(add_item);
+    this->setItemWidget(add_item, add_user_wid);
+    //默认设置新的朋友申请条目被选中
+    this->setCurrentItem(add_item);
+
+    auto * groupCon = new GroupTipItem();
+    groupCon->SetGroupTip(tr("联系人"));
+    QListWidgetItem *groupitem = new QListWidgetItem;
+    groupitem->setSizeHint(groupCon->sizeHint());
+    this->addItem(groupitem);
+    this->setItemWidget(groupitem, groupCon);
+    groupitem->setFlags(groupitem->flags() & ~Qt::ItemIsSelectable);
+
+
+    // 创建QListWidgetItem，并设置自定义的widget
+    for(int i = 0; i < 13; i++){
+        int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
+        int str_i = randomValue%strs.size();
+        int head_i = randomValue%heads.size();
+        int name_i = randomValue%names.size();
+
+        auto *con_user_wid = new ConUserItem();
+        con_user_wid->SetInfo(names[name_i], heads[head_i]);
+        QListWidgetItem *item = new QListWidgetItem;
+        //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
+        item->setSizeHint(con_user_wid->sizeHint());
+        this->addItem(item);
+        this->setItemWidget(item, con_user_wid);
+    }
 }
 
 bool ContactUserList::eventFilter(QObject *watched, QEvent *event)

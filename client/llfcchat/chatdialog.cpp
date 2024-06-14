@@ -82,8 +82,8 @@ ChatDialog::ChatDialog(QWidget *parent) :
     AddLBGroup(ui->side_chat_lb);
     AddLBGroup(ui->side_contact_lb);
 
-    connect(ui->side_chat_lb, &StateLabel::clicked, this, &ChatDialog::slot_side_chat);
-    connect(ui->side_contact_lb, &StateLabel::clicked, this, &ChatDialog::slot_side_contact);
+    connect(ui->side_chat_lb, &StateWidget::clicked, this, &ChatDialog::slot_side_chat);
+    connect(ui->side_contact_lb, &StateWidget::clicked, this, &ChatDialog::slot_side_contact);
 
     //链接搜索框输入变化
     connect(ui->search_edit, &QLineEdit::textChanged, this, &ChatDialog::slot_text_changed);
@@ -100,12 +100,19 @@ ChatDialog::ChatDialog(QWidget *parent) :
     connect(ui->con_user_list, &ContactUserList::sig_loading_contact_user,
             this, &ChatDialog::slot_loading_contact_user);
 
-    //预加载一些联系人列表
-    addContactUserList();
-
     //连接联系人页面点击好友申请条目的信号
     connect(ui->con_user_list, &ContactUserList::sig_switch_apply_friend_page,
             this,&ChatDialog::slot_switch_apply_friend_page);
+
+    //添加红点示意图
+    auto * side_chat_red = new QLabel();
+    side_chat_red->setObjectName("side_chat_red");
+    QVBoxLayout* layout2 = new QVBoxLayout;
+    side_chat_red->setAlignment(Qt::AlignCenter);
+    layout2->addWidget(side_chat_red);
+    layout2->setMargin(0);
+    ui->side_chat_lb->setLayout(layout2);
+
 }
 
 ChatDialog::~ChatDialog()
@@ -141,7 +148,7 @@ void ChatDialog::handleGlobalMousePress(QMouseEvent *event)
     }
 }
 
-void ChatDialog::AddLBGroup(StateLabel* lb)
+void ChatDialog::AddLBGroup(StateWidget* lb)
 {
     _lb_list.push_back(lb);
 }
@@ -168,52 +175,9 @@ void ChatDialog::addChatUserList()
 
 }
 
-void ChatDialog::addContactUserList()
-{
-    auto * groupTip = new GroupTipItem();
-    QListWidgetItem *item = new QListWidgetItem;
-    item->setSizeHint(groupTip->sizeHint());
-    ui->con_user_list->addItem(item);
-    ui->con_user_list->setItemWidget(item, groupTip);
-    item->setFlags(item->flags() & ~Qt::ItemIsSelectable);
-
-    auto *add_user_wid = new ConUserItem();
-    add_user_wid->setObjectName("new_friend_item");
-    add_user_wid->SetInfo(tr("新的朋友"),":/res/add_friend.png");
-    add_user_wid->SetItemType(ListItemType::APPLY_FRIEND_ITEM);
-    QListWidgetItem *add_item = new QListWidgetItem;
-    //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
-    add_item->setSizeHint(add_user_wid->sizeHint());
-    ui->con_user_list->addItem(add_item);
-    ui->con_user_list->setItemWidget(add_item, add_user_wid);
-
-    auto * groupCon = new GroupTipItem();
-    groupCon->SetGroupTip(tr("联系人"));
-    QListWidgetItem *groupitem = new QListWidgetItem;
-    groupitem->setSizeHint(groupCon->sizeHint());
-    ui->con_user_list->addItem(groupitem);
-    ui->con_user_list->setItemWidget(groupitem, groupCon);
-    groupitem->setFlags(groupitem->flags() & ~Qt::ItemIsSelectable);
 
 
-    // 创建QListWidgetItem，并设置自定义的widget
-    for(int i = 0; i < 13; i++){
-        int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
-        int str_i = randomValue%strs.size();
-        int head_i = randomValue%heads.size();
-        int name_i = randomValue%names.size();
-
-        auto *con_user_wid = new ConUserItem();
-        con_user_wid->SetInfo(names[name_i], heads[head_i]);
-        QListWidgetItem *item = new QListWidgetItem;
-        //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
-        item->setSizeHint(con_user_wid->sizeHint());
-        ui->con_user_list->addItem(item);
-        ui->con_user_list->setItemWidget(item, con_user_wid);
-    }
-}
-
-void ChatDialog::ClearLabelState(StateLabel *lb)
+void ChatDialog::ClearLabelState(StateWidget *lb)
 {
     for(auto & ele: _lb_list){
         if(ele == lb){

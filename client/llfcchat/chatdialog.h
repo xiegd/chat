@@ -6,6 +6,7 @@
 #include <QList>
 #include "statelabel.h"
 #include "global.h"
+#include "statewidget.h"
 
 namespace Ui {
 class ChatDialog;
@@ -23,13 +24,12 @@ protected:
 
     void handleGlobalMousePress(QMouseEvent *event) ;
 private:
-    void AddLBGroup(StateLabel* lb);
+    void AddLBGroup(StateWidget* lb);
     void addChatUserList();
-    void addContactUserList();
-    void ClearLabelState(StateLabel* lb);
+    void ClearLabelState(StateWidget* lb);
     Ui::ChatDialog *ui;
     bool _b_loading;
-    QList<StateLabel*> _lb_list;
+    QList<StateWidget*> _lb_list;
     void ShowSearch(bool bsearch = false);
     ChatUIMode _mode;
     ChatUIMode _state;

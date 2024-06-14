@@ -13,6 +13,8 @@ public:
     ContactUserList(QWidget* parent = nullptr);
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override ;
+private:
+    void addContactUserList();
 
 public slots:
      void slot_item_clicked(QListWidgetItem *item);

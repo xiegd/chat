@@ -25,12 +25,7 @@ void ConUserItem::SetInfo(QString name, QString head)
     _name = name;
 
     // 加载图片
-    QPixmap pixmap(_head);
-
-    // 设置图片自动缩放
-    ui->icon_lb->setPixmap(pixmap.scaled(ui->icon_lb->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    ui->icon_lb->setScaledContents(true);
-
+    ui->icon_lb->SetPixmap(head);
     ui->user_name_lb->setText(_name);
 
 }

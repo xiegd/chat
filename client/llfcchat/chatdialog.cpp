@@ -103,16 +103,6 @@ ChatDialog::ChatDialog(QWidget *parent) :
     //连接联系人页面点击好友申请条目的信号
     connect(ui->con_user_list, &ContactUserList::sig_switch_apply_friend_page,
             this,&ChatDialog::slot_switch_apply_friend_page);
-
-    //添加红点示意图
-    auto * side_chat_red = new QLabel();
-    side_chat_red->setObjectName("side_chat_red");
-    QVBoxLayout* layout2 = new QVBoxLayout;
-    side_chat_red->setAlignment(Qt::AlignCenter);
-    layout2->addWidget(side_chat_red);
-    layout2->setMargin(0);
-    ui->side_chat_lb->setLayout(layout2);
-
 }
 
 ChatDialog::~ChatDialog()

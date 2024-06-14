@@ -2,6 +2,7 @@
 #define STATEWIDGET_H
 #include <QWidget>
 #include "global.h"
+#include <QLabel>
 
 class StateWidget : public QWidget
 {
@@ -16,7 +17,9 @@ public:
     void ClearState();
 
     void SetSelected(bool bselected);
-
+    void AddRedPoint();
+    void ShowRedPoint(bool show=true);
+    void SetPixmap(QString info);
 protected:
     void paintEvent(QPaintEvent* event);
 
@@ -36,7 +39,8 @@ private:
     QString _selected_press;
 
     ClickLbState _curstate;
-
+    QLabel * _red_point;
+    QPixmap* _pix_map;
 signals:
     void clicked(void);
 

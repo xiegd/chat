@@ -2,18 +2,30 @@
 #include <QPaintEvent>
 #include <QStyleOption>
 #include <QPainter>
+#include <QLabel>
+#include <QVBoxLayout>
 
-StateWidget::StateWidget(QWidget *parent) : QWidget(parent),_curstate(ClickLbState::Normal)
+StateWidget::StateWidget(QWidget *parent) : QWidget(parent),_curstate(ClickLbState::Normal),_pix_map(nullptr)
 {
     setCursor(Qt::PointingHandCursor);
+    //添加红点
+    AddRedPoint();
 }
 
 void StateWidget::paintEvent(QPaintEvent *event)
 {
-    QStyleOption opt;
-    opt.init(this);
-    QPainter p(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+    if(!_pix_map){
+        QStyleOption opt;
+        opt.init(this);
+        QPainter p(this);
+        style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+        return;
+    }
+
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.drawPixmap(0,0,width(),height(),*_pix_map);
+
 }
 
 // 处理鼠标点击事件
@@ -142,6 +154,35 @@ void StateWidget::SetSelected(bool bselected)
     repolish(this);
     update();
     return;
+
+}
+
+void StateWidget::AddRedPoint()
+{
+    //添加红点示意图
+    _red_point = new QLabel();
+    _red_point->setObjectName("red_point");
+    QVBoxLayout* layout2 = new QVBoxLayout;
+    _red_point->setAlignment(Qt::AlignCenter);
+    layout2->addWidget(_red_point);
+    layout2->setMargin(0);
+    this->setLayout(layout2);
+}
+
+void StateWidget::ShowRedPoint(bool show)
+{
+
+}
+
+void StateWidget::SetPixmap(QString info)
+{
+    if(_pix_map){
+        delete _pix_map;
+    }
+
+    // 设置图片自动缩放
+    _pix_map = new QPixmap(info);
+    _pix_map->scaled(this->width(),this->height(),Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
 }
 

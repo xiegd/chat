@@ -687,6 +687,9 @@ ApplyFriendItem #addBtn[state='press'] {
     background: #f7f7f8;
 }
 
+#red_point {
+    border-image: url(:/res/red_point.png);
+}
 
 
 

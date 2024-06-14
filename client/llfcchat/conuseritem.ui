@@ -42,7 +42,7 @@
     <number>2</number>
    </property>
    <item>
-    <widget class="StateWidget" name="icon_lb" native="true">
+    <widget class="QLabel" name="icon_lb">
      <property name="minimumSize">
       <size>
        <width>45</width>
@@ -55,6 +55,9 @@
        <height>45</height>
       </size>
      </property>
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
     </widget>
    </item>
    <item>
@@ -66,14 +69,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>StateWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">statewidget.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

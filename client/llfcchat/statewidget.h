@@ -19,7 +19,7 @@ public:
     void SetSelected(bool bselected);
     void AddRedPoint();
     void ShowRedPoint(bool show=true);
-    void SetPixmap(QString info);
+
 protected:
     void paintEvent(QPaintEvent* event);
 
@@ -40,7 +40,7 @@ private:
 
     ClickLbState _curstate;
     QLabel * _red_point;
-    QPixmap* _pix_map;
+
 signals:
     void clicked(void);
 

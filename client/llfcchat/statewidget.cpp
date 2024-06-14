@@ -5,7 +5,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-StateWidget::StateWidget(QWidget *parent) : QWidget(parent),_curstate(ClickLbState::Normal),_pix_map(nullptr)
+StateWidget::StateWidget(QWidget *parent) : QWidget(parent),_curstate(ClickLbState::Normal)
 {
     setCursor(Qt::PointingHandCursor);
     //添加红点
@@ -14,17 +14,11 @@ StateWidget::StateWidget(QWidget *parent) : QWidget(parent),_curstate(ClickLbSta
 
 void StateWidget::paintEvent(QPaintEvent *event)
 {
-    if(!_pix_map){
-        QStyleOption opt;
-        opt.init(this);
-        QPainter p(this);
-        style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-        return;
-    }
-
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.drawPixmap(0,0,width(),height(),*_pix_map);
+    QStyleOption opt;
+    opt.init(this);
+    QPainter p(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+    return;
 
 }
 
@@ -174,17 +168,7 @@ void StateWidget::ShowRedPoint(bool show)
 
 }
 
-void StateWidget::SetPixmap(QString info)
-{
-    if(_pix_map){
-        delete _pix_map;
-    }
 
-    // 设置图片自动缩放
-    _pix_map = new QPixmap(info);
-    _pix_map->scaled(this->width(),this->height(),Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-}
 
 
 

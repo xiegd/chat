@@ -7,6 +7,7 @@ ChatUserWid::ChatUserWid(QWidget *parent) :
 {
     ui->setupUi(this);
     SetItemType(ListItemType::CHAT_USER_ITEM);
+    ui->red_point->raise();
 }
 
 ChatUserWid::~ChatUserWid()

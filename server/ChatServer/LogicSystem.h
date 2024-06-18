@@ -31,6 +31,5 @@ private:
 	std::condition_variable _consume;
 	bool _b_stop;
 	std::map<short, FunCallBack> _fun_callbacks;
-	std::unordered_map<int, std::shared_ptr<UserInfo>> _users;
 };
 

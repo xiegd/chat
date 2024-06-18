@@ -1,6 +1,7 @@
 #include "StatusServiceImpl.h"
 #include "ConfigMgr.h"
 #include "const.h"
+#include "RedisMgr.h"
 
 std::string generate_unique_string() {
 	// 创建UUID对象
@@ -58,13 +59,17 @@ Status StatusServiceImpl::Login(ServerContext* context, const LoginReq* request,
 {
 	auto uid = request->uid();
 	auto token = request->token();
-	std::lock_guard<std::mutex> guard(_token_mtx);
-	auto iter = _tokens.find(uid);
-	if (iter == _tokens.end()) {
+
+	std::string uid_str = std::to_string(uid);
+	std::string token_key = USERTOKENPREFIX + uid_str;
+	std::string token_value = "";
+	bool success = RedisMgr::GetInstance()->Get(token_key, token_value);
+	if (success) {
 		reply->set_error(ErrorCodes::UidInvalid);
 		return Status::OK;
 	}
-	if (iter->second != token) {
+	
+	if (token_value != token) {
 		reply->set_error(ErrorCodes::TokenInvalid);
 		return Status::OK;
 	}
@@ -76,7 +81,8 @@ Status StatusServiceImpl::Login(ServerContext* context, const LoginReq* request,
 
 void StatusServiceImpl::insertToken(int uid, std::string token)
 {
-	std::lock_guard<std::mutex> guard(_token_mtx);
-	_tokens[uid] = token;
+	std::string uid_str = std::to_string(uid);
+	std::string token_key = USERTOKENPREFIX + uid_str;
+	RedisMgr::GetInstance()->Set(token_key, token);
 }
 

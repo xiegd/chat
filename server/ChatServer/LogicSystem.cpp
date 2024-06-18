@@ -2,6 +2,7 @@
 #include "StatusGrpcClient.h"
 #include "MysqlMgr.h"
 #include "const.h"
+#include "RedisMgr.h"
 
 using namespace std;
 
@@ -76,39 +77,78 @@ void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short &msg_id
 	Json::Value root;
 	reader.parse(msg_data, root);
 	auto uid = root["uid"].asInt();
+	auto token = root["token"].asString();
 	std::cout << "user login uid is  " << uid << " user token  is "
-		<< root["token"].asString() << endl;
-	//从状态服务器获取token匹配是否准确
-	auto rsp = StatusGrpcClient::GetInstance()->Login(uid, root["token"].asString());
+		<< token << endl;
+
 	Json::Value  rtvalue;
 	Defer defer([this, &rtvalue, session]() {
 		std::string return_str = rtvalue.toStyledString();
 		session->Send(return_str, MSG_CHAT_LOGIN_RSP);
-	});
+		});
 
-	rtvalue["error"] = rsp.error();
-	if (rsp.error() != ErrorCodes::Success) {
+	//从redis获取用户token是否正确
+	std::string uid_str = std::to_string(uid);
+	std::string token_key = USERTOKENPREFIX + uid_str;
+	std::string token_value = "";
+	bool success = RedisMgr::GetInstance()->Get(token_key, token_value);
+	if (success) {
+		rtvalue["error"] = ErrorCodes::UidInvalid;
+		return ;
+	}
+
+	if (token_value != token) {
+		rtvalue["error"] = ErrorCodes::TokenInvalid;
+		return ;
+	}
+
+	rtvalue["error"] = ErrorCodes::Success;
+
+	std::string base_key = USER_BASE_INFO + uid_str;
+	
+	//优先查redis中查询用户信息
+	std::string info_str = "";
+	bool b_base = RedisMgr::GetInstance()->Get(base_key, info_str);
+	if (b_base) {
+		Json::Reader reader;
+		Json::Value root;
+		reader.parse(info_str, root);
+		auto uid = root["uid"].asInt();
+		auto name = root["name"].asString();
+		auto pwd = root["pwd"].asString();
+		auto email = root["email"].asString();
+		std::cout << "user login uid is  " << uid << " name  is "
+			<< name << " pwd is " << pwd << " email is " << email << endl;
+
+		rtvalue["uid"] = uid;
+		rtvalue["pwd"] = pwd;
+		rtvalue["name"] = name;
+		rtvalue["email"] = email;
 		return;
 	}
 
-	//内存中查询用户信息
-	auto find_iter = _users.find(uid);
+	//redis中没有则查询mysql
+	//查询数据库
 	std::shared_ptr<UserInfo> user_info = nullptr;
-	if (find_iter == _users.end()) {
-		//查询数据库
-		user_info = MysqlMgr::GetInstance()->GetUser(uid);
-		if (user_info == nullptr) {
-			rtvalue["error"] = ErrorCodes::UidInvalid;
-			return;
-		}
-
-		_users[uid] = user_info;
-	}
-	else {
-		user_info = find_iter->second;
+	user_info = MysqlMgr::GetInstance()->GetUser(uid);
+	if (user_info == nullptr) {
+		rtvalue["error"] = ErrorCodes::UidInvalid;
+		return;
 	}
 
-	rtvalue["uid"] = uid;
-	rtvalue["token"] = rsp.token();
+	//将数据库内容写入redis缓存
+	Json::Value redis_root;
+	redis_root["uid"] = user_info->uid;
+	redis_root["pwd"] = user_info->pwd;
+	redis_root["name"] = user_info->name;
+	redis_root["email"] = user_info->email;
+
+	RedisMgr::GetInstance()->Set(base_key, redis_root.toStyledString());
+
+	//返回数据
+	rtvalue["uid"] = user_info->uid;
+	rtvalue["pwd"] = user_info->pwd;
 	rtvalue["name"] = user_info->name;
+	rtvalue["email"] = user_info->email;
+	return;
 }

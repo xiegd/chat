@@ -92,7 +92,7 @@ void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short &msg_id
 	std::string token_key = USERTOKENPREFIX + uid_str;
 	std::string token_value = "";
 	bool success = RedisMgr::GetInstance()->Get(token_key, token_value);
-	if (success) {
+	if (!success) {
 		rtvalue["error"] = ErrorCodes::UidInvalid;
 		return ;
 	}
@@ -124,6 +124,18 @@ void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short &msg_id
 		rtvalue["pwd"] = pwd;
 		rtvalue["name"] = name;
 		rtvalue["email"] = email;
+
+		auto server_name = ConfigMgr::Inst().GetValue("SelfServer", "Name");
+		//将登录数量增加
+		auto rd_res = RedisMgr::GetInstance()->HGet(LOGIN_COUNT, server_name);
+		int count = 0;
+		if (!rd_res.empty()) {
+			count = std::stoi(rd_res);
+		}
+
+		count++;
+		auto count_str = std::to_string(count);
+		RedisMgr::GetInstance()->HSet(LOGIN_COUNT, server_name, count_str);
 		return;
 	}
 
@@ -144,6 +156,17 @@ void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short &msg_id
 	redis_root["email"] = user_info->email;
 
 	RedisMgr::GetInstance()->Set(base_key, redis_root.toStyledString());
+	auto server_name = ConfigMgr::Inst().GetValue("SelfServer", "Name");
+	//将登录数量增加
+	auto rd_res = RedisMgr::GetInstance()->HGet(LOGIN_COUNT, server_name);
+	int count = 0;
+	if (!rd_res.empty()) {
+		 count = std::stoi(rd_res);
+	}
+	
+	count++;
+	auto count_str = std::to_string(count);
+	RedisMgr::GetInstance()->HSet(LOGIN_COUNT, server_name, count_str);
 
 	//返回数据
 	rtvalue["uid"] = user_info->uid;

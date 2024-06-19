@@ -50,7 +50,8 @@ enum MSG_IDS {
 };
 
 #define USERIPPREFIX  "uip_"
-#define USERTOKENPREFIX "utoken_"
-#define IPCOUNTPREFIX "ipcount_"
+#define USERTOKENPREFIX  "utoken_"
+#define IPCOUNTPREFIX  "ipcount_"
 #define USER_BASE_INFO "ubaseinfo_"
+#define LOGIN_COUNT  "logincount"
 

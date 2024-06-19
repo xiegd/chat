@@ -2,6 +2,7 @@
 #include "ConfigMgr.h"
 #include "const.h"
 #include "RedisMgr.h"
+#include <limits>
 
 std::string generate_unique_string() {
 	// 创建UUID对象
@@ -31,22 +32,43 @@ StatusServiceImpl::StatusServiceImpl()
 	ChatServer server;
 	server.port = cfg["ChatServer1"]["Port"];
 	server.host = cfg["ChatServer1"]["Host"];
-	server.con_count = 0;
 	server.name = cfg["ChatServer1"]["Name"];
 	_servers[server.name] = server;
 
 	server.port = cfg["ChatServer2"]["Port"];
 	server.host = cfg["ChatServer2"]["Host"];
 	server.name = cfg["ChatServer2"]["Name"];
-	server.con_count = 0;
 	_servers[server.name] = server;
 }
 
 ChatServer StatusServiceImpl::getChatServer() {
 	std::lock_guard<std::mutex> guard(_server_mtx);
-	auto minServer = _servers.begin()->second;
+	auto& minServer = _servers.begin()->second;
+	auto count_str = RedisMgr::GetInstance()->HGet(LOGIN_COUNT, minServer.name);
+	if (count_str.empty()) {
+		minServer.con_count = 0;
+	}
+	else {
+		minServer.con_count++;
+	}
+
+
 	// 使用范围基于for循环
-	for (const auto& server : _servers) {
+	for ( auto& server : _servers) {
+		
+		if (server.second.name == minServer.name) {
+			continue;
+		}
+
+		auto count_str = RedisMgr::GetInstance()->HGet(LOGIN_COUNT, server.second.name);
+		if (count_str.empty()) {
+			server.second.con_count = std::numeric_limits<unsigned long long>::max();
+		}
+		else {
+			int count = std::stoi(count_str);
+			server.second.con_count = count + 1;
+		}
+
 		if (server.second.con_count < minServer.con_count) {
 			minServer = server.second;
 		}

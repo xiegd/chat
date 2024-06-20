@@ -3,8 +3,10 @@
 #include "adduseritem.h"
 #include "invaliditem.h"
 #include "findsuccessdlg.h"
+#include "tcpmgr.h"
+#include "customizeedit.h"
 
-SearchList::SearchList(QWidget *parent):QListWidget(parent),_find_dlg(nullptr)
+SearchList::SearchList(QWidget *parent):QListWidget(parent),_find_dlg(nullptr), _search_edit(nullptr), _send_pending(false)
 {
     Q_UNUSED(parent);
      this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -23,6 +25,10 @@ void SearchList::CloseFindDlg()
         _find_dlg->hide();
         _find_dlg = nullptr;
     }
+}
+
+void SearchList::SetSearchEdit(QWidget* edit) {
+    _search_edit = edit;
 }
 
 
@@ -69,10 +75,25 @@ void SearchList::slot_item_clicked(QListWidgetItem *item)
 
    if(itemType == ListItemType::ADD_USER_TIP_ITEM){
 
-       // 创建对话框
-       _find_dlg = std::make_shared<FindSuccessDlg>(this);
-       // 显示对话框
-       _find_dlg->show();
+       if (_send_pending) {
+           return;
+       }
+       _send_pending = true;
+       auto search_edit = dynamic_cast<CustomizeEdit*>(_search_edit);
+       auto uid_str = search_edit->text();
+       //此处发送请求给server
+	   QJsonObject jsonObj;
+	   jsonObj["uid"] = uid_str;
+
+	   QJsonDocument doc(jsonObj);
+	   QString jsonString = doc.toJson(QJsonDocument::Indented);
+
+	   //发送tcp请求给chat server
+	   emit TcpMgr::GetInstance()->sig_send_data(ReqId::ID_CHAT_LOGIN, jsonString);
+       //// 创建对话框
+       //_find_dlg = std::make_shared<FindSuccessDlg>(this);
+       //// 显示对话框
+       //_find_dlg->show();
        return;
    }
 

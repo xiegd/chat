@@ -8,6 +8,7 @@ ChatUserWid::ChatUserWid(QWidget *parent) :
     ui->setupUi(this);
     SetItemType(ListItemType::CHAT_USER_ITEM);
     ui->red_point->raise();
+    ShowRedPoint(false);
 }
 
 ChatUserWid::~ChatUserWid()
@@ -34,4 +35,13 @@ void ChatUserWid::SetInfo(QString name, QString head, QString msg)
 
     ui->user_name_lb->setText(_name);
     ui->user_chat_lb->setText(_msg);
+}
+
+void ChatUserWid::ShowRedPoint(bool bshow)
+{
+    if(bshow){
+        ui->red_point->show();
+    }else{
+        ui->red_point->hide();
+    }
 }

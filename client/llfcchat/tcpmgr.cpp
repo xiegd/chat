@@ -138,6 +138,41 @@ void TcpMgr::initHandlers()
         UserMgr::GetInstance()->SetToken(jsonObj["token"].toString());
         emit sig_swich_chatdlg();
     });
+
+
+	_handlers.insert(ID_SEARCH_USER_RSP, [this](ReqId id, int len, QByteArray data) {
+		Q_UNUSED(len);
+		qDebug() << "handle id is " << id << " data is " << data;
+		// 将QByteArray转换为QJsonDocument
+		QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
+
+		// 检查转换是否成功
+		if (jsonDoc.isNull()) {
+			qDebug() << "Failed to create QJsonDocument.";
+			return;
+		}
+
+		QJsonObject jsonObj = jsonDoc.object();
+
+		if (!jsonObj.contains("error")) {
+			int err = ErrorCodes::ERR_JSON;
+			qDebug() << "Login Failed, err is Json Parse Err" << err;
+
+			emit sig_user_search(nullptr);
+			return;
+		}
+
+		int err = jsonObj["error"].toInt();
+		if (err != ErrorCodes::SUCCESS) {
+			qDebug() << "Login Failed, err is " << err;
+            emit sig_user_search(nullptr);
+			return;
+		}
+       auto search_info =  std::make_shared<SearchInfo>(jsonObj["uid"].toInt(), jsonObj["name"].toString(),
+            jsonObj["nick"].toString(), jsonObj["desc"].toString(), jsonObj["sex"].toInt());
+
+        emit sig_user_search(search_info);
+		});
 }
 
 void TcpMgr::handleMsg(ReqId id, int len, QByteArray data)

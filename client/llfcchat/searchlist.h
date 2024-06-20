@@ -14,7 +14,7 @@ class SearchList: public QListWidget
 public:
     SearchList(QWidget *parent = nullptr);
     void CloseFindDlg();
-    bool AddUserItemClick();
+    void SetSearchEdit(QWidget* edit);
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override {
         // 检查事件是否是鼠标悬浮进入或离开
@@ -43,8 +43,10 @@ protected:
         return QListWidget::eventFilter(watched, event);
     }
 private:
+    bool _send_pending;
     void addTipItem();
     std::shared_ptr<QDialog> _find_dlg;
+    QWidget* _search_edit;
 private slots:
     void slot_item_clicked(QListWidgetItem *item);
 signals:

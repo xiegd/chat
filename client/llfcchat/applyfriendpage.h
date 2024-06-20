@@ -18,6 +18,8 @@ protected:
     void paintEvent(QPaintEvent *event);
 private:
     Ui::ApplyFriendPage *ui;
+signals:
+    void sig_show_search(bool);
 };
 
 #endif // APPLYFRIENDPAGE_H

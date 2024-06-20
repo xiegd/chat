@@ -17,6 +17,7 @@ public:
     ~ConUserItem();
     QSize sizeHint() const override;
     void SetInfo(QString name, QString head);
+    void ShowRedPoint(bool show = false);
 private:
     Ui::ConUserItem *ui;
     QString _name;

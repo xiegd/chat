@@ -8,6 +8,7 @@ ConUserItem::ConUserItem(QWidget *parent) :
     ui->setupUi(this);
     SetItemType(ListItemType::CONTACT_USER_ITEM);
     ui->red_point->raise();
+    ShowRedPoint(false);
 }
 
 ConUserItem::~ConUserItem()
@@ -33,5 +34,15 @@ void ConUserItem::SetInfo(QString name, QString head)
     ui->icon_lb->setScaledContents(true);
 
     ui->user_name_lb->setText(_name);
+
+}
+
+void ConUserItem::ShowRedPoint(bool show)
+{
+    if(show){
+        ui->red_point->show();
+    }else{
+        ui->red_point->hide();
+    }
 
 }

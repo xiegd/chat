@@ -23,6 +23,7 @@ protected:
     bool eventFilter(QObject *watched, QEvent *event) override ;
 
     void handleGlobalMousePress(QMouseEvent *event) ;
+    void CloseFindDlg();
 private:
     void AddLBGroup(StateWidget* lb);
     void addChatUserList();
@@ -42,6 +43,7 @@ public slots:
     void slot_loading_contact_user();
     void slot_switch_apply_friend_page();
     void slot_friend_info_page();
+    void slot_show_search(bool show);
 private slots:
 
 };

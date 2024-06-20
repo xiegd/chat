@@ -37,6 +37,8 @@ ApplyFriendPage::ApplyFriendPage(QWidget *parent) :
             authFriend->show();
         });
     }
+
+    connect(ui->apply_friend_list, &ApplyFriendList::sig_show_search, this, &ApplyFriendPage::sig_show_search);
 }
 
 ApplyFriendPage::~ApplyFriendPage()

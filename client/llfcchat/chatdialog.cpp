@@ -62,11 +62,7 @@ ChatDialog::ChatDialog(QWidget *parent) :
 
     //连接加载信号和槽
     connect(ui->chat_user_list, &ChatUserList::sig_loading_chat_user, this, &ChatDialog::slot_loading_chat_user);
-
     addChatUserList();
-
-
-
     QPixmap pixmap(":/res/head_1.jpg"); // 加载图片
     ui->side_head_lb->setPixmap(pixmap); // 将图片设置到QLabel上
     QPixmap scaledPixmap = pixmap.scaled( ui->side_head_lb->size(), Qt::KeepAspectRatio); // 将图片缩放到label的大小
@@ -103,6 +99,12 @@ ChatDialog::ChatDialog(QWidget *parent) :
     //连接联系人页面点击好友申请条目的信号
     connect(ui->con_user_list, &ContactUserList::sig_switch_apply_friend_page,
             this,&ChatDialog::slot_switch_apply_friend_page);
+
+    //连接清除搜索框操作
+    connect(ui->friend_apply_page, &ApplyFriendPage::sig_show_search, this, &ChatDialog::slot_show_search);
+
+    //为searchlist 设置search edit
+    ui->search_list->SetSearchEdit(ui->search_edit);
 }
 
 ChatDialog::~ChatDialog()
@@ -134,8 +136,12 @@ void ChatDialog::handleGlobalMousePress(QMouseEvent *event)
         // 如果不在聊天列表内，清空输入框
         ui->search_edit->clear();
         ShowSearch(false);
-        ui->search_list->CloseFindDlg();
     }
+}
+
+void ChatDialog::CloseFindDlg()
+{
+    ui->search_list->CloseFindDlg();
 }
 
 void ChatDialog::AddLBGroup(StateWidget* lb)
@@ -190,11 +196,17 @@ void ChatDialog::ShowSearch(bool bsearch)
         ui->con_user_list->hide();
         ui->search_list->hide();
         _mode = ChatUIMode::ChatMode;
+        ui->search_list->CloseFindDlg();
+        ui->search_edit->clear();
+        ui->search_edit->clearFocus();
     }else if(_state == ChatUIMode::ContactMode){
         ui->chat_user_list->hide();
         ui->search_list->hide();
         ui->con_user_list->show();
         _mode = ChatUIMode::ContactMode;
+        ui->search_list->CloseFindDlg();
+		ui->search_edit->clear();
+		ui->search_edit->clearFocus();
     }
 }
 
@@ -237,7 +249,9 @@ void ChatDialog::slot_side_contact(){
 void ChatDialog::slot_text_changed(const QString &str)
 {
     //qDebug()<< "receive slot text changed str is " << str;
-    ShowSearch(true);
+    if (!str.isEmpty()) {
+        ShowSearch(true);
+    }
 }
 
 void ChatDialog::slot_focus_out()
@@ -262,4 +276,8 @@ void ChatDialog::slot_friend_info_page()
 
 }
 
+void ChatDialog::slot_show_search(bool show)
+{
+    ShowSearch(show);
+}
 

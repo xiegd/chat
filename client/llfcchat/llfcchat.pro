@@ -68,6 +68,7 @@ SOURCES += \
         statewidget.cpp \
         tcpmgr.cpp \
         timerbtn.cpp \
+        userdata.cpp \
         usermgr.cpp
 
 HEADERS += \
@@ -113,6 +114,7 @@ HEADERS += \
         statewidget.h \
         tcpmgr.h \
         timerbtn.h \
+        userdata.h \
         usermgr.h
 
 FORMS += \

@@ -47,6 +47,8 @@ private:
 enum MSG_IDS {
 	MSG_CHAT_LOGIN = 1005, //用户登陆
 	MSG_CHAT_LOGIN_RSP = 1006, //用户登陆回包
+	ID_SEARCH_USER_REQ = 1007, //用户搜索请求
+	ID_SEARCH_USER_RSP = 1008, //搜索用户回包
 };
 
 #define USERIPPREFIX  "uip_"
@@ -54,4 +56,5 @@ enum MSG_IDS {
 #define IPCOUNTPREFIX  "ipcount_"
 #define USER_BASE_INFO "ubaseinfo_"
 #define LOGIN_COUNT  "logincount"
+#define NAME_INFO  "nameinfo_"
 

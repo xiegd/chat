@@ -16,6 +16,7 @@
 #include "invaliditem.h"
 #include "conuseritem.h"
 #include "lineitem.h"
+#include "tcpmgr.h"
 
 
 ChatDialog::ChatDialog(QWidget *parent) :

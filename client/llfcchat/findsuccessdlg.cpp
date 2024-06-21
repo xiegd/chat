@@ -22,6 +22,7 @@ FindSuccessDlg::FindSuccessDlg(QWidget *parent) :
             Qt::KeepAspectRatio, Qt::SmoothTransformation);
     ui->head_lb->setPixmap(head_pix);
     ui->add_friend_btn->SetState("normal","hover","press");
+    this->setModal(true);
 }
 
 FindSuccessDlg::~FindSuccessDlg()

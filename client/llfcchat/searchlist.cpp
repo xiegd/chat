@@ -5,6 +5,8 @@
 #include "findsuccessdlg.h"
 #include "tcpmgr.h"
 #include "customizeedit.h"
+#include "findfaildlg.h"
+#include "loadingdlg.h"
 
 SearchList::SearchList(QWidget *parent):QListWidget(parent),_find_dlg(nullptr), _search_edit(nullptr), _send_pending(false)
 {
@@ -17,6 +19,8 @@ SearchList::SearchList(QWidget *parent):QListWidget(parent),_find_dlg(nullptr), 
     connect(this, &QListWidget::itemClicked, this, &SearchList::slot_item_clicked);
     //添加条目
     addTipItem();
+    //连接搜索条目
+    connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_user_search, this, &SearchList::slot_user_search);
 }
 
 void SearchList::CloseFindDlg()
@@ -29,6 +33,20 @@ void SearchList::CloseFindDlg()
 
 void SearchList::SetSearchEdit(QWidget* edit) {
     _search_edit = edit;
+}
+
+void SearchList::waitPending(bool pending)
+{
+    if(pending){
+        _loadingDialog = new LoadingDlg(this);
+        _loadingDialog->setModal(true);
+        _loadingDialog->show();
+        _send_pending = pending;
+    }else{
+        _loadingDialog->hide();
+        _loadingDialog->deleteLater();
+         _send_pending = pending;
+    }
 }
 
 
@@ -78,7 +96,7 @@ void SearchList::slot_item_clicked(QListWidgetItem *item)
        if (_send_pending) {
            return;
        }
-       _send_pending = true;
+       waitPending(true);
        auto search_edit = dynamic_cast<CustomizeEdit*>(_search_edit);
        auto uid_str = search_edit->text();
        //此处发送请求给server
@@ -89,14 +107,22 @@ void SearchList::slot_item_clicked(QListWidgetItem *item)
 	   QString jsonString = doc.toJson(QJsonDocument::Indented);
 
 	   //发送tcp请求给chat server
-	   emit TcpMgr::GetInstance()->sig_send_data(ReqId::ID_CHAT_LOGIN, jsonString);
-       //// 创建对话框
-       //_find_dlg = std::make_shared<FindSuccessDlg>(this);
-       //// 显示对话框
-       //_find_dlg->show();
+       emit TcpMgr::GetInstance()->sig_send_data(ReqId::ID_SEARCH_USER_REQ, jsonString);
        return;
    }
 
    //清除弹出框
     CloseFindDlg();
+}
+
+void SearchList::slot_user_search(std::shared_ptr<SearchInfo> si)
+{
+    waitPending(false);
+    if (si == nullptr) {
+        _find_dlg = std::make_shared<FindFailDlg>(this);
+    }else{
+        _find_dlg = std::make_shared<FindSuccessDlg>(this);
+    }
+
+    _find_dlg->show();
 }

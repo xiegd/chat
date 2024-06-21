@@ -7,6 +7,8 @@
 #include <QDebug>
 #include <QDialog>
 #include <memory>
+#include "userdata.h"
+#include "loadingdlg.h"
 
 class SearchList: public QListWidget
 {
@@ -43,12 +45,15 @@ protected:
         return QListWidget::eventFilter(watched, event);
     }
 private:
+    void waitPending(bool pending = true);
     bool _send_pending;
     void addTipItem();
     std::shared_ptr<QDialog> _find_dlg;
     QWidget* _search_edit;
+    LoadingDlg * _loadingDialog;
 private slots:
     void slot_item_clicked(QListWidgetItem *item);
+    void slot_user_search(std::shared_ptr<SearchInfo> si);
 signals:
 
 };

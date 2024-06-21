@@ -49,6 +49,7 @@ SOURCES += \
         conuseritem.cpp \
         customizeedit.cpp \
         customizetextedit.cpp \
+        findfaildlg.cpp \
         findsuccessdlg.cpp \
         friendlabel.cpp \
         global.cpp \
@@ -95,6 +96,7 @@ HEADERS += \
         conuseritem.h \
         customizeedit.h \
         customizetextedit.h \
+        findfaildlg.h \
         findsuccessdlg.h \
         friendlabel.h \
         global.h \
@@ -127,6 +129,7 @@ FORMS += \
         chatpage.ui \
         chatuserwid.ui \
         conuseritem.ui \
+        findfaildlg.ui \
         findsuccessdlg.ui \
         friendlabel.ui \
         grouptipitem.ui \

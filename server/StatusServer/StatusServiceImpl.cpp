@@ -29,16 +29,29 @@ Status StatusServiceImpl::GetChatServer(ServerContext* context, const GetChatSer
 StatusServiceImpl::StatusServiceImpl()
 {
 	auto& cfg = ConfigMgr::Inst();
-	ChatServer server;
-	server.port = cfg["ChatServer1"]["Port"];
-	server.host = cfg["ChatServer1"]["Host"];
-	server.name = cfg["ChatServer1"]["Name"];
-	_servers[server.name] = server;
+	auto server_list = cfg["chatservers"]["Name"];
 
-	server.port = cfg["ChatServer2"]["Port"];
-	server.host = cfg["ChatServer2"]["Host"];
-	server.name = cfg["ChatServer2"]["Name"];
-	_servers[server.name] = server;
+	std::vector<std::string> words;
+
+	std::stringstream ss(server_list);
+	std::string word;
+
+	while (std::getline(ss, word, ',')) {
+		words.push_back(word);
+	}
+
+	for (auto& word : words) {
+		if (cfg[word]["Name"].empty()) {
+			continue;
+		}
+
+		ChatServer server;
+		server.port = cfg[word]["Port"];
+		server.host = cfg[word]["Host"];
+		server.name = cfg[word]["Name"];
+		_servers[server.name] = server;
+	}
+
 }
 
 ChatServer StatusServiceImpl::getChatServer() {

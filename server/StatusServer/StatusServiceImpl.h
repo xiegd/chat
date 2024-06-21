@@ -14,6 +14,7 @@ using message::LoginRsp;
 using message::StatusService;
 
 struct ChatServer {
+	ChatServer():host(""),port(""),name(""),con_count(0){}
 	std::string host;
 	std::string port;
 	std::string name;

@@ -173,7 +173,6 @@ void ChatDialog::addChatUserList()
 }
 
 
-
 void ChatDialog::ClearLabelState(StateWidget *lb)
 {
     for(auto & ele: _lb_list){

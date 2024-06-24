@@ -5,7 +5,7 @@
 #include <grpcpp/grpcpp.h> 
 #include "message.grpc.pb.h"
 #include "message.pb.h"
-
+#include <queue>
 using grpc::Channel;
 using grpc::Status;
 using grpc::ClientContext;
@@ -75,7 +75,7 @@ private:
 	size_t poolSize_;
 	std::string host_;
 	std::string port_;
-	std::queue<std::unique_ptr<ChatService::Stub>> connections_;
+	std::queue<std::unique_ptr<ChatService::Stub> > connections_;
 	std::mutex mutex_;
 	std::condition_variable cond_;
 };

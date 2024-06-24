@@ -49,6 +49,7 @@ enum MSG_IDS {
 	MSG_CHAT_LOGIN_RSP = 1006, //用户登陆回包
 	ID_SEARCH_USER_REQ = 1007, //用户搜索请求
 	ID_SEARCH_USER_RSP = 1008, //搜索用户回包
+	ID_NOTIFY_ADD_FRIEND_REQ = 1011,  //通知用户添加好友申请
 };
 
 #define USERIPPREFIX  "uip_"

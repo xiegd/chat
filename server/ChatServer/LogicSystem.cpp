@@ -3,6 +3,7 @@
 #include "MysqlMgr.h"
 #include "const.h"
 #include "RedisMgr.h"
+#include "UserMgr.h"
 
 using namespace std;
 
@@ -145,6 +146,13 @@ void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short &msg_id
 		count++;
 		auto count_str = std::to_string(count);
 		RedisMgr::GetInstance()->HSet(LOGIN_COUNT, server_name, count_str);
+		//session绑定用户uid
+		session->SetUserId(uid);
+		//为用户设置登录ip server的名字
+		std::string  ipkey = USERIPPREFIX + uid_str;
+		RedisMgr::GetInstance()->Set(ipkey, server_name);
+		//uid和session绑定管理,方便以后踢人操作
+		UserMgr::GetInstance()->SetUserSession(uid, session);
 		return;
 	}
 
@@ -179,7 +187,8 @@ void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short &msg_id
 	count++;
 	auto count_str = std::to_string(count);
 	RedisMgr::GetInstance()->HSet(LOGIN_COUNT, server_name, count_str);
-
+	//session绑定用户uid
+	session->SetUserId(uid);
 	//返回数据
 	rtvalue["uid"] = user_info->uid;
 	rtvalue["pwd"] = user_info->pwd;
@@ -188,6 +197,11 @@ void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short &msg_id
 	rtvalue["nick"] = user_info->nick;
 	rtvalue["desc"] = user_info->desc;
 	rtvalue["sex"] = user_info->sex;
+	//为用户设置登录ip server的名字
+	std::string  ipkey = USERIPPREFIX + uid_str;
+	RedisMgr::GetInstance()->Set(ipkey, server_name);
+	//uid和session绑定管理,方便以后踢人操作
+	UserMgr::GetInstance()->SetUserSession(uid, session);
 	return;
 }
 

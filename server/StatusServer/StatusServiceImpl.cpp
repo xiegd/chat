@@ -2,7 +2,7 @@
 #include "ConfigMgr.h"
 #include "const.h"
 #include "RedisMgr.h"
-#include <limits>
+#include <climits>
 
 std::string generate_unique_string() {
 	// 创建UUID对象
@@ -59,7 +59,8 @@ ChatServer StatusServiceImpl::getChatServer() {
 	auto& minServer = _servers.begin()->second;
 	auto count_str = RedisMgr::GetInstance()->HGet(LOGIN_COUNT, minServer.name);
 	if (count_str.empty()) {
-		minServer.con_count = 0;
+		//不存在则默认设置为最大
+		minServer.con_count = INT_MAX;
 	}
 	else {
 		minServer.con_count++;
@@ -75,7 +76,7 @@ ChatServer StatusServiceImpl::getChatServer() {
 
 		auto count_str = RedisMgr::GetInstance()->HGet(LOGIN_COUNT, server.second.name);
 		if (count_str.empty()) {
-			server.second.con_count = std::numeric_limits<unsigned long long>::max();
+			server.second.con_count = INT_MAX;
 		}
 		else {
 			int count = std::stoi(count_str);

@@ -4,7 +4,7 @@
 #include <QDialog>
 #include "clickedlabel.h"
 #include "friendlabel.h"
-
+#include "userdata.h"
 namespace Ui {
 class ApplyFriend;
 }
@@ -19,6 +19,7 @@ public:
     void InitTipLbs();
     void AddTipLbs(ClickedLabel*, QPoint cur_point, QPoint &next_point, int text_width, int text_height);
     bool eventFilter(QObject *obj, QEvent *event);
+    void SetSearchInfo(std::shared_ptr<SearchInfo> si);
 private:
     void resetLabels();
     Ui::ApplyFriend *ui;
@@ -32,6 +33,7 @@ private:
     void addLabel(QString name);
     std::vector<QString> _tip_data;
     QPoint _tip_cur_point;
+    std::shared_ptr<SearchInfo> _si;
 public slots:
     //显示更多label标签
     void ShowMoreLabel();

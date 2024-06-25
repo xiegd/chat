@@ -74,6 +74,9 @@ void LogicSystem::RegisterCallBacks() {
 
 	_fun_callbacks[ID_SEARCH_USER_REQ] = std::bind(&LogicSystem::SearchInfo, this,
 		placeholders::_1, placeholders::_2, placeholders::_3);
+
+	_fun_callbacks[ID_ADD_FRIEND_REQ] = std::bind(&LogicSystem::AddFriendReq, this,
+		placeholders::_1, placeholders::_2, placeholders::_3);
 }
 
 void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short &msg_id, const string &msg_data) {
@@ -228,6 +231,27 @@ void LogicSystem::SearchInfo(std::shared_ptr<CSession> session, const short& msg
 		GetUserByName(uid_str, rtvalue);
 	}
 	return;
+}
+
+void LogicSystem::AddFriendReq(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data)
+{
+	Json::Reader reader;
+	Json::Value root;
+	reader.parse(msg_data, root);
+	auto uid = root["uid"].asInt();
+	auto applyname = root["applyname"].asString();
+	auto bakname = root["bakname"].asString();
+	auto touid = root["touid"].asInt();
+	std::cout << "user login uid is  " << uid << " applyname  is "
+		<< applyname << " bakname is " << bakname << " touid is " << touid << endl;
+
+	Json::Value  rtvalue;
+	Defer defer([this, &rtvalue, session]() {
+		std::string return_str = rtvalue.toStyledString();
+		session->Send(return_str, ID_ADD_FRIEND_RSP);
+		});
+
+	rtvalue["error"] = ErrorCodes::Success;
 }
 
 bool LogicSystem::isPureDigit(const std::string& str)

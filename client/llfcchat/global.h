@@ -28,6 +28,7 @@ enum ReqId{
     ID_CHAT_LOGIN_RSP= 1006, //登陆聊天服务器回包
     ID_SEARCH_USER_REQ = 1007, //用户搜索请求
     ID_SEARCH_USER_RSP = 1008, //搜索用户回包
+    ID_ADD_FRIEND_REQ = 1009,  //添加好友申请
 };
 
 enum ErrorCodes{

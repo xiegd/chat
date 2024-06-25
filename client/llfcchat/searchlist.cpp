@@ -7,6 +7,7 @@
 #include "customizeedit.h"
 #include "findfaildlg.h"
 #include "loadingdlg.h"
+#include "userdata.h"
 
 SearchList::SearchList(QWidget *parent):QListWidget(parent),_find_dlg(nullptr), _search_edit(nullptr), _send_pending(false)
 {
@@ -121,7 +122,12 @@ void SearchList::slot_user_search(std::shared_ptr<SearchInfo> si)
     if (si == nullptr) {
         _find_dlg = std::make_shared<FindFailDlg>(this);
     }else{
+        //此处分两种情况，一种是搜多到已经是自己的朋友了，一种是未添加好友
+        //此处先处理为添加的好友
         _find_dlg = std::make_shared<FindSuccessDlg>(this);
+        dynamic_pointer_cast<FindSuccessDlg>(_find_dlg)->SetSearchInfo(si);
+
+        //此处处理已经添加的好友，实现页面跳转
     }
 
     _find_dlg->show();

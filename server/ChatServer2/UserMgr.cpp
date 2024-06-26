@@ -1,5 +1,6 @@
 #include "UserMgr.h"
 #include "CSession.h"
+#include "RedisMgr.h"
 
 UserMgr:: ~ UserMgr(){
 	_uid_to_session.clear();
@@ -24,9 +25,15 @@ void UserMgr::SetUserSession(int uid, std::shared_ptr<CSession> session)
 }
 
 void UserMgr::RmvUserSession(int uid)
-{
-	std::lock_guard<std::mutex> lock(_session_mtx);
-	_uid_to_session.erase(uid);
+{ 
+	auto uid_str = std::to_string(uid);
+	RedisMgr::GetInstance()->Del(USERIPPREFIX + uid_str);
+
+	{
+		std::lock_guard<std::mutex> lock(_session_mtx);
+		_uid_to_session.erase(uid);
+	}
+
 }
 
 UserMgr::UserMgr()

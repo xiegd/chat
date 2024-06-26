@@ -251,6 +251,9 @@ void LogicSystem::AddFriendReq(std::shared_ptr<CSession> session, const short& m
 		session->Send(return_str, ID_ADD_FRIEND_RSP);
 		});
 
+	//先更新数据库
+	MysqlMgr::GetInstance()->AddFriendApply(uid, touid);
+
 	rtvalue["error"] = ErrorCodes::Success;
 }
 

@@ -11,11 +11,29 @@
  Target Server Version : 80027 (8.0.27)
  File Encoding         : 65001
 
- Date: 21/06/2024 14:49:21
+ Date: 26/06/2024 14:49:20
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for friend_apply
+-- ----------------------------
+DROP TABLE IF EXISTS `friend_apply`;
+CREATE TABLE `friend_apply`  (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `from_uid` int NOT NULL,
+  `to_uid` int NOT NULL,
+  `status` smallint NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `from_uid`(`from_uid` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of friend_apply
+-- ----------------------------
+INSERT INTO `friend_apply` VALUES (5, 1019, 1002, 0);
 
 -- ----------------------------
 -- Table structure for user
@@ -39,7 +57,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (3, 1002, 'llfc', 'secondtonone1@163.com', ':38;::>9;;:', '', '', 0);
+INSERT INTO `user` VALUES (3, 1002, 'llfc', 'secondtonone1@163.com', '654321)', '', '', 0);
 INSERT INTO `user` VALUES (4, 1003, 'tc', '18165031775@qq.com', '123456', '', '', 0);
 INSERT INTO `user` VALUES (5, 1004, 'yuanweihua', '1456188862@qq.com', '}kyn;89>?<', '', '', 0);
 INSERT INTO `user` VALUES (6, 1005, 'test', '2022202210033@whu.edu.cn', '}kyn;89>?<', '', '', 0);
@@ -52,7 +70,7 @@ INSERT INTO `user` VALUES (15, 1014, '123456789', '1152907774@qq.com', '12345678
 INSERT INTO `user` VALUES (16, 1015, 'aaaaaaa', '3031719794@qq.com', '777777', '', '', 0);
 INSERT INTO `user` VALUES (17, 1016, 'aaa', '2996722319@qq.com', '222222', '', '', 0);
 INSERT INTO `user` VALUES (20, 1019, 'zack', '1017234088@qq.com', '654321)', '', '', 0);
-INSERT INTO `user` VALUES (21, 1020, 'aatext', '1584736136@qq.com', '123456', '', '', 0);
+INSERT INTO `user` VALUES (21, 1020, 'aatext', '1584736136@qq.com', '745230', '', '', 0);
 INSERT INTO `user` VALUES (22, 1021, 'ferrero1', '1220292901@qq.com', '1234', '', '', 0);
 INSERT INTO `user` VALUES (23, 1022, 'ferrero2', '15504616642@163.com', '1234', '', '', 0);
 INSERT INTO `user` VALUES (24, 1023, 'lyf', '3194811890@qq.com', '123456', '', '', 0);

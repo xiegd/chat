@@ -16,20 +16,6 @@ bool bstop = false;
 std::condition_variable cond_quit;
 std::mutex mutex_quit;
 
-std::unique_ptr<grpc::Server> RunGrpcServer() {
-	auto& cfg = ConfigMgr::Inst();
-	std::string server_address(cfg["SelfServer"]["Host"] + ":" + cfg["SelfServer"]["RPCPort"]);
-	ChatServiceImpl service;
-	grpc::ServerBuilder builder;
-	// 监听端口和添加服务
-	builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
-	builder.RegisterService(&service);
-	// 构建并启动gRPC服务器
-	std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
-	std::cout << "RPC Server listening on " << server_address << std::endl;
-	return server;
-}
-
 int main()
 {
 	auto& cfg = ConfigMgr::Inst();
@@ -40,7 +26,16 @@ int main()
 		RedisMgr::GetInstance()->HSet(LOGIN_COUNT, server_name,"0");
 
 		//定义一个GrpcServer
-		std::unique_ptr<grpc::Server> server =RunGrpcServer();
+
+		std::string server_address(cfg["SelfServer"]["Host"] + ":" + cfg["SelfServer"]["RPCPort"]);
+		ChatServiceImpl service;
+		grpc::ServerBuilder builder;
+		// 监听端口和添加服务
+		builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
+		builder.RegisterService(&service);
+		// 构建并启动gRPC服务器
+		std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
+		std::cout << "RPC Server listening on " << server_address << std::endl;
 
 		//单独启动一个线程处理grpc服务
 		std::thread  grpc_server_thread([&server]() {

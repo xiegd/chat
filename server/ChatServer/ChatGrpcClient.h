@@ -88,7 +88,7 @@ public:
 
 	}
 
-	AddFriendRsp NotifyAddFriend(const AddFriendReq& req);
+	AddFriendRsp NotifyAddFriend(std::string server_ip, const AddFriendReq& req);
 
 private:
 	ChatGrpcClient();

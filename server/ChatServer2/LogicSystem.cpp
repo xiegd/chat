@@ -4,6 +4,7 @@
 #include "const.h"
 #include "RedisMgr.h"
 #include "UserMgr.h"
+#include "ChatGrpcClient.h"
 
 using namespace std;
 
@@ -75,7 +76,7 @@ void LogicSystem::RegisterCallBacks() {
 	_fun_callbacks[ID_SEARCH_USER_REQ] = std::bind(&LogicSystem::SearchInfo, this,
 		placeholders::_1, placeholders::_2, placeholders::_3);
 
-	_fun_callbacks[ID_ADD_FRIEND_REQ] = std::bind(&LogicSystem::AddFriendReq, this,
+	_fun_callbacks[ID_ADD_FRIEND_REQ] = std::bind(&LogicSystem::AddFriendApply, this,
 		placeholders::_1, placeholders::_2, placeholders::_3);
 }
 
@@ -233,7 +234,7 @@ void LogicSystem::SearchInfo(std::shared_ptr<CSession> session, const short& msg
 	return;
 }
 
-void LogicSystem::AddFriendReq(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data)
+void LogicSystem::AddFriendApply(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data)
 {
 	Json::Reader reader;
 	Json::Value root;
@@ -246,6 +247,7 @@ void LogicSystem::AddFriendReq(std::shared_ptr<CSession> session, const short& m
 		<< applyname << " bakname is " << bakname << " touid is " << touid << endl;
 
 	Json::Value  rtvalue;
+	rtvalue["error"] = ErrorCodes::Success;
 	Defer defer([this, &rtvalue, session]() {
 		std::string return_str = rtvalue.toStyledString();
 		session->Send(return_str, ID_ADD_FRIEND_RSP);
@@ -254,7 +256,24 @@ void LogicSystem::AddFriendReq(std::shared_ptr<CSession> session, const short& m
 	//先更新数据库
 	MysqlMgr::GetInstance()->AddFriendApply(uid, touid);
 
-	rtvalue["error"] = ErrorCodes::Success;
+	//查询redis 查找touid对应的server ip
+	auto to_str = std::to_string(touid);
+	auto to_ip_key = USERIPPREFIX + to_str;
+	std::string to_ip_value = "";
+	bool b_ip = RedisMgr::GetInstance()->Get(to_ip_key, to_ip_value);
+	if (!b_ip) {
+		return;
+	}
+
+	AddFriendReq add_req;
+	add_req.set_applyuid(uid);
+	add_req.set_touid(touid);
+	add_req.set_name(applyname);
+	add_req.set_desc("");
+
+	//发送通知
+	ChatGrpcClient::GetInstance()->NotifyAddFriend(to_ip_value,add_req);
+
 }
 
 bool LogicSystem::isPureDigit(const std::string& str)

@@ -4,7 +4,7 @@
 ChatGrpcClient::ChatGrpcClient()
 {
 	auto& cfg = ConfigMgr::Inst();
-	auto server_list = cfg["chatservers"]["Name"];
+	auto server_list = cfg["PeerServer"]["Servers"];
 
 	std::vector<std::string> words;
 
@@ -19,19 +19,26 @@ ChatGrpcClient::ChatGrpcClient()
 		if (cfg[word]["Name"].empty()) {
 			continue;
 		}
-		auto& gCfgMgr = ConfigMgr::Inst();
-		std::string host = gCfgMgr["StatusServer"]["Host"];
-		std::string port = gCfgMgr["StatusServer"]["Port"];
 		_pools[cfg[word]["Name"]] = std::make_unique<ChatConPool>(5, cfg[word]["Host"], cfg[word]["Port"]);
 	}
 
 }
 
-AddFriendRsp ChatGrpcClient::NotifyAddFriend(const AddFriendReq& req)
+AddFriendRsp ChatGrpcClient::NotifyAddFriend(std::string server_ip, const AddFriendReq& req)
 {
-	auto to_uid = req.touid();
-	std::string  uid_str = std::to_string(to_uid);
-	
 	AddFriendRsp rsp;
+	auto find_iter = _pools.find(server_ip);
+	if (find_iter == _pools.end()) {
+		return rsp;
+	}
+	
+	auto &pool = find_iter->second;
+	ClientContext context;
+	auto stub = pool->getConnection();
+	Status status = stub->NotifyAddFriend(&context, req, &rsp);
+	Defer defer([&stub, this, &pool]() {
+		pool->returnConnection(std::move(stub));
+		});
+
 	return rsp;
 }

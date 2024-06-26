@@ -56,14 +56,14 @@ StatusServiceImpl::StatusServiceImpl()
 
 ChatServer StatusServiceImpl::getChatServer() {
 	std::lock_guard<std::mutex> guard(_server_mtx);
-	auto& minServer = _servers.begin()->second;
+	auto minServer = _servers.begin()->second;
 	auto count_str = RedisMgr::GetInstance()->HGet(LOGIN_COUNT, minServer.name);
 	if (count_str.empty()) {
 		//不存在则默认设置为最大
 		minServer.con_count = INT_MAX;
 	}
 	else {
-		minServer.con_count++;
+		minServer.con_count = std::stoi(count_str);
 	}
 
 
@@ -79,8 +79,7 @@ ChatServer StatusServiceImpl::getChatServer() {
 			server.second.con_count = INT_MAX;
 		}
 		else {
-			int count = std::stoi(count_str);
-			server.second.con_count = count + 1;
+			server.second.con_count = std::stoi(count_str);
 		}
 
 		if (server.second.con_count < minServer.con_count) {

@@ -18,7 +18,7 @@ std::mutex mutex_quit;
 
 std::unique_ptr<grpc::Server> RunGrpcServer() {
 	auto& cfg = ConfigMgr::Inst();
-	std::string server_address(cfg["SelfServer"]["Host"] + ":" + cfg["SelfServer"]["Port"]);
+	std::string server_address(cfg["SelfServer"]["Host"] + ":" + cfg["SelfServer"]["RPCPort"]);
 	ChatServiceImpl service;
 	grpc::ServerBuilder builder;
 	// 监听端口和添加服务
@@ -26,7 +26,7 @@ std::unique_ptr<grpc::Server> RunGrpcServer() {
 	builder.RegisterService(&service);
 	// 构建并启动gRPC服务器
 	std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
-	std::cout << "Server listening on " << server_address << std::endl;
+	std::cout << "RPC Server listening on " << server_address << std::endl;
 	return server;
 }
 

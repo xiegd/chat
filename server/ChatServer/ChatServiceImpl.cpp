@@ -23,11 +23,12 @@ Status ChatServiceImpl::NotifyAddFriend(ServerContext* context, const AddFriendR
 		reply->set_touid(request->touid());
 		});
 
-	//用户不在内存中则直接返回，将申请写入数据库即可
+	//用户不在内存中则直接返回
 	if (session == nullptr) {
 		return Status::OK;
 	}
 	
+	//在内存中则直接发送通知对方
 	Json::Value  rtvalue;
 	rtvalue["error"] = ErrorCodes::Success;
 	rtvalue["applyuid"] = request->applyuid();

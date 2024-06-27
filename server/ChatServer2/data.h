@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 struct UserInfo {
+	UserInfo():name(""), pwd(""),uid(0),email(""),nick(""),desc(""),sex(0) {}
 	std::string name;
 	std::string pwd;
 	int uid;

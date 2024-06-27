@@ -15,15 +15,16 @@ class ApplyFriendItem : public ListItemBase
 public:
     explicit ApplyFriendItem(QWidget *parent = nullptr);
     ~ApplyFriendItem();
-    void SetInfo(QString name, QString head, QString msg);
+    void SetInfo(int uid, QString name, QString head, QString msg);
+    void ShowAddBtn(bool bshow);
 private:
     Ui::ApplyFriendItem *ui;
     QString _name;
     QString _head;
     QString _msg;
-
+    int _uid;
 signals:
-    void sig_auth_friend(QString name);
+    void sig_auth_friend(int uid);
 };
 
 #endif // APPLYFRIENDITEM_H

@@ -5,7 +5,7 @@
 #include "conuseritem.h"
 #include <QRandomGenerator>
 
-ContactUserList::ContactUserList(QWidget *parent)
+ContactUserList::ContactUserList(QWidget *parent): _add_friend_item(nullptr)
 {
     Q_UNUSED(parent);
      this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -21,6 +21,11 @@ ContactUserList::ContactUserList(QWidget *parent)
 }
 
 
+void ContactUserList::ShowRedPoint(bool bshow /*= true*/)
+{
+    _add_friend_item->ShowRedPoint(bshow);
+}
+
 void ContactUserList::addContactUserList()
 {
     auto * groupTip = new GroupTipItem();
@@ -30,15 +35,15 @@ void ContactUserList::addContactUserList()
     this->setItemWidget(item, groupTip);
     item->setFlags(item->flags() & ~Qt::ItemIsSelectable);
 
-    auto *add_user_wid = new ConUserItem();
-    add_user_wid->setObjectName("new_friend_item");
-    add_user_wid->SetInfo(tr("新的朋友"),":/res/add_friend.png");
-    add_user_wid->SetItemType(ListItemType::APPLY_FRIEND_ITEM);
+    _add_friend_item = new ConUserItem();
+    _add_friend_item->setObjectName("new_friend_item");
+    _add_friend_item->SetInfo(tr("新的朋友"),":/res/add_friend.png");
+    _add_friend_item->SetItemType(ListItemType::APPLY_FRIEND_ITEM);
     QListWidgetItem *add_item = new QListWidgetItem;
     //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
-    add_item->setSizeHint(add_user_wid->sizeHint());
+    add_item->setSizeHint(_add_friend_item->sizeHint());
     this->addItem(add_item);
-    this->setItemWidget(add_item, add_user_wid);
+    this->setItemWidget(add_item, _add_friend_item);
     //默认设置新的朋友申请条目被选中
     this->setCurrentItem(add_item);
 

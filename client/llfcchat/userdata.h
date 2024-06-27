@@ -11,5 +11,12 @@ public:
 	int _sex;
 };
 
+class AddFriendApply {
+public:
+	AddFriendApply(int from_uid, QString name, QString desc);
+	int _from_uid;
+	QString _name;
+	QString _desc;
+};
 
 #endif

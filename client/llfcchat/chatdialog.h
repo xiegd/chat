@@ -7,6 +7,8 @@
 #include "statelabel.h"
 #include "global.h"
 #include "statewidget.h"
+#include <memory>
+#include "userdata.h"
 
 namespace Ui {
 class ChatDialog;
@@ -44,6 +46,7 @@ public slots:
     void slot_switch_apply_friend_page();
     void slot_friend_info_page();
     void slot_show_search(bool show);
+    void slot_apply_friend(std::shared_ptr<AddFriendApply> apply);
 private slots:
 
 };

@@ -35,6 +35,7 @@ signals:
     void sig_swich_chatdlg();
     void sig_login_failed(int);
     void sig_user_search(std::shared_ptr<SearchInfo>);
+    void sig_friend_apply(std::shared_ptr<AddFriendApply>);
 };
 
 #endif // TCPMGR_H

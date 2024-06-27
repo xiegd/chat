@@ -110,6 +110,12 @@ background-color:rgb(255,255,255)
     font-family: "Microsoft YaHei";
 }
 
+#already_add_lb{
+    color:rgb(153,153,153);
+    font-size: 12px;
+    font-family: "Microsoft YaHei";
+}
+
 #user_name_lb{
     color:rgb(0,0,0);
     font-size: 14px;

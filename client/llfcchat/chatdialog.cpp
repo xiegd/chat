@@ -106,6 +106,9 @@ ChatDialog::ChatDialog(QWidget *parent) :
 
     //为searchlist 设置search edit
     ui->search_list->SetSearchEdit(ui->search_edit);
+
+    //连接申请添加好友信号
+    connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_friend_apply, this, &ChatDialog::slot_apply_friend);
 }
 
 ChatDialog::~ChatDialog()
@@ -279,5 +282,15 @@ void ChatDialog::slot_friend_info_page()
 void ChatDialog::slot_show_search(bool show)
 {
     ShowSearch(show);
+}
+
+void ChatDialog::slot_apply_friend(std::shared_ptr<AddFriendApply> apply)
+{
+	qDebug() << "receive apply friend slot, applyuid is " << apply->_from_uid << " name is "
+		<< apply->_name << " desc is " << apply->_desc;
+
+    ui->side_contact_lb->ShowRedPoint(true);
+    ui->con_user_list->ShowRedPoint(true);
+    ui->friend_apply_page->AddNewApply(apply);
 }
 

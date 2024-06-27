@@ -7,6 +7,7 @@
 #include "applyfrienditem.h"
 #include "authenfriend.h"
 #include "applyfriend.h"
+#include "tcpmgr.h"
 
 
 ApplyFriendPage::ApplyFriendPage(QWidget *parent) :
@@ -23,7 +24,7 @@ ApplyFriendPage::ApplyFriendPage(QWidget *parent) :
         int name_i = randomValue%names.size();
 
         auto *apply_item = new ApplyFriendItem();
-        apply_item->SetInfo(names[name_i], heads[head_i], strs[str_i]);
+        apply_item->SetInfo(0,names[name_i], heads[head_i], strs[str_i]);
         QListWidgetItem *item = new QListWidgetItem;
         //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
         item->setSizeHint(apply_item->sizeHint());
@@ -39,11 +40,34 @@ ApplyFriendPage::ApplyFriendPage(QWidget *parent) :
     }
 
     connect(ui->apply_friend_list, &ApplyFriendList::sig_show_search, this, &ApplyFriendPage::sig_show_search);
+    
 }
 
 ApplyFriendPage::~ApplyFriendPage()
 {
     delete ui;
+}
+
+void ApplyFriendPage::AddNewApply(std::shared_ptr<AddFriendApply> apply)
+{
+    //先模拟头像随机，以后头像资源增加资源服务器后再显示
+    int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
+    int head_i = randomValue % heads.size();
+	auto* apply_item = new ApplyFriendItem();
+	apply_item->SetInfo(apply->_from_uid, apply->_name, heads[head_i], apply->_desc);
+	QListWidgetItem* item = new QListWidgetItem;
+	//qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
+	item->setSizeHint(apply_item->sizeHint());
+	item->setFlags(item->flags() & ~Qt::ItemIsEnabled & ~Qt::ItemIsSelectable);
+	ui->apply_friend_list->insertItem(0,item);
+	ui->apply_friend_list->setItemWidget(item, apply_item);
+    apply_item->ShowAddBtn(true);
+	//收到审核好友信号
+	connect(apply_item, &ApplyFriendItem::sig_auth_friend, [this]() {
+		auto* authFriend = new AuthenFriend(this);
+		authFriend->setModal(true);
+		authFriend->show();
+		});
 }
 
 void ApplyFriendPage::paintEvent(QPaintEvent *event)
@@ -53,5 +77,6 @@ void ApplyFriendPage::paintEvent(QPaintEvent *event)
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
+
 
 

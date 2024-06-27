@@ -2,6 +2,8 @@
 #define APPLYFRIENDPAGE_H
 
 #include <QWidget>
+#include "userdata.h"
+#include <memory>
 
 namespace Ui {
 class ApplyFriendPage;
@@ -14,10 +16,13 @@ class ApplyFriendPage : public QWidget
 public:
     explicit ApplyFriendPage(QWidget *parent = nullptr);
     ~ApplyFriendPage();
+    void AddNewApply(std::shared_ptr<AddFriendApply> apply);
 protected:
     void paintEvent(QPaintEvent *event);
 private:
     Ui::ApplyFriendPage *ui;
+public slots:
+
 signals:
     void sig_show_search(bool);
 };

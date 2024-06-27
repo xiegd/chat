@@ -5,12 +5,14 @@
 #include <QWheelEvent>
 #include <QScrollBar>
 #include <QDebug>
+class ConUserItem;
 
 class ContactUserList : public QListWidget
 {
     Q_OBJECT
 public:
     ContactUserList(QWidget* parent = nullptr);
+    void ShowRedPoint(bool bshow = true);
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override ;
 private:
@@ -21,6 +23,8 @@ public slots:
 signals:
     void sig_loading_contact_user();
     void sig_switch_apply_friend_page();
+private:
+    ConUserItem* _add_friend_item;
 };
 
 #endif // CONTACTUSERLIST_H

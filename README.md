@@ -44,3 +44,11 @@ C++ 聊天项目实战案例，涵盖grpc，并发线程，网络编程，qt开�
 [day19-搜索框和聊天列表](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day19-%E5%AE%9E%E7%8E%B0%E6%90%9C%E7%B4%A2%E6%A1%86%E5%92%8C%E8%81%8A%E5%A4%A9%E5%88%97%E8%A1%A8.md)
 
 [day20-动态加载聊天列表](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day20-%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E8%81%8A%E5%A4%A9%E5%88%97%E8%A1%A8.md)
+
+[day21-滚动聊天布局设计](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day21-%E6%BB%9A%E5%8A%A8%E8%81%8A%E5%A4%A9%E5%B8%83%E5%B1%80%E8%AE%BE%E8%AE%A1.md)
+
+[day22-气泡聊天对话框](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day22.%E6%B0%94%E6%B3%A1%E8%81%8A%E5%A4%A9%E5%AF%B9%E8%AF%9D%E6%A1%86.md)
+
+[day23-侧边栏切换和搜索联动功能](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day23.%E4%BE%A7%E8%BE%B9%E6%A0%8F%E5%88%87%E6%8D%A2%E5%92%8C%E6%90%9C%E7%B4%A2%E8%81%94%E5%8A%A8%E5%8A%9F%E8%83%BD.md)
+
+[day24-事件过滤器实现搜索隐藏](https://gitee.com/secondtonone1/llfcchat/blob/master/%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/day24.%E4%BA%8B%E4%BB%B6%E8%BF%87%E6%BB%A4%E5%99%A8%E5%AE%9E%E7%8E%B0%E7%82%B9%E5%87%BB%E4%BD%8D%E7%BD%AE%E5%88%A4%E6%96%AD.md)

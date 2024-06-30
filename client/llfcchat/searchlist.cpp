@@ -126,9 +126,7 @@ void SearchList::slot_user_search(std::shared_ptr<SearchInfo> si)
         //此处先处理为添加的好友
         _find_dlg = std::make_shared<FindSuccessDlg>(this);
         dynamic_pointer_cast<FindSuccessDlg>(_find_dlg)->SetSearchInfo(si);
-
         //此处处理已经添加的好友，实现页面跳转
     }
-
     _find_dlg->show();
 }

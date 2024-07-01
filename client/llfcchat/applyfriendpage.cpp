@@ -40,7 +40,9 @@ ApplyFriendPage::ApplyFriendPage(QWidget *parent) :
     }
 
     connect(ui->apply_friend_list, &ApplyFriendList::sig_show_search, this, &ApplyFriendPage::sig_show_search);
-    
+    connect(TcpMgr::GetInstance().get(),&TcpMgr::sig_load_apply_list,
+            this, &ApplyFriendPage::slot_load_apply_list);
+
 }
 
 ApplyFriendPage::~ApplyFriendPage()
@@ -76,6 +78,16 @@ void ApplyFriendPage::paintEvent(QPaintEvent *event)
     opt.init(this);
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+void ApplyFriendPage::slot_load_apply_list(QJsonArray array)
+{
+    qDebug()<< "slot_load_apply_list";
+    // 遍历 QJsonArray 并输出每个元素
+    for (const QJsonValue &value : array) {
+        auto name = value["name"].toString();
+        qDebug() << "apply name is " << name;
+     }
 }
 
 

@@ -103,6 +103,11 @@ private:
 			connections_.pop();
 			try {
 				auto reply = (redisReply*)redisCommand(context, "PING");
+				if (!reply) {
+					std::cout << "redis ping failed" << std::endl;
+					connections_.push(context);
+					continue;
+				}
 				freeReplyObject(reply);
 				connections_.push(context);
 			}

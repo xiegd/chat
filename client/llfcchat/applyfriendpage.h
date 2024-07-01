@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "userdata.h"
 #include <memory>
+#include <QJsonArray>
 
 namespace Ui {
 class ApplyFriendPage;
@@ -22,7 +23,7 @@ protected:
 private:
     Ui::ApplyFriendPage *ui;
 public slots:
-
+    void slot_load_apply_list(QJsonArray array);
 signals:
     void sig_show_search(bool);
 };

@@ -107,7 +107,7 @@ void TcpMgr::initHandlers()
     //auto self = shared_from_this();
     _handlers.insert(ID_CHAT_LOGIN_RSP, [this](ReqId id, int len, QByteArray data){
         Q_UNUSED(len);
-        qDebug()<< "handle id is "<< id << " data is " << data;
+        qDebug()<< "handle id is "<< id ;
         // 将QByteArray转换为QJsonDocument
         QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
 
@@ -118,6 +118,7 @@ void TcpMgr::initHandlers()
         }
 
         QJsonObject jsonObj = jsonDoc.object();
+        qDebug()<< "data jsonobj is " << jsonObj ;
 
         if(!jsonObj.contains("error")){
             int err = ErrorCodes::ERR_JSON;
@@ -136,6 +137,9 @@ void TcpMgr::initHandlers()
         UserMgr::GetInstance()->SetUid(jsonObj["uid"].toInt());
         UserMgr::GetInstance()->SetName(jsonObj["name"].toString());
         UserMgr::GetInstance()->SetToken(jsonObj["token"].toString());
+        if(jsonObj.contains("apply_list")){
+             emit sig_load_apply_list(jsonObj["apply_list"].toArray());
+        }
         emit sig_swich_chatdlg();
     });
 

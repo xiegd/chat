@@ -11,7 +11,7 @@
  Target Server Version : 80027 (8.0.27)
  File Encoding         : 65001
 
- Date: 26/06/2024 14:49:20
+ Date: 01/07/2024 10:32:52
 */
 
 SET NAMES utf8mb4;
@@ -28,12 +28,13 @@ CREATE TABLE `friend_apply`  (
   `status` smallint NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `from_uid`(`from_uid` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of friend_apply
 -- ----------------------------
 INSERT INTO `friend_apply` VALUES (5, 1019, 1002, 0);
+INSERT INTO `friend_apply` VALUES (6, 1023, 1002, 0);
 
 -- ----------------------------
 -- Table structure for user

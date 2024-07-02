@@ -19,4 +19,21 @@ public:
 	QString _desc;
 };
 
+struct ApplyInfo {
+    ApplyInfo(int uid, QString name, QString desc,
+        QString icon, QString nick, int sex)
+        :_uid(uid),_name(name),_desc(desc),
+        _icon(icon),_nick(nick),_sex(sex){}
+
+    void SetIcon(QString head){
+        _icon = head;
+    }
+    int _uid;
+    QString _name;
+    QString _desc;
+    QString _icon;
+    QString _nick;
+    int _sex;
+};
+
 #endif

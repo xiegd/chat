@@ -21,9 +21,9 @@ public:
 protected:
     void paintEvent(QPaintEvent *event);
 private:
+    void loadApplyList();
     Ui::ApplyFriendPage *ui;
 public slots:
-    void slot_load_apply_list(QJsonArray array);
 signals:
     void sig_show_search(bool);
 };

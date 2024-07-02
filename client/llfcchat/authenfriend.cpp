@@ -3,6 +3,8 @@
 #include "clickedlabel.h"
 #include "friendlabel.h"
 #include <QScrollBar>
+#include "usermgr.h"
+#include "tcpmgr.h"
 
 AuthenFriend::AuthenFriend(QWidget *parent) :
     QDialog(parent),
@@ -110,6 +112,12 @@ bool AuthenFriend::eventFilter(QObject *obj, QEvent *event)
         ui->scrollArea->verticalScrollBar()->setHidden(true);
     }
     return QObject::eventFilter(obj, event);
+}
+
+void AuthenFriend::SetApplyInfo(std::shared_ptr<ApplyInfo> apply_info)
+{
+    _apply_info = apply_info;
+    ui->back_ed->setPlaceholderText(apply_info->_name);
 }
 
 void AuthenFriend::ShowMoreLabel()
@@ -404,6 +412,18 @@ void AuthenFriend::SlotAddFirendLabelByClickTip(QString text)
 
 void AuthenFriend::SlotApplySure()
 {
+    //添加发送逻辑
+    QJsonObject jsonObj;
+    auto uid = UserMgr::GetInstance()->GetUid();
+    jsonObj["uid"] = uid;
+    jsonObj["touid"] = _apply_info->_uid;
+
+    QJsonDocument doc(jsonObj);
+    QString jsonString = doc.toJson(QJsonDocument::Indented);
+
+    //发送tcp请求给chat server
+    emit TcpMgr::GetInstance()->sig_send_data(ReqId::ID_AUTH_FRIEND_REQ, jsonString);
+
     this->hide();
     deleteLater();
 }

@@ -138,7 +138,7 @@ void TcpMgr::initHandlers()
         UserMgr::GetInstance()->SetName(jsonObj["name"].toString());
         UserMgr::GetInstance()->SetToken(jsonObj["token"].toString());
         if(jsonObj.contains("apply_list")){
-             emit sig_load_apply_list(jsonObj["apply_list"].toArray());
+            UserMgr::GetInstance()->AppendApplyList(jsonObj["apply_list"].toArray());
         }
         emit sig_swich_chatdlg();
     });

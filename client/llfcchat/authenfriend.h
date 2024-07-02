@@ -4,6 +4,7 @@
 #include <QDialog>
 #include "clickedlabel.h"
 #include "friendlabel.h"
+#include "userdata.h"
 
 namespace Ui {
 class AuthenFriend;
@@ -20,6 +21,7 @@ public:
     void InitTipLbs();
     void AddTipLbs(ClickedLabel*, QPoint cur_point, QPoint &next_point, int text_width, int text_height);
     bool eventFilter(QObject *obj, QEvent *event);
+    void SetApplyInfo(std::shared_ptr<ApplyInfo> apply_info);
 private:
     void resetLabels();
 
@@ -52,8 +54,9 @@ public slots:
     void SlotApplySure();
     //处理取消回调
     void SlotApplyCancel();
-
+   
 private:
+ 	std::shared_ptr<ApplyInfo> _apply_info;
     Ui::AuthenFriend *ui;
 };
 

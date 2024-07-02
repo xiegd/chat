@@ -8,6 +8,7 @@
 #include "authenfriend.h"
 #include "applyfriend.h"
 #include "tcpmgr.h"
+#include "usermgr.h"
 
 
 ApplyFriendPage::ApplyFriendPage(QWidget *parent) :
@@ -15,34 +16,8 @@ ApplyFriendPage::ApplyFriendPage(QWidget *parent) :
     ui(new Ui::ApplyFriendPage)
 {
     ui->setupUi(this);
-
-    // 创建QListWidgetItem，并设置自定义的widget
-    for(int i = 0; i < 13; i++){
-        int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
-        int str_i = randomValue%strs.size();
-        int head_i = randomValue%heads.size();
-        int name_i = randomValue%names.size();
-
-        auto *apply_item = new ApplyFriendItem();
-        apply_item->SetInfo(0,names[name_i], heads[head_i], strs[str_i]);
-        QListWidgetItem *item = new QListWidgetItem;
-        //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
-        item->setSizeHint(apply_item->sizeHint());
-        item->setFlags(item->flags() & ~Qt::ItemIsEnabled & ~Qt::ItemIsSelectable);
-        ui->apply_friend_list->addItem(item);
-        ui->apply_friend_list->setItemWidget(item, apply_item);
-        //收到审核好友信号
-        connect(apply_item, &ApplyFriendItem::sig_auth_friend, [this](){
-            auto *authFriend =  new AuthenFriend(this);
-            authFriend->setModal(true);
-            authFriend->show();
-        });
-    }
-
     connect(ui->apply_friend_list, &ApplyFriendList::sig_show_search, this, &ApplyFriendPage::sig_show_search);
-    connect(TcpMgr::GetInstance().get(),&TcpMgr::sig_load_apply_list,
-            this, &ApplyFriendPage::slot_load_apply_list);
-
+    loadApplyList();
 }
 
 ApplyFriendPage::~ApplyFriendPage()
@@ -56,7 +31,9 @@ void ApplyFriendPage::AddNewApply(std::shared_ptr<AddFriendApply> apply)
     int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
     int head_i = randomValue % heads.size();
 	auto* apply_item = new ApplyFriendItem();
-	apply_item->SetInfo(apply->_from_uid, apply->_name, heads[head_i], apply->_desc);
+    auto apply_info = std::make_shared<ApplyInfo>(apply->_from_uid,
+             apply->_name, apply->_desc,heads[head_i], apply->_name, 0);
+    apply_item->SetInfo( apply_info);
 	QListWidgetItem* item = new QListWidgetItem;
 	//qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
 	item->setSizeHint(apply_item->sizeHint());
@@ -65,9 +42,10 @@ void ApplyFriendPage::AddNewApply(std::shared_ptr<AddFriendApply> apply)
 	ui->apply_friend_list->setItemWidget(item, apply_item);
     apply_item->ShowAddBtn(true);
 	//收到审核好友信号
-	connect(apply_item, &ApplyFriendItem::sig_auth_friend, [this]() {
+    connect(apply_item, &ApplyFriendItem::sig_auth_friend, [this](std::shared_ptr<ApplyInfo> apply_info) {
 		auto* authFriend = new AuthenFriend(this);
 		authFriend->setModal(true);
+        authFriend->SetApplyInfo(apply_info);
 		authFriend->show();
 		});
 }
@@ -80,15 +58,60 @@ void ApplyFriendPage::paintEvent(QPaintEvent *event)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void ApplyFriendPage::slot_load_apply_list(QJsonArray array)
+void ApplyFriendPage::loadApplyList()
 {
-    qDebug()<< "slot_load_apply_list";
-    // 遍历 QJsonArray 并输出每个元素
-    for (const QJsonValue &value : array) {
-        auto name = value["name"].toString();
-        qDebug() << "apply name is " << name;
-     }
+    //添加好友申请
+    auto apply_list = UserMgr::GetInstance()->GetApplyList();
+    for(auto &apply: apply_list){
+        int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
+        int head_i = randomValue % heads.size();
+        auto* apply_item = new ApplyFriendItem();
+        apply->SetIcon(heads[head_i]);
+        apply_item->SetInfo(apply);
+        QListWidgetItem* item = new QListWidgetItem;
+        //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
+        item->setSizeHint(apply_item->sizeHint());
+        item->setFlags(item->flags() & ~Qt::ItemIsEnabled & ~Qt::ItemIsSelectable);
+        ui->apply_friend_list->insertItem(0,item);
+        ui->apply_friend_list->setItemWidget(item, apply_item);
+        apply_item->ShowAddBtn(true);
+        //收到审核好友信号
+        connect(apply_item, &ApplyFriendItem::sig_auth_friend, [this](std::shared_ptr<ApplyInfo> apply_info) {
+            auto* authFriend = new AuthenFriend(this);
+            authFriend->setModal(true);
+            authFriend->SetApplyInfo(apply_info);
+            authFriend->show();
+            });
+    }
+
+    // 模拟假数据，创建QListWidgetItem，并设置自定义的widget
+    for(int i = 0; i < 13; i++){
+        int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
+        int str_i = randomValue%strs.size();
+        int head_i = randomValue%heads.size();
+        int name_i = randomValue%names.size();
+
+        auto *apply_item = new ApplyFriendItem();
+        auto apply = std::make_shared<ApplyInfo>(0, names[name_i], strs[str_i],
+                                    heads[head_i], names[name_i], 0);
+        apply_item->SetInfo(apply);
+        QListWidgetItem *item = new QListWidgetItem;
+        //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
+        item->setSizeHint(apply_item->sizeHint());
+        item->setFlags(item->flags() & ~Qt::ItemIsEnabled & ~Qt::ItemIsSelectable);
+        ui->apply_friend_list->addItem(item);
+        ui->apply_friend_list->setItemWidget(item, apply_item);
+        //收到审核好友信号
+        connect(apply_item, &ApplyFriendItem::sig_auth_friend, [this](std::shared_ptr<ApplyInfo> apply_info){
+            auto *authFriend =  new AuthenFriend(this);
+            authFriend->setModal(true);
+            authFriend->SetApplyInfo(apply_info);
+            authFriend->show();
+        });
+    }
 }
+
+
 
 
 

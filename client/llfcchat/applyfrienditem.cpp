@@ -10,7 +10,7 @@ ApplyFriendItem::ApplyFriendItem(QWidget *parent) :
     ui->addBtn->SetState("normal","hover", "press");
     ui->addBtn->hide();
     connect(ui->addBtn, &ClickedBtn::clicked,  [this](){
-        emit this->sig_auth_friend(_uid);
+        emit this->sig_auth_friend(_apply_info);
     });
 }
 
@@ -19,21 +19,18 @@ ApplyFriendItem::~ApplyFriendItem()
     delete ui;
 }
 
-void ApplyFriendItem::SetInfo(int uid , QString name, QString head, QString msg)
+void ApplyFriendItem::SetInfo(std::shared_ptr<ApplyInfo> apply_info)
 {
-    _name = name;
-    _head = head;
-    _msg = msg;
-    _uid = uid;
+    _apply_info = apply_info;
     // 加载图片
-    QPixmap pixmap(_head);
+    QPixmap pixmap(_apply_info->_icon);
 
     // 设置图片自动缩放
     ui->icon_lb->setPixmap(pixmap.scaled(ui->icon_lb->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     ui->icon_lb->setScaledContents(true);
 
-    ui->user_name_lb->setText(_name);
-    ui->user_chat_lb->setText(_msg);
+    ui->user_name_lb->setText(_apply_info->_name);
+    ui->user_chat_lb->setText(_apply_info->_desc);
 }
 
 void ApplyFriendItem::ShowAddBtn(bool bshow)

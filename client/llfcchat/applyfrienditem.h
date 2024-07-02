@@ -3,6 +3,9 @@
 
 #include <QWidget>
 #include <listitembase.h>
+#include "userdata.h"
+#include <memory>
+
 
 namespace Ui {
 class ApplyFriendItem;
@@ -15,16 +18,16 @@ class ApplyFriendItem : public ListItemBase
 public:
     explicit ApplyFriendItem(QWidget *parent = nullptr);
     ~ApplyFriendItem();
-    void SetInfo(int uid, QString name, QString head, QString msg);
+    void SetInfo(std::shared_ptr<ApplyInfo> apply_info);
     void ShowAddBtn(bool bshow);
+    QSize sizeHint() const override {
+        return QSize(250, 80); // 返回自定义的尺寸
+    }
 private:
     Ui::ApplyFriendItem *ui;
-    QString _name;
-    QString _head;
-    QString _msg;
-    int _uid;
+    std::shared_ptr<ApplyInfo> _apply_info;
 signals:
-    void sig_auth_friend(int uid);
+    void sig_auth_friend(std::shared_ptr<ApplyInfo> apply_info);
 };
 
 #endif // APPLYFRIENDITEM_H

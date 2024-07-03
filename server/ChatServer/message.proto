@@ -80,8 +80,20 @@ message SendChatMsgRsp{
 		int32 touid = 3;
 }
 
+message AuthFriendReq{
+	int32 fromuid = 1;
+	int32 touid = 2;
+}
+
+message AuthFriendRsp{
+	int32 error = 1;
+	int32 fromuid = 2;
+	int32 touid = 3;
+}
+
 service ChatService {
 	rpc NotifyAddFriend(AddFriendReq) returns (AddFriendRsp) {}
 	rpc RplyAddFriend(RplyFriendReq) returns (RplyFriendRsp) {}
 	rpc SendChatMsg(SendChatMsgReq) returns (SendChatMsgRsp) {}
+	rpc NofifyAuthFriend(AuthFriendReq) returns (AuthFriendRsp) {}
 }

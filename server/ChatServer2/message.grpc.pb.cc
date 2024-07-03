@@ -189,6 +189,7 @@ static const char* ChatService_method_names[] = {
   "/message.ChatService/NotifyAddFriend",
   "/message.ChatService/RplyAddFriend",
   "/message.ChatService/SendChatMsg",
+  "/message.ChatService/NofifyAuthFriend",
 };
 
 std::unique_ptr< ChatService::Stub> ChatService::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -201,6 +202,7 @@ ChatService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channe
   : channel_(channel), rpcmethod_NotifyAddFriend_(ChatService_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_RplyAddFriend_(ChatService_method_names[1], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_SendChatMsg_(ChatService_method_names[2], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_NofifyAuthFriend_(ChatService_method_names[3], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status ChatService::Stub::NotifyAddFriend(::grpc::ClientContext* context, const ::message::AddFriendReq& request, ::message::AddFriendRsp* response) {
@@ -272,6 +274,29 @@ void ChatService::Stub::experimental_async::SendChatMsg(::grpc::ClientContext* c
   return result;
 }
 
+::grpc::Status ChatService::Stub::NofifyAuthFriend(::grpc::ClientContext* context, const ::message::AuthFriendReq& request, ::message::AuthFriendRsp* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::message::AuthFriendReq, ::message::AuthFriendRsp, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_NofifyAuthFriend_, context, request, response);
+}
+
+void ChatService::Stub::experimental_async::NofifyAuthFriend(::grpc::ClientContext* context, const ::message::AuthFriendReq* request, ::message::AuthFriendRsp* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::message::AuthFriendReq, ::message::AuthFriendRsp, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_NofifyAuthFriend_, context, request, response, std::move(f));
+}
+
+void ChatService::Stub::experimental_async::NofifyAuthFriend(::grpc::ClientContext* context, const ::message::AuthFriendReq* request, ::message::AuthFriendRsp* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_NofifyAuthFriend_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::message::AuthFriendRsp>* ChatService::Stub::PrepareAsyncNofifyAuthFriendRaw(::grpc::ClientContext* context, const ::message::AuthFriendReq& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::message::AuthFriendRsp, ::message::AuthFriendReq, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_NofifyAuthFriend_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::message::AuthFriendRsp>* ChatService::Stub::AsyncNofifyAuthFriendRaw(::grpc::ClientContext* context, const ::message::AuthFriendReq& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncNofifyAuthFriendRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
 ChatService::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       ChatService_method_names[0],
@@ -303,6 +328,16 @@ ChatService::Service::Service() {
              ::message::SendChatMsgRsp* resp) {
                return service->SendChatMsg(ctx, req, resp);
              }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      ChatService_method_names[3],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< ChatService::Service, ::message::AuthFriendReq, ::message::AuthFriendRsp, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](ChatService::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::message::AuthFriendReq* req,
+             ::message::AuthFriendRsp* resp) {
+               return service->NofifyAuthFriend(ctx, req, resp);
+             }, this)));
 }
 
 ChatService::Service::~Service() {
@@ -323,6 +358,13 @@ ChatService::Service::~Service() {
 }
 
 ::grpc::Status ChatService::Service::SendChatMsg(::grpc::ServerContext* context, const ::message::SendChatMsgReq* request, ::message::SendChatMsgRsp* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status ChatService::Service::NofifyAuthFriend(::grpc::ServerContext* context, const ::message::AuthFriendReq* request, ::message::AuthFriendRsp* response) {
   (void) context;
   (void) request;
   (void) response;

@@ -146,6 +146,7 @@ public:
 	bool UpdatePwd(const std::string& name, const std::string& newpwd);
 	bool CheckPwd(const std::string& name, const std::string& pwd, UserInfo& userInfo);
 	bool AddFriendApply(const int& from, const int& to);
+	bool AuthFriendApply(const int& from, const int& to);
 	std::shared_ptr<UserInfo> GetUser(int uid);
 	std::shared_ptr<UserInfo> GetUser(std::string name);
 	bool GetApplyList(int touid, std::vector<std::shared_ptr<ApplyInfo>>& applyList, int offset, int limit );

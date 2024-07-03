@@ -30,6 +30,10 @@ bool MysqlMgr::AddFriendApply(const int& from, const int& to)
 	return _dao.AddFriendApply(from, to);
 }
 
+bool MysqlMgr::AuthFriendApply(const int& from, const int& to) {
+	return _dao.AuthFriendApply(from, to);
+}
+
 std::shared_ptr<UserInfo> MysqlMgr::GetUser(int uid)
 {
 	return _dao.GetUser(uid);

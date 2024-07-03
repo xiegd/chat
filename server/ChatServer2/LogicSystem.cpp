@@ -78,6 +78,10 @@ void LogicSystem::RegisterCallBacks() {
 
 	_fun_callbacks[ID_ADD_FRIEND_REQ] = std::bind(&LogicSystem::AddFriendApply, this,
 		placeholders::_1, placeholders::_2, placeholders::_3);
+
+	_fun_callbacks[ID_AUTH_FRIEND_REQ] = std::bind(&LogicSystem::AddFriendApply, this,
+		placeholders::_1, placeholders::_2, placeholders::_3);
+	
 }
 
 void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short &msg_id, const string &msg_data) {
@@ -230,6 +234,44 @@ void LogicSystem::AddFriendApply(std::shared_ptr<CSession> session, const short&
 	//发送通知
 	ChatGrpcClient::GetInstance()->NotifyAddFriend(to_ip_value,add_req);
 
+}
+
+void LogicSystem::AuthFriendApply(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data) {
+	
+	Json::Reader reader;
+	Json::Value root;
+	reader.parse(msg_data, root);
+
+	auto uid = root["fromuid"].asInt();
+	auto touid = root["touid"].asInt();
+	std::cout << "from " << uid << " auth friend to " << touid << std::endl;
+
+	Json::Value  rtvalue;
+	rtvalue["error"] = ErrorCodes::Success;
+
+	Defer defer([this, &rtvalue, session]() {
+		std::string return_str = rtvalue.toStyledString();
+		session->Send(return_str, ID_ADD_FRIEND_RSP);
+		});
+
+	//先更新数据库
+	MysqlMgr::GetInstance()->AuthFriendApply(uid, touid);
+
+	//查询redis 查找touid对应的server ip
+	auto to_str = std::to_string(touid);
+	auto to_ip_key = USERIPPREFIX + to_str;
+	std::string to_ip_value = "";
+	bool b_ip = RedisMgr::GetInstance()->Get(to_ip_key, to_ip_value);
+	if (!b_ip) {
+		return;
+	}
+
+	AuthFriendReq auth_req;
+	auth_req.set_fromuid(uid);
+	auth_req.set_touid(touid);
+
+	//发送通知
+	ChatGrpcClient::GetInstance()->NotifyAuthFriend(to_ip_value, auth_req);
 }
 
 bool LogicSystem::isPureDigit(const std::string& str)

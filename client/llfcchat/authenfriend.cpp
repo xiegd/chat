@@ -415,7 +415,7 @@ void AuthenFriend::SlotApplySure()
     //添加发送逻辑
     QJsonObject jsonObj;
     auto uid = UserMgr::GetInstance()->GetUid();
-    jsonObj["uid"] = uid;
+    jsonObj["fromuid"] = uid;
     jsonObj["touid"] = _apply_info->_uid;
 
     QJsonDocument doc(jsonObj);

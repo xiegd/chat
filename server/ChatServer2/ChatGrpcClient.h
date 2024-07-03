@@ -13,6 +13,9 @@ using grpc::ClientContext;
 using message::AddFriendReq;
 using message::AddFriendRsp;
 
+using message::AuthFriendReq;
+using message::AuthFriendRsp;
+
 using message::GetChatServerRsp;
 using message::LoginRsp;
 using message::LoginReq;
@@ -89,6 +92,7 @@ public:
 	}
 
 	AddFriendRsp NotifyAddFriend(std::string server_ip, const AddFriendReq& req);
+	AuthFriendRsp NotifyAuthFriend(std::string server_ip, const AuthFriendReq& req);
 
 private:
 	ChatGrpcClient();

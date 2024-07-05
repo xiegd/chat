@@ -412,11 +412,19 @@ void AuthenFriend::SlotAddFirendLabelByClickTip(QString text)
 
 void AuthenFriend::SlotApplySure()
 {
+    qDebug() << "Slot Apply Sure ";
     //添加发送逻辑
     QJsonObject jsonObj;
     auto uid = UserMgr::GetInstance()->GetUid();
     jsonObj["fromuid"] = uid;
     jsonObj["touid"] = _apply_info->_uid;
+    QString back_name = "";
+    if(ui->back_ed->text().isEmpty()){
+        back_name = ui->back_ed->placeholderText();
+    }else{
+        back_name = ui->back_ed->text();
+    }
+    jsonObj["back"] = back_name;
 
     QJsonDocument doc(jsonObj);
     QString jsonString = doc.toJson(QJsonDocument::Indented);

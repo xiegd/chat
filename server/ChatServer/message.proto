@@ -95,5 +95,5 @@ service ChatService {
 	rpc NotifyAddFriend(AddFriendReq) returns (AddFriendRsp) {}
 	rpc RplyAddFriend(RplyFriendReq) returns (RplyFriendRsp) {}
 	rpc SendChatMsg(SendChatMsgReq) returns (SendChatMsgRsp) {}
-	rpc NofifyAuthFriend(AuthFriendReq) returns (AuthFriendRsp) {}
+	rpc NotifyAuthFriend(AuthFriendReq) returns (AuthFriendRsp) {}
 }

@@ -448,7 +448,7 @@ const char descriptor_table_protodef_message_2eproto[] PROTOBUF_SECTION_VARIABLE
   "age.AddFriendRsp\"\000\022A\n\rRplyAddFriend\022\026.me"
   "ssage.RplyFriendReq\032\026.message.RplyFriend"
   "Rsp\"\000\022A\n\013SendChatMsg\022\027.message.SendChatM"
-  "sgReq\032\027.message.SendChatMsgRsp\"\000\022D\n\020Nofi"
+  "sgReq\032\027.message.SendChatMsgRsp\"\000\022D\n\020Noti"
   "fyAuthFriend\022\026.message.AuthFriendReq\032\026.m"
   "essage.AuthFriendRsp\"\000b\006proto3"
   ;

@@ -106,7 +106,7 @@ background-color:rgb(255,255,255)
 
 #user_chat_lb{
     color:rgb(153,153,153);
-    font-size: 12px;
+    font-size: 14px;
     font-family: "Microsoft YaHei";
 }
 
@@ -118,7 +118,7 @@ background-color:rgb(255,255,255)
 
 #user_name_lb{
     color:rgb(0,0,0);
-    font-size: 14px;
+    font-size: 16px;
     font-weight: normal;
     font-family: "Microsoft YaHei";
 }
@@ -659,7 +659,7 @@ ApplyFriendItem {
 
 ApplyFriendItem #user_chat_lb{
     color: #a2a2a2;
-    font-size: 12px; /* 设置字体大小 */
+    font-size: 14px; /* 设置字体大小 */
     font-family: "Microsoft YaHei"; /* 设置字体 */
 }
 

@@ -21,9 +21,9 @@ public:
 
 struct ApplyInfo {
     ApplyInfo(int uid, QString name, QString desc,
-        QString icon, QString nick, int sex)
+        QString icon, QString nick, int sex, int status)
         :_uid(uid),_name(name),_desc(desc),
-        _icon(icon),_nick(nick),_sex(sex){}
+        _icon(icon),_nick(nick),_sex(sex),_status(status){}
 
     void SetIcon(QString head){
         _icon = head;
@@ -34,6 +34,7 @@ struct ApplyInfo {
     QString _icon;
     QString _nick;
     int _sex;
+    int _status;
 };
 
 #endif

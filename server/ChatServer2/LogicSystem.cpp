@@ -79,7 +79,7 @@ void LogicSystem::RegisterCallBacks() {
 	_fun_callbacks[ID_ADD_FRIEND_REQ] = std::bind(&LogicSystem::AddFriendApply, this,
 		placeholders::_1, placeholders::_2, placeholders::_3);
 
-	_fun_callbacks[ID_AUTH_FRIEND_REQ] = std::bind(&LogicSystem::AddFriendApply, this,
+	_fun_callbacks[ID_AUTH_FRIEND_REQ] = std::bind(&LogicSystem::AuthFriendApply, this,
 		placeholders::_1, placeholders::_2, placeholders::_3);
 	
 }
@@ -143,6 +143,7 @@ void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short &msg_id
 			obj["nick"] = apply->_nick;
 			obj["sex"] = apply->_sex;
 			obj["desc"] = apply->_desc;
+			obj["status"] = apply->_status;
 			rtvalue["apply_list"].append(obj);
 		}
 	}
@@ -244,6 +245,7 @@ void LogicSystem::AuthFriendApply(std::shared_ptr<CSession> session, const short
 
 	auto uid = root["fromuid"].asInt();
 	auto touid = root["touid"].asInt();
+	auto back_name = root["back"].asString();
 	std::cout << "from " << uid << " auth friend to " << touid << std::endl;
 
 	Json::Value  rtvalue;
@@ -256,6 +258,9 @@ void LogicSystem::AuthFriendApply(std::shared_ptr<CSession> session, const short
 
 	//先更新数据库
 	MysqlMgr::GetInstance()->AuthFriendApply(uid, touid);
+
+	//更新数据库添加好友
+	MysqlMgr::GetInstance()->AddFriend(uid, touid,back_name);
 
 	//查询redis 查找touid对应的server ip
 	auto to_str = std::to_string(touid);

@@ -41,8 +41,9 @@ void UserMgr::AppendApplyList(QJsonArray array)
         auto nick = value["nick"].toString();
         auto sex = value["sex"].toInt();
         auto uid = value["uid"].toInt();
+        auto status = value["status"].toInt();
         auto info = std::make_shared<ApplyInfo>(uid, name,
-                           desc, icon, nick, sex);
+                           desc, icon, nick, sex, status);
         _apply_list.push_back(info);
     }
 }

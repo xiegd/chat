@@ -95,7 +95,7 @@ AuthFriendRsp ChatGrpcClient::NotifyAuthFriend(std::string server_ip, const Auth
 
 	auto& cfg = ConfigMgr::Inst();
 	auto self_name = cfg["SelfServer"]["Name"];
-	//直接通知对方有申请消息
+	//直接通知对方有认证通过消息
 	if (server_ip == self_name) {
 		auto session = UserMgr::GetInstance()->GetSession(req.touid());
 		if (session) {
@@ -105,7 +105,7 @@ AuthFriendRsp ChatGrpcClient::NotifyAuthFriend(std::string server_ip, const Auth
 			rtvalue["fromuid"] = req.fromuid();
 			rtvalue["touid"] = req.touid();
 			std::string return_str = rtvalue.toStyledString();
-			session->Send(return_str, ID_NOTIFY_ADD_FRIEND_REQ);
+			session->Send(return_str, ID_NOTIFY_AUTH_FRIEND_REQ);
 		}
 
 		return rsp;
@@ -114,7 +114,7 @@ AuthFriendRsp ChatGrpcClient::NotifyAuthFriend(std::string server_ip, const Auth
 	auto& pool = find_iter->second;
 	ClientContext context;
 	auto stub = pool->getConnection();
-	Status status = stub->NofifyAuthFriend(&context, req, &rsp);
+	Status status = stub->NotifyAuthFriend(&context, req, &rsp);
 	Defer defercon([&stub, this, &pool]() {
 		pool->returnConnection(std::move(stub));
 		});

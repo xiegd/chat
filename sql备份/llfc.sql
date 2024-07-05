@@ -11,11 +11,28 @@
  Target Server Version : 80027 (8.0.27)
  File Encoding         : 65001
 
- Date: 01/07/2024 10:32:52
+ Date: 05/07/2024 12:01:08
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for friend
+-- ----------------------------
+DROP TABLE IF EXISTS `friend`;
+CREATE TABLE `friend`  (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `self_id` int NOT NULL,
+  `friend_id` int NOT NULL,
+  `back` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `self_friend`(`self_id` ASC, `friend_id` ASC) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of friend
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for friend_apply
@@ -28,13 +45,14 @@ CREATE TABLE `friend_apply`  (
   `status` smallint NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `from_uid`(`from_uid` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of friend_apply
 -- ----------------------------
-INSERT INTO `friend_apply` VALUES (5, 1019, 1002, 0);
-INSERT INTO `friend_apply` VALUES (6, 1023, 1002, 0);
+INSERT INTO `friend_apply` VALUES (5, 1019, 1002, 1);
+INSERT INTO `friend_apply` VALUES (6, 1023, 1002, 1);
+INSERT INTO `friend_apply` VALUES (25, 0, 1023, 0);
 
 -- ----------------------------
 -- Table structure for user
@@ -53,7 +71,7 @@ CREATE TABLE `user`  (
   UNIQUE INDEX `uid`(`uid` ASC) USING BTREE,
   UNIQUE INDEX `email`(`email` ASC) USING BTREE,
   INDEX `name`(`name` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
@@ -75,6 +93,8 @@ INSERT INTO `user` VALUES (21, 1020, 'aatext', '1584736136@qq.com', '745230', ''
 INSERT INTO `user` VALUES (22, 1021, 'ferrero1', '1220292901@qq.com', '1234', '', '', 0);
 INSERT INTO `user` VALUES (23, 1022, 'ferrero2', '15504616642@163.com', '1234', '', '', 0);
 INSERT INTO `user` VALUES (24, 1023, 'lyf', '3194811890@qq.com', '123456', '', '', 0);
+INSERT INTO `user` VALUES (25, 1024, 'lh', '2494350589@qq.com', 'fb8::>:;8<', '', '', 0);
+INSERT INTO `user` VALUES (26, 1025, 'jf', 'luojianfeng553@163.com', '745230', '', '', 0);
 
 -- ----------------------------
 -- Table structure for user_id
@@ -88,7 +108,7 @@ CREATE TABLE `user_id`  (
 -- ----------------------------
 -- Records of user_id
 -- ----------------------------
-INSERT INTO `user_id` VALUES (1023);
+INSERT INTO `user_id` VALUES (1025);
 
 -- ----------------------------
 -- Procedure structure for reg_user

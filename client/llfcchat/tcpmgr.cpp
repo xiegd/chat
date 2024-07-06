@@ -226,25 +226,24 @@ void TcpMgr::initHandlers()
 
         QJsonObject jsonObj = jsonDoc.object();
         //todo... 改为增加好友逻辑，这个先不写
-//        if (!jsonObj.contains("error")) {
-//            int err = ErrorCodes::ERR_JSON;
-//            qDebug() << "Login Failed, err is Json Parse Err" << err;
+        if (!jsonObj.contains("error")) {
+            int err = ErrorCodes::ERR_JSON;
+            qDebug() << "Auth Friend Failed, err is " << err;
+            return;
+        }
 
-//            emit sig_user_search(nullptr);
-//            return;
-//        }
+        int err = jsonObj["error"].toInt();
+        if (err != ErrorCodes::SUCCESS) {
+            qDebug() << "Auth Friend Failed, err is " << err;
+            return;
+        }
 
-//        int err = jsonObj["error"].toInt();
-//        if (err != ErrorCodes::SUCCESS) {
-//            qDebug() << "Login Failed, err is " << err;
-//            emit sig_user_search(nullptr);
-//            return;
-//        }
 //        auto apply_info = std::make_shared<AddFriendApply>(jsonObj["applyuid"].toInt(), jsonObj["name"].toString(),
 //            jsonObj["desc"].toString());
 
 //        emit sig_friend_apply(apply_info);
         });
+
 }
 
 void TcpMgr::handleMsg(ReqId id, int len, QByteArray data)

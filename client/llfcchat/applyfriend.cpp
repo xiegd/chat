@@ -230,6 +230,7 @@ void ApplyFriend::resetLabels()
 void ApplyFriend::addLabel(QString name)
 {
     if (_friend_labels.find(name) != _friend_labels.end()) {
+        ui->lb_ed->clear();
         return;
     }
 
@@ -376,11 +377,21 @@ void ApplyFriend::SlotAddFirendLabelByClickTip(QString text)
         text = text.mid(index + add_prefix.length());
     }
     addLabel(text);
-    //标签展示栏也增加一个标签, 并设置绿色选中
-    if (index != -1) {
+
+    auto find_it = std::find(_tip_data.begin(), _tip_data.end(), text);
+    //找到了就只需设置状态为选中即可
+    if (find_it == _tip_data.end()) {
         _tip_data.push_back(text);
     }
-
+   
+    //判断标签展示栏是否有该标签
+    auto find_add = _add_labels.find(text);
+    if (find_add != _add_labels.end()) {
+        find_add.value()->SetCurState(ClickLbState::Selected);
+        return;
+    }
+     
+    //标签展示栏也增加一个标签, 并设置绿色选中
 	auto* lb = new ClickedLabel(ui->lb_list);
 	lb->SetState("normal", "hover", "pressed", "selected_normal",
 		"selected_hover", "selected_pressed");
@@ -417,6 +428,7 @@ void ApplyFriend::SlotAddFirendLabelByClickTip(QString text)
 
 void ApplyFriend::SlotApplySure()
 {
+    qDebug()<<"Slot Apply Sure called" ;
     //发送请求逻辑
     QJsonObject jsonObj;
     auto uid = UserMgr::GetInstance()->GetUid();
@@ -447,6 +459,7 @@ void ApplyFriend::SlotApplySure()
 
 void ApplyFriend::SlotApplyCancel()
 {
+    qDebug() << "Slot Apply Cancel";
     this->hide();
     deleteLater();
 }

@@ -1,15 +1,18 @@
 #include "clickedbtn.h"
 #include <QVariant>
 #include "global.h"
+#include <QKeyEvent>
 
 ClickedBtn::ClickedBtn(QWidget *parent):QPushButton (parent)
 {
     setCursor(Qt::PointingHandCursor); // 设置光标为小手
+    setFocusPolicy(Qt::NoFocus);
 }
 
 ClickedBtn::~ClickedBtn(){
 
 }
+
 
 void ClickedBtn::SetState(QString normal, QString hover, QString press)
 {

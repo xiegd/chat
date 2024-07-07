@@ -278,9 +278,59 @@ void ApplyFriend::SlotLabelEnter()
         return;
     }
 
+    auto text = ui->lb_ed->text();
+
     addLabel(ui->lb_ed->text());
 
     ui->input_tip_wid->hide();
+
+    auto find_it = std::find(_tip_data.begin(), _tip_data.end(), text);
+    //找到了就只需设置状态为选中即可
+    if (find_it == _tip_data.end()) {
+        _tip_data.push_back(text);
+        _tip_temp.push_back(text);
+    }
+
+    //判断标签展示栏是否有该标签
+    auto find_add = _add_labels.find(text);
+    if (find_add != _add_labels.end()) {
+        find_add.value()->SetCurState(ClickLbState::Selected);
+        return;
+    }
+
+    //标签展示栏也增加一个标签, 并设置绿色选中
+    auto* lb = new ClickedLabel(ui->lb_list);
+    lb->SetState("normal", "hover", "pressed", "selected_normal",
+        "selected_hover", "selected_pressed");
+    lb->setObjectName("tipslb");
+    lb->setText(text);
+    connect(lb, &ClickedLabel::clicked, this, &ApplyFriend::SlotChangeFriendLabelByTip);
+    qDebug() << "ui->lb_list->width() is " << ui->lb_list->width();
+    qDebug() << "_tip_cur_point.x() is " << _tip_cur_point.x();
+
+    QFontMetrics fontMetrics(lb->font()); // 获取QLabel控件的字体信息
+    int textWidth = fontMetrics.width(lb->text()); // 获取文本的宽度
+    int textHeight = fontMetrics.height(); // 获取文本的高度
+    qDebug() << "textWidth is " << textWidth;
+
+    if (_tip_cur_point.x() + textWidth + tip_offset + 3 > ui->lb_list->width()) {
+
+        _tip_cur_point.setX(5);
+        _tip_cur_point.setY(_tip_cur_point.y() + textHeight + 15);
+
+    }
+
+    auto next_point = _tip_cur_point;
+
+    AddTipLbs(lb, _tip_cur_point, next_point, textWidth, textHeight);
+    _tip_cur_point = next_point;
+
+    int diff_height = next_point.y() + textHeight + tip_offset - ui->lb_list->height();
+    ui->lb_list->setFixedHeight(next_point.y() + textHeight + tip_offset);
+
+    lb->SetCurState(ClickLbState::Selected);
+
+    ui->scrollcontent->setFixedHeight(ui->scrollcontent->height() + diff_height);
 }
 
 void ApplyFriend::SlotRemoveFriendLabel(QString name)
@@ -382,6 +432,7 @@ void ApplyFriend::SlotAddFirendLabelByClickTip(QString text)
     //找到了就只需设置状态为选中即可
     if (find_it == _tip_data.end()) {
         _tip_data.push_back(text);
+        _tip_temp.push_back(text);
     }
    
     //判断标签展示栏是否有该标签

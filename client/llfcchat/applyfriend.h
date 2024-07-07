@@ -34,6 +34,8 @@ private:
     std::vector<QString> _tip_data;
     QPoint _tip_cur_point;
     std::shared_ptr<SearchInfo> _si;
+    //临时添加的标签列表
+    std::vector<QString> _tip_temp;
 public slots:
     //显示更多label标签
     void ShowMoreLabel();

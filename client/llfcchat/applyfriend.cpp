@@ -288,7 +288,6 @@ void ApplyFriend::SlotLabelEnter()
     //找到了就只需设置状态为选中即可
     if (find_it == _tip_data.end()) {
         _tip_data.push_back(text);
-        _tip_temp.push_back(text);
     }
 
     //判断标签展示栏是否有该标签
@@ -432,7 +431,6 @@ void ApplyFriend::SlotAddFirendLabelByClickTip(QString text)
     //找到了就只需设置状态为选中即可
     if (find_it == _tip_data.end()) {
         _tip_data.push_back(text);
-        _tip_temp.push_back(text);
     }
    
     //判断标签展示栏是否有该标签

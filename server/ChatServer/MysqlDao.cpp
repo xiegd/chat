@@ -253,7 +253,7 @@ bool MysqlDao::AddFriend(const int& from, const int& to, std::string back_name) 
 
 		// 准备第一个SQL语句, 插入认证方好友数据
 		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("INSERT IGNORE INTO friend(self_id, friend_id, back) "
-			"VALUES (%s, %s, %s) "
+			"VALUES (?, ?, ?) "
 			));
 		//反过来的申请时from，验证时to
 		pstmt->setInt(1, from); // from id
@@ -268,7 +268,7 @@ bool MysqlDao::AddFriend(const int& from, const int& to, std::string back_name) 
 
 		//准备第二个SQL语句，插入申请方好友数据
 		std::unique_ptr<sql::PreparedStatement> pstmt2(con->_con->prepareStatement("INSERT IGNORE INTO friend(self_id, friend_id, back) "
-			"VALUES (%s, %s, %s) "
+			"VALUES (?, ?, ?) "
 		));
 		//反过来的申请时from，验证时to
 		pstmt2->setInt(1, to); // from id

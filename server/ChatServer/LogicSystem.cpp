@@ -130,6 +130,7 @@ void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short &msg_id
 	rtvalue["nick"] = user_info->nick;
 	rtvalue["desc"] = user_info->desc;
 	rtvalue["sex"] = user_info->sex;
+	rtvalue["icon"] = user_info->icon;
 
 	//从数据库获取申请列表
 	std::vector<std::shared_ptr<ApplyInfo>> apply_list;
@@ -253,7 +254,7 @@ void LogicSystem::AuthFriendApply(std::shared_ptr<CSession> session, const short
 
 	Defer defer([this, &rtvalue, session]() {
 		std::string return_str = rtvalue.toStyledString();
-		session->Send(return_str, ID_ADD_FRIEND_RSP);
+		session->Send(return_str, ID_AUTH_FRIEND_RSP);
 		});
 
 	//先更新数据库
@@ -456,6 +457,7 @@ bool LogicSystem::GetBaseInfo(std::string base_key, int uid, std::shared_ptr<Use
 		userinfo->nick = root["nick"].asString();
 		userinfo->desc = root["desc"].asString();
 		userinfo->sex = root["sex"].asInt();
+		userinfo->icon = root["icon"].asString();
 		std::cout << "user login uid is  " << userinfo->uid << " name  is "
 			<< userinfo->name << " pwd is " << userinfo->pwd << " email is " << userinfo->email << endl;
 	}
@@ -479,7 +481,7 @@ bool LogicSystem::GetBaseInfo(std::string base_key, int uid, std::shared_ptr<Use
 		redis_root["nick"] = userinfo->nick;
 		redis_root["desc"] = userinfo->desc;
 		redis_root["sex"] = userinfo->sex;
-
+		redis_root["icon"] = userinfo->icon;
 		RedisMgr::GetInstance()->Set(base_key, redis_root.toStyledString());
 	}
 

@@ -2,6 +2,7 @@
 #include <grpcpp/grpcpp.h>
 #include "message.grpc.pb.h"
 #include <mutex>
+#include "data.h"
 
 using grpc::Server;
 using grpc::ServerBuilder;
@@ -24,6 +25,8 @@ public:
 
 	Status NotifyAuthFriend(ServerContext* context, 
 		const AuthFriendReq* request, AuthFriendRsp* response) override;
+
+	bool GetBaseInfo(std::string base_key, int uid, std::shared_ptr<UserInfo>& userinfo);
 
 private:
 };

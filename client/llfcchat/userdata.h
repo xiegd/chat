@@ -37,4 +37,8 @@ struct ApplyInfo {
     int _status;
 };
 
+struct AuthInfo {
+
+};
+
 #endif

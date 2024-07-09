@@ -9,6 +9,7 @@ struct UserInfo {
 	std::string nick;
 	std::string desc;
 	int sex;
+	std::string icon;
 };
 
 struct ApplyInfo {

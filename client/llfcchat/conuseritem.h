@@ -16,7 +16,7 @@ public:
     explicit ConUserItem(QWidget *parent = nullptr);
     ~ConUserItem();
     QSize sizeHint() const override;
-    void SetInfo(QString name, QString head);
+    void SetInfo(int uid, QString name, QString head);
     void ShowRedPoint(bool show = false);
 private:
     Ui::ConUserItem *ui;

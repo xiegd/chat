@@ -21,7 +21,7 @@ QSize ConUserItem::sizeHint() const
     return QSize(250, 70); // 返回自定义的尺寸
 }
 
-void ConUserItem::SetInfo(QString name, QString head)
+void ConUserItem::SetInfo(int uid, QString name, QString head)
 {
     _head = head;
     _name = name;

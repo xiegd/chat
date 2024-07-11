@@ -65,9 +65,9 @@ Status ChatServiceImpl::NotifyAuthFriend(ServerContext* context, const AuthFrien
 	rtvalue["fromuid"] = request->fromuid();
 	rtvalue["touid"] = request->touid();
 
-	std::string base_key = USER_BASE_INFO + std::to_string(touid);
+	std::string base_key = USER_BASE_INFO + std::to_string(request->fromuid());
 	auto user_info = std::make_shared<UserInfo>();
-	bool b_info = GetBaseInfo(base_key, touid, user_info);
+	bool b_info = GetBaseInfo(base_key, request->fromuid(), user_info);
 	if (b_info) {
 		rtvalue["name"] = user_info->name;
 		rtvalue["nick"] = user_info->nick;

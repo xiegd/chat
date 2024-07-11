@@ -237,10 +237,16 @@ void TcpMgr::initHandlers()
             return;
         }
 
-//        auto apply_info = std::make_shared<AddFriendApply>(jsonObj["applyuid"].toInt(), jsonObj["name"].toString(),
-//            jsonObj["desc"].toString());
+        int from_uid = jsonObj["fromuid"].toInt();
+        QString name = jsonObj["name"].toString();
+        QString nick = jsonObj["nick"].toString();
+        QString icon = jsonObj["icon"].toString();
+        int sex = jsonObj["sex"].toInt();
 
-//        emit sig_friend_apply(apply_info);
+        auto auth_info = std::make_shared<AuthInfo>(from_uid,name,
+                                                    nick, icon, sex);
+
+        emit sig_add_auth_friend(auth_info);
         });
 
     _handlers.insert(ID_ADD_FRIEND_RSP, [this](ReqId id, int len, QByteArray data) {
@@ -299,7 +305,15 @@ void TcpMgr::initHandlers()
             return;
         }
 
-         qDebug() << "Auth Friend Success " ;
+        auto name = jsonObj["name"].toString();
+        auto nick = jsonObj["nick"].toString();
+        auto icon = jsonObj["icon"].toString();
+        auto sex = jsonObj["sex"].toInt();
+        auto uid = jsonObj["uid"].toInt();
+        auto rsp = std::make_shared<AuthRsp>(uid, name, nick, icon, sex);
+        emit sig_auth_rsp(rsp);
+
+        qDebug() << "Auth Friend Success " ;
       });
 }
 

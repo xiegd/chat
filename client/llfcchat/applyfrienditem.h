@@ -26,6 +26,7 @@ public:
 private:
     Ui::ApplyFriendItem *ui;
     std::shared_ptr<ApplyInfo> _apply_info;
+    bool _added;
 signals:
     void sig_auth_friend(std::shared_ptr<ApplyInfo> apply_info);
 };

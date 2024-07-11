@@ -151,9 +151,9 @@ AuthFriendRsp ChatGrpcClient::NotifyAuthFriend(std::string server_ip, const Auth
 			rtvalue["error"] = ErrorCodes::Success;
 			rtvalue["fromuid"] = req.fromuid();
 			rtvalue["touid"] = req.touid();
-			std::string base_key = USER_BASE_INFO + std::to_string(req.touid());
+			std::string base_key = USER_BASE_INFO + std::to_string(req.fromuid());
 			auto user_info = std::make_shared<UserInfo>();
-			bool b_info = GetBaseInfo(base_key, req.touid(), user_info);
+			bool b_info = GetBaseInfo(base_key, req.fromuid(), user_info);
 			if (b_info) {
 				rtvalue["name"] = user_info->name;
 				rtvalue["nick"] = user_info->nick;

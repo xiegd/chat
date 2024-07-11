@@ -251,6 +251,21 @@ void LogicSystem::AuthFriendApply(std::shared_ptr<CSession> session, const short
 
 	Json::Value  rtvalue;
 	rtvalue["error"] = ErrorCodes::Success;
+	auto user_info = std::make_shared<UserInfo>();
+
+	std::string base_key = USER_BASE_INFO + std::to_string(touid);
+	bool b_info = GetBaseInfo(base_key, touid, user_info);
+	if (b_info) {
+		rtvalue["name"] = user_info->name;
+		rtvalue["nick"] = user_info->nick;
+		rtvalue["icon"] = user_info->icon;
+		rtvalue["sex"] = user_info->sex;
+		rtvalue["uid"] = user_info->uid;
+	}
+	else {
+		rtvalue["error"] = ErrorCodes::UidInvalid;
+	}
+
 
 	Defer defer([this, &rtvalue, session]() {
 		std::string return_str = rtvalue.toStyledString();

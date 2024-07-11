@@ -129,14 +129,14 @@ const std::vector<QString> heads = {
 };
 
 const std::vector<QString> names = {
-    "llfc",
-    "zack",
-    "golang",
-    "cpp",
-    "java",
-    "nodejs",
-    "python",
-    "rust"
+    "HanMeiMei",
+    "Lily",
+    "Ben",
+    "Androw",
+    "Max",
+    "Summer",
+    "Candy",
+    "Hunter"
 };
 
 

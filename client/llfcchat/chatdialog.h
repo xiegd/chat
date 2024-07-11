@@ -47,6 +47,8 @@ public slots:
     void slot_friend_info_page();
     void slot_show_search(bool show);
     void slot_apply_friend(std::shared_ptr<AddFriendApply> apply);
+    void slot_add_auth_friend(std::shared_ptr<AuthInfo> auth_info);
+    void slot_auth_rsp(std::shared_ptr<AuthRsp> auth_rsp);
 private slots:
 
 };

@@ -21,11 +21,12 @@ QSize ChatUserWid::sizeHint() const
     return QSize(250, 70); // 返回自定义的尺寸
 }
 
-void ChatUserWid::SetInfo(QString name, QString head, QString msg)
+void ChatUserWid::SetInfo(int uid, QString name, QString head, QString msg)
 {
     _name = name;
     _head = head;
     _msg = msg;
+    _uid = uid;
     // 加载图片
     QPixmap pixmap(_head);
 

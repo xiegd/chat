@@ -5,6 +5,8 @@
 #include "userdata.h"
 #include <memory>
 #include <QJsonArray>
+#include <unordered_map>
+#include "applyfrienditem.h"
 
 namespace Ui {
 class ApplyFriendPage;
@@ -23,7 +25,9 @@ protected:
 private:
     void loadApplyList();
     Ui::ApplyFriendPage *ui;
+    std::unordered_map<int, ApplyFriendItem*> _unauth_items;
 public slots:
+    void slot_auth_rsp(std::shared_ptr<AuthRsp> );
 signals:
     void sig_show_search(bool);
 };

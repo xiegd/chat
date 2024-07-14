@@ -2,7 +2,7 @@
 #include "ui_applyfrienditem.h"
 
 ApplyFriendItem::ApplyFriendItem(QWidget *parent) :
-    ListItemBase(parent),
+    ListItemBase(parent), _added(false),
     ui(new Ui::ApplyFriendItem)
 {
     ui->setupUi(this);
@@ -38,12 +38,17 @@ void ApplyFriendItem::ShowAddBtn(bool bshow)
     if (bshow) {
 		ui->addBtn->show();
 		ui->already_add_lb->hide();
+        _added = false;
     }
     else {
 		ui->addBtn->hide();
 		ui->already_add_lb->show();
+        _added = true;
     }
 }
 
+int ApplyFriendItem::GetUid() {
+    return _apply_info->_uid;
+}
 
 

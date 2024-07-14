@@ -23,6 +23,7 @@ public:
     QSize sizeHint() const override {
         return QSize(250, 80); // 返回自定义的尺寸
     }
+    int GetUid();
 private:
     Ui::ApplyFriendItem *ui;
     std::shared_ptr<ApplyInfo> _apply_info;

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "listitembase.h"
+#include "userdata.h"
 
 namespace Ui {
 class ConUserItem;
@@ -16,12 +17,13 @@ public:
     explicit ConUserItem(QWidget *parent = nullptr);
     ~ConUserItem();
     QSize sizeHint() const override;
-    void SetInfo(int uid, QString name, QString head);
+    void SetInfo(std::shared_ptr<AuthInfo> auth_info);
+    void SetInfo(std::shared_ptr<AuthRsp> auth_rsp);
+    void SetInfo(int uid, QString name, QString icon);
     void ShowRedPoint(bool show = false);
 private:
     Ui::ConUserItem *ui;
-    QString _name;
-    QString _head;
+    std::shared_ptr<UserInfo> _info;
 };
 
 #endif // CONUSERITEM_H

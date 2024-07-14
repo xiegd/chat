@@ -21,7 +21,8 @@
 
 ChatDialog::ChatDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ChatDialog),_b_loading(false),_mode(ChatUIMode::ChatMode),_state(ChatUIMode::ChatMode)
+    ui(new Ui::ChatDialog),_b_loading(false),_mode(ChatUIMode::ChatMode),
+    _state(ChatUIMode::ChatMode),_last_widget(nullptr)
 {
     ui->setupUi(this);
 
@@ -116,6 +117,13 @@ ChatDialog::ChatDialog(QWidget *parent) :
     //链接自己认证回复信号
     connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_auth_rsp, this,
             &ChatDialog::slot_auth_rsp);
+
+    //连接点击联系人item发出的信号和用户信息展示槽函数
+    connect(ui->con_user_list, &ContactUserList::sig_switch_friend_info_page,
+            this,&ChatDialog::slot_friend_info_page);
+
+    //设置中心部件为chatpage
+    ui->stackedWidget->setCurrentWidget(ui->chat_page);
 }
 
 ChatDialog::~ChatDialog()
@@ -251,7 +259,13 @@ void ChatDialog::slot_side_contact(){
     qDebug()<< "receive side contact clicked";
     ClearLabelState(ui->side_contact_lb);
     //设置
-    ui->stackedWidget->setCurrentWidget(ui->friend_apply_page);
+    if(_last_widget == nullptr){
+        ui->stackedWidget->setCurrentWidget(ui->friend_apply_page);
+        _last_widget = ui->friend_apply_page;
+    }else{
+        ui->stackedWidget->setCurrentWidget(_last_widget);
+    }
+
     _state = ChatUIMode::ContactMode;
     ShowSearch(false);
 }
@@ -278,12 +292,15 @@ void ChatDialog::slot_loading_contact_user()
 void ChatDialog::slot_switch_apply_friend_page()
 {
     qDebug()<<"receive switch apply friend page sig";
+    _last_widget = ui->friend_apply_page;
     ui->stackedWidget->setCurrentWidget(ui->friend_apply_page);
 }
 
 void ChatDialog::slot_friend_info_page()
 {
-
+    qDebug()<<"receive switch friend info page sig";
+    _last_widget = ui->friend_info_page;
+    ui->stackedWidget->setCurrentWidget(ui->friend_info_page);
 }
 
 void ChatDialog::slot_show_search(bool show)

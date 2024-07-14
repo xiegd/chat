@@ -36,6 +36,7 @@ private:
     void ShowSearch(bool bsearch = false);
     ChatUIMode _mode;
     ChatUIMode _state;
+    QWidget* _last_widget;
 public slots:
     void slot_loading_chat_user();
     void slot_side_chat();

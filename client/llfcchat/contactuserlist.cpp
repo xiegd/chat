@@ -149,7 +149,15 @@ void ContactUserList::slot_item_clicked(QListWidgetItem *item)
        // 创建对话框，提示用户
        qDebug()<< "apply friend item clicked ";
        //跳转到好友申请界面
-       emit sig_switch_apply_friend_page();
+       emit sig_switch_apply_friend_page(); 
+       return;
+   }
+
+   if(itemType == ListItemType::CONTACT_USER_ITEM){
+       // 创建对话框，提示用户
+       qDebug()<< "contact user item clicked ";
+       //跳转到好友申请界面
+       emit sig_switch_friend_info_page();
        return;
    }
 }
@@ -163,7 +171,7 @@ void ContactUserList::slot_add_auth_firend(std::shared_ptr<AuthInfo> auth_info)
     int head_i = randomValue%heads.size();
 
     auto *con_user_wid = new ConUserItem();
-    con_user_wid->SetInfo(auth_info->_uid ,auth_info->_name, heads[head_i]);
+    con_user_wid->SetInfo(auth_info);
     QListWidgetItem *item = new QListWidgetItem;
     //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
     item->setSizeHint(con_user_wid->sizeHint());

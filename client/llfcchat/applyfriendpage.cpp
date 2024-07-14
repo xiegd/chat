@@ -18,6 +18,8 @@ ApplyFriendPage::ApplyFriendPage(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->apply_friend_list, &ApplyFriendList::sig_show_search, this, &ApplyFriendPage::sig_show_search);
     loadApplyList();
+    //接受tcp传递的authrsp信号处理
+    connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_auth_rsp, this, &ApplyFriendPage::slot_auth_rsp);
 }
 
 ApplyFriendPage::~ApplyFriendPage()
@@ -78,6 +80,8 @@ void ApplyFriendPage::loadApplyList()
             apply_item->ShowAddBtn(false);
         }else{
              apply_item->ShowAddBtn(true);
+             auto uid = apply_item->GetUid();
+             _unauth_items[uid] = apply_item;
         }
 
         //收到审核好友信号
@@ -116,7 +120,15 @@ void ApplyFriendPage::loadApplyList()
     }
 }
 
+void ApplyFriendPage::slot_auth_rsp(std::shared_ptr<AuthRsp> auth_rsp) {
+    auto uid = auth_rsp->_uid;
+    auto find_iter = _unauth_items.find(uid);
+    if (find_iter == _unauth_items.end()) {
+        return;
+    }
 
+    find_iter->second->ShowAddBtn(false);
+}
 
 
 

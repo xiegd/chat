@@ -316,10 +316,11 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="ChatPage" name="chat_page"/>
      <widget class="ApplyFriendPage" name="friend_apply_page"/>
+     <widget class="FriendInfoPage" name="friend_info_page"/>
     </widget>
    </item>
   </layout>
@@ -366,6 +367,12 @@
    <class>StateWidget</class>
    <extends>QWidget</extends>
    <header location="global">statewidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FriendInfoPage</class>
+   <extends>QWidget</extends>
+   <header location="global">friendinfopage.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

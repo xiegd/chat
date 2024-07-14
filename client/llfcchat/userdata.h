@@ -1,6 +1,8 @@
 #ifndef USERDATA_H
 #define USERDATA_H
 #include <QString>
+#include <memory>
+
 class SearchInfo {
 public:
 	SearchInfo(int uid, QString name, QString nick, QString desc, int sex);
@@ -61,6 +63,32 @@ struct AuthRsp {
     QString _nick;
     QString _icon;
     int _sex;
+};
+
+struct UserInfo {
+    UserInfo(int uid, QString name, QString nick, QString icon, int sex):
+        _uid(uid),_name(name),_nick(nick),_icon(icon),_sex(sex){}
+
+    UserInfo(std::shared_ptr<AuthInfo> auth):
+        _uid(auth->_uid),_name(auth->_name),_nick(auth->_nick),
+        _icon(auth->_icon),_sex(auth->_sex){}
+
+    UserInfo(int uid, QString name, QString icon):
+    _uid(uid), _name(name), _icon(icon),_nick(_name),
+    _sex(0){
+
+    }
+
+    UserInfo(std::shared_ptr<AuthRsp> auth):
+        _uid(auth->_uid),_name(auth->_name),_nick(auth->_nick),
+        _icon(auth->_icon),_sex(auth->_sex){}
+
+    int _uid;
+    QString _name;
+    QString _nick;
+    QString _icon;
+    int _sex;
+
 };
 
 #endif

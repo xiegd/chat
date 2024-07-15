@@ -45,7 +45,7 @@ public slots:
     void slot_focus_out();
     void slot_loading_contact_user();
     void slot_switch_apply_friend_page();
-    void slot_friend_info_page();
+    void slot_friend_info_page(std::shared_ptr<UserInfo> user_info);
     void slot_show_search(bool show);
     void slot_apply_friend(std::shared_ptr<AddFriendApply> apply);
     void slot_add_auth_friend(std::shared_ptr<AuthInfo> auth_info);

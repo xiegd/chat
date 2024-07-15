@@ -88,7 +88,7 @@
               </property>
               <property name="maximumSize">
                <size>
-                <width>50</width>
+                <width>16777215</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -293,7 +293,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="ClickedBtn" name="msg_chat">
         <property name="minimumSize">
          <size>
           <width>50</width>
@@ -328,7 +328,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_3">
+       <widget class="ClickedBtn" name="voice_chat">
         <property name="minimumSize">
          <size>
           <width>50</width>
@@ -363,7 +363,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="ClickedBtn" name="video_chat">
         <property name="minimumSize">
          <size>
           <width>50</width>
@@ -412,6 +412,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ClickedBtn</class>
+   <extends>QPushButton</extends>
+   <header>clickedbtn.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

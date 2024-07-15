@@ -152,7 +152,54 @@ RESOURCES += \
     rc.qrc
 
 DISTFILES += \
-    config.ini
+    config.ini \
+    res/add_friend.png \
+    res/add_friend_hover.png \
+    res/add_friend_normal.png \
+    res/addtip.png \
+    res/arowdown.png \
+    res/chat_icon.png \
+    res/chat_icon_hover.png \
+    res/chat_icon_press.png \
+    res/chat_icon_select_hover.png \
+    res/chat_icon_select_press.png \
+    res/close_search.png \
+    res/close_transparent.png \
+    res/contact_list.png \
+    res/contact_list_hover.png \
+    res/contact_list_press.png \
+    res/female.png \
+    res/filedir.png \
+    res/filedir_hover.png \
+    res/filedir_press.png \
+    res/head_1.jpg \
+    res/head_2.jpg \
+    res/head_3.jpg \
+    res/head_4.jpg \
+    res/head_5.jpg \
+    res/ice.png \
+    res/loading.gif \
+    res/male.png \
+    res/msg_chat_hover.png \
+    res/msg_chat_normal.png \
+    res/msg_chat_press.png \
+    res/red_point.png \
+    res/right_tip.png \
+    res/search.png \
+    res/smile.png \
+    res/smile_hover.png \
+    res/smile_press.png \
+    res/tipclose.png \
+    res/unvisible.png \
+    res/unvisible_hover.png \
+    res/video_chat_hover.png \
+    res/video_chat_normal.png \
+    res/video_chat_press.png \
+    res/visible.png \
+    res/visible_hover.png \
+    res/voice_chat_hover.png \
+    res/voice_chat_normal.png \
+    res/voice_chat_press.png
 
 CONFIG(debug, debug|release) {
         #debug

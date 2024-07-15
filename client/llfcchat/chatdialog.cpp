@@ -296,12 +296,15 @@ void ChatDialog::slot_switch_apply_friend_page()
     ui->stackedWidget->setCurrentWidget(ui->friend_apply_page);
 }
 
-void ChatDialog::slot_friend_info_page()
+void ChatDialog::slot_friend_info_page(std::shared_ptr<UserInfo> user_info)
 {
     qDebug()<<"receive switch friend info page sig";
     _last_widget = ui->friend_info_page;
     ui->stackedWidget->setCurrentWidget(ui->friend_info_page);
+    ui->friend_info_page->SetInfo(user_info);
 }
+
+
 
 void ChatDialog::slot_show_search(bool show)
 {

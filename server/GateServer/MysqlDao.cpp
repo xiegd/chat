@@ -56,7 +56,8 @@ int MysqlDao::RegUser(const std::string& name, const std::string& email, const s
 	}
 }
 
-int MysqlDao::RegUserTransaction(const std::string& name, const std::string& email, const std::string& pwd)
+int MysqlDao::RegUserTransaction(const std::string& name, const std::string& email, const std::string& pwd, 
+	const std::string& icon)
 {
 	auto con = pool_->getConnection();
 	if (con == nullptr) {
@@ -125,11 +126,14 @@ int MysqlDao::RegUserTransaction(const std::string& name, const std::string& ema
 		}
 
 		// 插入user信息
-		std::unique_ptr<sql::PreparedStatement> pstmt_insert(con->_con->prepareStatement("INSERT INTO user (uid, name, email, pwd) VALUES (?, ?, ?, ?)"));
+		std::unique_ptr<sql::PreparedStatement> pstmt_insert(con->_con->prepareStatement("INSERT INTO user (uid, name, email, pwd, nick, icon) "
+			"VALUES (?, ?, ?, ?,?,?)"));
 		pstmt_insert->setInt(1,newId);
 		pstmt_insert->setString(2, name);
 		pstmt_insert->setString(3, email);
 		pstmt_insert->setString(4, pwd);
+		pstmt_insert->setString(5, name);
+		pstmt_insert->setString(6, icon);
 		//执行插入
 		pstmt_insert->executeUpdate();
 		// 提交事务

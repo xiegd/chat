@@ -12,19 +12,18 @@ class UserMgr:public QObject,public Singleton<UserMgr>,
 public:
     friend class Singleton<UserMgr>;
     ~ UserMgr();
-    void SetName(QString name);
-    void SetUid(int uid);
+    void SetUserInfo(std::shared_ptr<UserInfo> user_info);
     void SetToken(QString token);
     int GetUid();
     QString GetName();
+    QString GetIcon();
     void AppendApplyList(QJsonArray array);
     std::vector<std::shared_ptr<ApplyInfo>> GetApplyList();
 private:
     UserMgr();
-    QString _name;
-    QString _token;
-    int _uid;
+    std::shared_ptr<UserInfo> _user_info;
     std::vector<std::shared_ptr<ApplyInfo>> _apply_list;
+    QString _token;
 };
 
 #endif // USERMGR_H

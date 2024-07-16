@@ -17,6 +17,7 @@
 #include "conuseritem.h"
 #include "lineitem.h"
 #include "tcpmgr.h"
+#include "usermgr.h"
 
 
 ChatDialog::ChatDialog(QWidget *parent) :
@@ -65,9 +66,10 @@ ChatDialog::ChatDialog(QWidget *parent) :
     //连接加载信号和槽
     connect(ui->chat_user_list, &ChatUserList::sig_loading_chat_user, this, &ChatDialog::slot_loading_chat_user);
     addChatUserList();
-    QPixmap pixmap(":/res/head_1.jpg"); // 加载图片
-    ui->side_head_lb->setPixmap(pixmap); // 将图片设置到QLabel上
-    QPixmap scaledPixmap = pixmap.scaled( ui->side_head_lb->size(), Qt::KeepAspectRatio); // 将图片缩放到label的大小
+    //模拟加载自己头像
+    QString head_icon = UserMgr::GetInstance()->GetIcon();
+    QPixmap pixmap(head_icon); // 加载图片
+    QPixmap scaledPixmap = pixmap.scaled( ui->side_head_lb->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation); // 将图片缩放到label的大小
     ui->side_head_lb->setPixmap(scaledPixmap); // 将缩放后的图片设置到QLabel上
     ui->side_head_lb->setScaledContents(true); // 设置QLabel自动缩放图片内容以适应大小
 

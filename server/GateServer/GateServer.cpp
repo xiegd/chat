@@ -124,7 +124,7 @@ void TestRedisMgr() {
 }
 
 void TestMysqlMgr() {
-	int id = MysqlMgr::GetInstance()->RegUser("wwc","secondtonone1@163.com","123456");
+	int id = MysqlMgr::GetInstance()->RegUser("wwc","secondtonone1@163.com","123456",": / res / head_1.jpg");
 	std::cout << "id  is " << id << std::endl;
 }
 

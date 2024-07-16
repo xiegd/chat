@@ -6,14 +6,8 @@ UserMgr::~UserMgr()
 
 }
 
-void UserMgr::SetName(QString name)
-{
-    _name = name;
-}
-
-void UserMgr::SetUid(int uid)
-{
-    _uid = uid;
+void UserMgr::SetUserInfo(std::shared_ptr<UserInfo> user_info) {
+    _user_info = user_info;
 }
 
 void UserMgr::SetToken(QString token)
@@ -23,12 +17,17 @@ void UserMgr::SetToken(QString token)
 
 int UserMgr::GetUid()
 {
-    return _uid;
+    return _user_info->_uid;
 }
 
 QString UserMgr::GetName()
 {
-    return _name;
+    return _user_info->_name;
+}
+
+QString UserMgr::GetIcon()
+{
+    return _user_info->_icon;
 }
 
 void UserMgr::AppendApplyList(QJsonArray array)
@@ -53,7 +52,7 @@ std::vector<std::shared_ptr<ApplyInfo> > UserMgr::GetApplyList()
     return _apply_list;
 }
 
-UserMgr::UserMgr()
+UserMgr::UserMgr():_user_info(nullptr)
 {
 
 }

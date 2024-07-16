@@ -5,9 +5,9 @@ MysqlMgr::~MysqlMgr() {
 
 }
 
-int MysqlMgr::RegUser(const std::string& name, const std::string& email, const std::string& pwd)
+int MysqlMgr::RegUser(const std::string& name, const std::string& email, const std::string& pwd, const std::string& icon)
 {
-	return _dao.RegUserTransaction(name, email, pwd);
+	return _dao.RegUserTransaction(name, email, pwd, icon);
 }
 
 bool MysqlMgr::CheckEmail(const std::string& name, const std::string& email) {

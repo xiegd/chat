@@ -174,6 +174,11 @@ void ChatDialog::AddLBGroup(StateWidget* lb)
 
 void ChatDialog::addChatUserList()
 {
+    auto friend_list = UserMgr::GetInstance()->GetFriendListPerPage();
+    if (friend_list.empty() == false) {
+
+    }
+
     // 创建QListWidgetItem，并设置自定义的widget
     for(int i = 0; i < 13; i++){
         int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
@@ -189,6 +194,10 @@ void ChatDialog::addChatUserList()
         ui->chat_user_list->addItem(item);
         ui->chat_user_list->setItemWidget(item, chat_user_wid);
     }
+
+}
+
+void ChatDialog::loadMoreFriend() {
 
 }
 

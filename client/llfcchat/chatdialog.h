@@ -29,6 +29,7 @@ protected:
 private:
     void AddLBGroup(StateWidget* lb);
     void addChatUserList();
+    void loadMoreFriend();
     void ClearLabelState(StateWidget* lb);
     Ui::ChatDialog *ui;
     bool _b_loading;

@@ -91,4 +91,20 @@ struct UserInfo {
 
 };
 
+struct FriendInfo {
+    FriendInfo(int uid, QString name, QString nick, QString icon, 
+        int sex, QString desc, QString back):_uid(uid),
+        _name(name),_nick(nick),_icon(icon),_sex(sex),_desc(desc),
+        _back(back){}
+
+    int _uid;
+    QString _name;
+    QString _nick;
+    QString _icon;
+    int _sex;
+    QString _desc;
+    QString _back;
+
+};
+
 #endif

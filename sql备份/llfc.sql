@@ -11,7 +11,7 @@
  Target Server Version : 80027 (8.0.27)
  File Encoding         : 65001
 
- Date: 05/07/2024 12:01:08
+ Date: 17/07/2024 11:27:12
 */
 
 SET NAMES utf8mb4;
@@ -28,11 +28,13 @@ CREATE TABLE `friend`  (
   `back` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `self_friend`(`self_id` ASC, `friend_id` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of friend
 -- ----------------------------
+INSERT INTO `friend` VALUES (31, 1002, 1019, 'zack');
+INSERT INTO `friend` VALUES (32, 1019, 1002, '');
 
 -- ----------------------------
 -- Table structure for friend_apply
@@ -45,14 +47,14 @@ CREATE TABLE `friend_apply`  (
   `status` smallint NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `from_uid`(`from_uid` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of friend_apply
 -- ----------------------------
 INSERT INTO `friend_apply` VALUES (5, 1019, 1002, 1);
-INSERT INTO `friend_apply` VALUES (6, 1023, 1002, 1);
-INSERT INTO `friend_apply` VALUES (25, 0, 1023, 0);
+INSERT INTO `friend_apply` VALUES (6, 1023, 1002, 0);
+INSERT INTO `friend_apply` VALUES (30, 1012, 1002, 0);
 
 -- ----------------------------
 -- Table structure for user
@@ -67,34 +69,40 @@ CREATE TABLE `user`  (
   `nick` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `sex` int NOT NULL DEFAULT 0,
+  `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uid`(`uid` ASC) USING BTREE,
   UNIQUE INDEX `email`(`email` ASC) USING BTREE,
   INDEX `name`(`name` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 41 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (3, 1002, 'llfc', 'secondtonone1@163.com', '654321)', '', '', 0);
-INSERT INTO `user` VALUES (4, 1003, 'tc', '18165031775@qq.com', '123456', '', '', 0);
-INSERT INTO `user` VALUES (5, 1004, 'yuanweihua', '1456188862@qq.com', '}kyn;89>?<', '', '', 0);
-INSERT INTO `user` VALUES (6, 1005, 'test', '2022202210033@whu.edu.cn', '}kyn;89>?<', '', '', 0);
-INSERT INTO `user` VALUES (7, 1006, 'q', 'w', 'e', '', '', 0);
-INSERT INTO `user` VALUES (8, 1007, 'fhr', '3157199927@qq.com', 'xuexi1228', '', '', 0);
-INSERT INTO `user` VALUES (9, 1008, 'zglx2008', 'zglx2008@163.com', '123456', '', '', 0);
-INSERT INTO `user` VALUES (13, 1012, 'resettest', '1042958553@qq.com', '230745', '', '', 0);
-INSERT INTO `user` VALUES (14, 1013, 'rss_test', '1685229455@qq.com', '123456', '', '', 0);
-INSERT INTO `user` VALUES (15, 1014, '123456789', '1152907774@qq.com', '123456789', '', '', 0);
-INSERT INTO `user` VALUES (16, 1015, 'aaaaaaa', '3031719794@qq.com', '777777', '', '', 0);
-INSERT INTO `user` VALUES (17, 1016, 'aaa', '2996722319@qq.com', '222222', '', '', 0);
-INSERT INTO `user` VALUES (20, 1019, 'zack', '1017234088@qq.com', '654321)', '', '', 0);
-INSERT INTO `user` VALUES (21, 1020, 'aatext', '1584736136@qq.com', '745230', '', '', 0);
-INSERT INTO `user` VALUES (22, 1021, 'ferrero1', '1220292901@qq.com', '1234', '', '', 0);
-INSERT INTO `user` VALUES (23, 1022, 'ferrero2', '15504616642@163.com', '1234', '', '', 0);
-INSERT INTO `user` VALUES (24, 1023, 'lyf', '3194811890@qq.com', '123456', '', '', 0);
-INSERT INTO `user` VALUES (25, 1024, 'lh', '2494350589@qq.com', 'fb8::>:;8<', '', '', 0);
-INSERT INTO `user` VALUES (26, 1025, 'jf', 'luojianfeng553@163.com', '745230', '', '', 0);
+INSERT INTO `user` VALUES (3, 1002, 'llfc', 'secondtonone1@163.com', '654321)', 'llfc', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (4, 1003, 'tc', '18165031775@qq.com', '123456', 'tc', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (5, 1004, 'yuanweihua', '1456188862@qq.com', '}kyn;89>?<', 'yuanweihua', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (6, 1005, 'test', '2022202210033@whu.edu.cn', '}kyn;89>?<', 'test', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (8, 1007, 'fhr', '3157199927@qq.com', 'xuexi1228', 'fhr', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (9, 1008, 'zglx2008', 'zglx2008@163.com', '123456', 'zglx2008', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (13, 1012, 'resettest', '1042958553@qq.com', '230745', 'resettest', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (14, 1013, 'rss_test', '1685229455@qq.com', '123456', 'rss_test', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (15, 1014, '123456789', '1152907774@qq.com', '123456789', '123456789', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (16, 1015, 'aaaaaaa', '3031719794@qq.com', '777777', 'aaaaaaa', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (17, 1016, 'aaa', '2996722319@qq.com', '222222', 'aaa', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (20, 1019, 'zack', '1017234088@qq.com', '654321)', 'zack', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (21, 1020, 'aatext', '1584736136@qq.com', '745230', 'aatext', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (22, 1021, 'ferrero1', '1220292901@qq.com', '1234', 'ferrero1', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (23, 1022, 'ferrero2', '15504616642@163.com', '1234', 'ferrero2', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (24, 1023, 'lyf', '3194811890@qq.com', '123456', 'lyf', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (25, 1024, 'lh', '2494350589@qq.com', 'fb8::>:;8<', 'lh', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (26, 1025, 'jf', 'luojianfeng553@163.com', '745230', 'jf', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (33, 1031, 'zjm', '1013049201@qq.com', '745230', 'zjm', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (34, 1032, 'yxc', '1003314442@qq.com', '123', 'yxc', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (37, 1035, 'wangyu', '962087148@qq.com', '123456', 'wangyu', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (38, 1036, 'zjx', '3434321837@qq.com', '745230', 'zjx', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (39, 1037, 'chae', '318192621@qq.com', '123456', 'chae', '', 0, ':/res/head_1.jpg');
+INSERT INTO `user` VALUES (40, 1038, 'summer', '1586856388@qq.com', '654321)', 'summer', '', 0, ':/res/head_2.jpg');
 
 -- ----------------------------
 -- Table structure for user_id
@@ -108,7 +116,7 @@ CREATE TABLE `user_id`  (
 -- ----------------------------
 -- Records of user_id
 -- ----------------------------
-INSERT INTO `user_id` VALUES (1025);
+INSERT INTO `user_id` VALUES (1038);
 
 -- ----------------------------
 -- Procedure structure for reg_user

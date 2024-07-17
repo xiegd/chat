@@ -69,10 +69,10 @@ std::vector<std::shared_ptr<ApplyInfo> > UserMgr::GetApplyList()
     return _apply_list;
 }
 
-std::vector<std::shared_ptr<FriendInfo>> UserMgr::GetFriendListPerPage() {
+std::vector<std::shared_ptr<FriendInfo>> UserMgr::GetChatListPerPage() {
     
     std::vector<std::shared_ptr<FriendInfo>> friend_list;
-    int begin = _loaded;
+    int begin = _chat_loaded;
     int end = begin + CHAT_COUNT_PER_PAGE;
 
     if (begin >= _friend_list.size()) {
@@ -90,13 +90,13 @@ std::vector<std::shared_ptr<FriendInfo>> UserMgr::GetFriendListPerPage() {
 }
 
 
-UserMgr::UserMgr():_user_info(nullptr), _loaded(0)
+UserMgr::UserMgr():_user_info(nullptr), _chat_loaded(0)
 {
 
 }
 
-bool UserMgr::IsLoadAllFin() {
-    if (_loaded >= _friend_list.size()) {
+bool UserMgr::IsLoadChatFin() {
+    if (_chat_loaded >= _friend_list.size()) {
         return true;
     }
 
@@ -104,7 +104,7 @@ bool UserMgr::IsLoadAllFin() {
 }
 
 void UserMgr::UpdateFriendLoadedCount() {
-    int begin = _loaded;
+    int begin = _chat_loaded;
     int end = begin + CHAT_COUNT_PER_PAGE;
 
     if (begin >= _friend_list.size()) {
@@ -112,9 +112,9 @@ void UserMgr::UpdateFriendLoadedCount() {
     }
 
     if (end > _friend_list.size()) {
-        _loaded = _friend_list.size();
+        _chat_loaded = _friend_list.size();
         return ;
     }
 
-    _loaded = end;
+    _chat_loaded = end;
 }

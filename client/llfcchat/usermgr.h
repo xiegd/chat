@@ -20,8 +20,8 @@ public:
     void AppendApplyList(QJsonArray array);
     void AppendFriendList(QJsonArray array);
     std::vector<std::shared_ptr<ApplyInfo>> GetApplyList();
-    std::vector<std::shared_ptr<FriendInfo>> GetFriendListPerPage();
-    bool IsLoadAllFin();
+    std::vector<std::shared_ptr<FriendInfo>> GetChatListPerPage();
+    bool IsLoadChatFin();
     void UpdateFriendLoadedCount();
 private:
     UserMgr();
@@ -29,7 +29,7 @@ private:
     std::vector<std::shared_ptr<ApplyInfo>> _apply_list;
     std::vector<std::shared_ptr<FriendInfo>> _friend_list;
     QString _token;
-    int _loaded;
+    int _chat_loaded;
 };
 
 #endif // USERMGR_H

@@ -9,6 +9,7 @@
 #include "statewidget.h"
 #include <memory>
 #include "userdata.h"
+#include <QListWidgetItem>
 
 namespace Ui {
 class ChatDialog;
@@ -29,8 +30,9 @@ protected:
 private:
     void AddLBGroup(StateWidget* lb);
     void addChatUserList();
-    void loadMoreFriend();
+    void loadMoreChatUser();
     void ClearLabelState(StateWidget* lb);
+    void loadMoreConUser();
     Ui::ChatDialog *ui;
     bool _b_loading;
     QList<StateWidget*> _lb_list;
@@ -38,6 +40,8 @@ private:
     ChatUIMode _mode;
     ChatUIMode _state;
     QWidget* _last_widget;
+    //todo...
+    QMap<int, QListWidgetItem*> _chat_items_added;
 public slots:
     void slot_loading_chat_user();
     void slot_side_chat();
@@ -51,6 +55,7 @@ public slots:
     void slot_apply_friend(std::shared_ptr<AddFriendApply> apply);
     void slot_add_auth_friend(std::shared_ptr<AuthInfo> auth_info);
     void slot_auth_rsp(std::shared_ptr<AuthRsp> auth_rsp);
+    void slot_jump_chat_item(std::shared_ptr<SearchInfo> si);
 private slots:
 
 };

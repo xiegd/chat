@@ -126,6 +126,9 @@ ChatDialog::ChatDialog(QWidget *parent) :
 
     //设置中心部件为chatpage
     ui->stackedWidget->setCurrentWidget(ui->chat_page);
+
+    //连接searchlist跳转聊天信号
+    connect(ui->search_list, &SearchList::sig_jump_chat_item, this, &ChatDialog::slot_jump_chat_item);
 }
 
 ChatDialog::~ChatDialog()
@@ -178,6 +181,10 @@ void ChatDialog::addChatUserList()
     auto friend_list = UserMgr::GetInstance()->GetChatListPerPage();
     if (friend_list.empty() == false) {
         for(auto & friend_ele : friend_list){
+            auto find_iter = _chat_items_added.find(friend_ele->_uid);
+            if(find_iter != _chat_items_added.end()){
+                continue;
+            }
             auto *chat_user_wid = new ChatUserWid();
             chat_user_wid->SetInfo(friend_ele->_uid,friend_ele->_name,
                                    friend_ele->_icon, friend_ele->_last_msg);
@@ -186,10 +193,11 @@ void ChatDialog::addChatUserList()
             item->setSizeHint(chat_user_wid->sizeHint());
             ui->chat_user_list->addItem(item);
             ui->chat_user_list->setItemWidget(item, chat_user_wid);
+            _chat_items_added.insert(friend_ele->_uid, item);
         }
 
         //更新已加载条目
-        UserMgr::GetInstance()->UpdateFriendLoadedCount();
+        UserMgr::GetInstance()->UpdateChatLoadedCount();
     }
 
     //模拟测试条目
@@ -211,10 +219,14 @@ void ChatDialog::addChatUserList()
 
 }
 
-void ChatDialog::loadMoreFriend() {
+void ChatDialog::loadMoreChatUser() {
     auto friend_list = UserMgr::GetInstance()->GetChatListPerPage();
     if (friend_list.empty() == false) {
         for(auto & friend_ele : friend_list){
+            auto find_iter = _chat_items_added.find(friend_ele->_uid);
+            if(find_iter != _chat_items_added.end()){
+                continue;
+            }
             auto *chat_user_wid = new ChatUserWid();
             chat_user_wid->SetInfo(friend_ele->_uid,friend_ele->_name,
                                    friend_ele->_icon, friend_ele->_last_msg);
@@ -223,10 +235,11 @@ void ChatDialog::loadMoreFriend() {
             item->setSizeHint(chat_user_wid->sizeHint());
             ui->chat_user_list->addItem(item);
             ui->chat_user_list->setItemWidget(item, chat_user_wid);
+            _chat_items_added.insert(friend_ele->_uid, item);
         }
 
         //更新已加载条目
-        UserMgr::GetInstance()->UpdateFriendLoadedCount();
+        UserMgr::GetInstance()->UpdateChatLoadedCount();
     }
 }
 
@@ -239,6 +252,26 @@ void ChatDialog::ClearLabelState(StateWidget *lb)
         }
 
         ele->ClearState();
+    }
+}
+
+void ChatDialog::loadMoreConUser()
+{
+    auto friend_list = UserMgr::GetInstance()->GetConListPerPage();
+    if (friend_list.empty() == false) {
+        for(auto & friend_ele : friend_list){
+            auto *chat_user_wid = new ConUserItem();
+            chat_user_wid->SetInfo(friend_ele->_uid,friend_ele->_name,
+                                   friend_ele->_icon);
+            QListWidgetItem *item = new QListWidgetItem;
+            //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
+            item->setSizeHint(chat_user_wid->sizeHint());
+            ui->con_user_list->addItem(item);
+            ui->con_user_list->setItemWidget(item, chat_user_wid);
+        }
+
+        //更新已加载条目
+        UserMgr::GetInstance()->UpdateContactLoadedCount();
     }
 }
 
@@ -279,7 +312,7 @@ void ChatDialog::slot_loading_chat_user()
     loadingDialog->setModal(true);
     loadingDialog->show();
     qDebug() << "add new data to list.....";
-    loadMoreFriend();
+    loadMoreChatUser();
     // 加载完成后关闭对话框
     loadingDialog->deleteLater();
 
@@ -327,6 +360,20 @@ void ChatDialog::slot_focus_out()
 void ChatDialog::slot_loading_contact_user()
 {
     qDebug() << "slot loading contact user";
+    if(_b_loading){
+        return;
+    }
+
+    _b_loading = true;
+    LoadingDlg *loadingDialog = new LoadingDlg(this);
+    loadingDialog->setModal(true);
+    loadingDialog->show();
+    qDebug() << "add new data to list.....";
+    loadMoreConUser();
+    // 加载完成后关闭对话框
+    loadingDialog->deleteLater();
+
+    _b_loading = false;
 }
 
 void ChatDialog::slot_switch_apply_friend_page()
@@ -399,5 +446,10 @@ void ChatDialog::slot_auth_rsp(std::shared_ptr<AuthRsp> auth_rsp)
     item->setSizeHint(chat_user_wid->sizeHint());
     ui->chat_user_list->insertItem(0, item);
     ui->chat_user_list->setItemWidget(item, chat_user_wid);
+}
+
+void ChatDialog::slot_jump_chat_item(std::shared_ptr<SearchInfo> si)
+{
+    qDebug() << "slot jump chat item " << endl;
 }
 

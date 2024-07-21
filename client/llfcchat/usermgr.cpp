@@ -115,6 +115,8 @@ std::vector<std::shared_ptr<FriendInfo>> UserMgr::GetConListPerPage() {
 UserMgr::UserMgr():_user_info(nullptr), _chat_loaded(0),_contact_loaded(0)
 {
     connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_auth_rsp, this, &UserMgr::SlotAddFriendRsp);
+    connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_add_auth_friend, this, &UserMgr::SlotAddFriendAuth);
+
 }
 
 void UserMgr::SlotAddFriendRsp(std::shared_ptr<AuthRsp> rsp)

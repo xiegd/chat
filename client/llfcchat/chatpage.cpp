@@ -27,6 +27,13 @@ ChatPage::~ChatPage()
     delete ui;
 }
 
+void ChatPage::SetUserInfo(std::shared_ptr<UserInfo> user_info)
+{
+    _user_info = user_info;
+    //设置ui界面
+    ui->title_lb->setText(_user_info->_name);
+}
+
 void ChatPage::paintEvent(QPaintEvent *event)
 {
     QStyleOption opt;

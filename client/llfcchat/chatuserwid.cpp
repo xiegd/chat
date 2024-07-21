@@ -21,21 +21,18 @@ QSize ChatUserWid::sizeHint() const
     return QSize(250, 70); // 返回自定义的尺寸
 }
 
-void ChatUserWid::SetInfo(int uid, QString name, QString head, QString msg)
+void ChatUserWid::SetInfo(std::shared_ptr<UserInfo> user_info)
 {
-    _name = name;
-    _head = head;
-    _msg = msg;
-    _uid = uid;
+    _user_info = user_info;
     // 加载图片
-    QPixmap pixmap(_head);
+    QPixmap pixmap(_user_info->_icon);
 
     // 设置图片自动缩放
     ui->icon_lb->setPixmap(pixmap.scaled(ui->icon_lb->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     ui->icon_lb->setScaledContents(true);
 
-    ui->user_name_lb->setText(_name);
-    ui->user_chat_lb->setText(_msg);
+    ui->user_name_lb->setText(_user_info->_name);
+    ui->user_chat_lb->setText(_user_info->_last_msg);
 }
 
 void ChatUserWid::ShowRedPoint(bool bshow)
@@ -45,4 +42,9 @@ void ChatUserWid::ShowRedPoint(bool bshow)
     }else{
         ui->red_point->hide();
     }
+}
+
+std::shared_ptr<UserInfo> ChatUserWid::GetUserInfo()
+{
+    return _user_info;
 }

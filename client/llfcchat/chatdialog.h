@@ -33,6 +33,8 @@ private:
     void loadMoreChatUser();
     void ClearLabelState(StateWidget* lb);
     void loadMoreConUser();
+    void SetSelectChatItem(int uid = 0);
+    void SetSelectChatPage(int uid = 0);
     Ui::ChatDialog *ui;
     bool _b_loading;
     QList<StateWidget*> _lb_list;
@@ -56,6 +58,8 @@ public slots:
     void slot_add_auth_friend(std::shared_ptr<AuthInfo> auth_info);
     void slot_auth_rsp(std::shared_ptr<AuthRsp> auth_rsp);
     void slot_jump_chat_item(std::shared_ptr<SearchInfo> si);
+    void slot_jump_chat_item_from_infopage(std::shared_ptr<UserInfo> ui);
+    void slot_item_clicked(QListWidgetItem *item);
 private slots:
 
 };

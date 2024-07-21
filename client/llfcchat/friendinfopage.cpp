@@ -1,5 +1,6 @@
 #include "friendinfopage.h"
 #include "ui_friendinfopage.h"
+#include <QDebug>
 
 FriendInfoPage::FriendInfoPage(QWidget *parent) :
     QWidget(parent),
@@ -29,4 +30,10 @@ void FriendInfoPage::SetInfo(std::shared_ptr<UserInfo> user_info)
     ui->name_lb->setText(user_info->_name);
     ui->nick_lb->setText(user_info->_nick);
     ui->bak_lb->setText(user_info->_nick);
+}
+
+void FriendInfoPage::on_msg_chat_clicked()
+{
+    qDebug() << "msg chat btn clicked";
+    emit sig_jump_chat_item(_user_info);
 }

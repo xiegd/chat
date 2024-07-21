@@ -5,12 +5,13 @@
 
 class SearchInfo {
 public:
-	SearchInfo(int uid, QString name, QString nick, QString desc, int sex);
+    SearchInfo(int uid, QString name, QString nick, QString desc, int sex, QString icon);
 	int _uid;
 	QString _name;
 	QString _nick;
 	QString _desc;
 	int _sex;
+    QString _icon;
 };
 
 class AddFriendApply {
@@ -65,34 +66,8 @@ struct AuthRsp {
     int _sex;
 };
 
-struct UserInfo {
-    UserInfo(int uid, QString name, QString nick, QString icon, int sex):
-        _uid(uid),_name(name),_nick(nick),_icon(icon),_sex(sex){}
-
-    UserInfo(std::shared_ptr<AuthInfo> auth):
-        _uid(auth->_uid),_name(auth->_name),_nick(auth->_nick),
-        _icon(auth->_icon),_sex(auth->_sex){}
-
-    UserInfo(int uid, QString name, QString icon):
-    _uid(uid), _name(name), _icon(icon),_nick(_name),
-    _sex(0){
-
-    }
-
-    UserInfo(std::shared_ptr<AuthRsp> auth):
-        _uid(auth->_uid),_name(auth->_name),_nick(auth->_nick),
-        _icon(auth->_icon),_sex(auth->_sex){}
-
-    int _uid;
-    QString _name;
-    QString _nick;
-    QString _icon;
-    int _sex;
-
-};
-
 struct FriendInfo {
-    FriendInfo(int uid, QString name, QString nick, QString icon, 
+    FriendInfo(int uid, QString name, QString nick, QString icon,
         int sex, QString desc, QString back, QString last_msg=""):_uid(uid),
         _name(name),_nick(nick),_icon(icon),_sex(sex),_desc(desc),
         _back(back),_last_msg(last_msg){}
@@ -115,5 +90,46 @@ struct FriendInfo {
     QString _last_msg;
 
 };
+
+struct UserInfo {
+    UserInfo(int uid, QString name, QString nick, QString icon, int sex, QString last_msg = ""):
+        _uid(uid),_name(name),_nick(nick),_icon(icon),_sex(sex),_last_msg(last_msg){}
+
+    UserInfo(std::shared_ptr<AuthInfo> auth):
+        _uid(auth->_uid),_name(auth->_name),_nick(auth->_nick),
+        _icon(auth->_icon),_sex(auth->_sex),_last_msg(""){}
+
+    UserInfo(int uid, QString name, QString icon):
+    _uid(uid), _name(name), _icon(icon),_nick(_name),
+    _sex(0),_last_msg(""){
+
+    }
+
+    UserInfo(std::shared_ptr<AuthRsp> auth):
+        _uid(auth->_uid),_name(auth->_name),_nick(auth->_nick),
+        _icon(auth->_icon),_sex(auth->_sex),_last_msg(""){}
+
+    UserInfo(std::shared_ptr<SearchInfo> search_info):
+        _uid(search_info->_uid),_name(search_info->_name),_nick(search_info->_nick),
+    _icon(search_info->_icon),_sex(search_info->_sex),_last_msg(""){
+
+    }
+
+    UserInfo(std::shared_ptr<FriendInfo> friend_info):
+        _uid(friend_info->_uid),_name(friend_info->_name),_nick(friend_info->_nick),
+        _icon(friend_info->_icon),_sex(friend_info->_sex),_last_msg(""){
+
+        }
+
+    int _uid;
+    QString _name;
+    QString _nick;
+    QString _icon;
+    int _sex;
+    QString _last_msg;
+
+};
+
+
 
 #endif

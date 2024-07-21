@@ -185,7 +185,8 @@ void TcpMgr::initHandlers()
 			return;
 		}
        auto search_info =  std::make_shared<SearchInfo>(jsonObj["uid"].toInt(), jsonObj["name"].toString(),
-            jsonObj["nick"].toString(), jsonObj["desc"].toString(), jsonObj["sex"].toInt());
+            jsonObj["nick"].toString(), jsonObj["desc"].toString(),
+               jsonObj["sex"].toInt(), jsonObj["icon"].toString());
 
         emit sig_user_search(search_info);
 		});

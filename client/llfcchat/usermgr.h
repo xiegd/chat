@@ -17,6 +17,7 @@ public:
     int GetUid();
     QString GetName();
     QString GetIcon();
+     std::shared_ptr<UserInfo> GetUserInfo();
     void AppendApplyList(QJsonArray array);
     void AppendFriendList(QJsonArray array);
     std::vector<std::shared_ptr<ApplyInfo>> GetApplyList();

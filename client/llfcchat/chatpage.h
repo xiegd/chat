@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "userdata.h"
+#include <QMap>
 
 namespace Ui {
 class ChatPage;
@@ -20,9 +21,12 @@ protected:
 private slots:
     void on_send_btn_clicked();
 
+    void on_receive_btn_clicked();
+
 private:
     Ui::ChatPage *ui;
     std::shared_ptr<UserInfo> _user_info;
+    QMap<QString, QWidget*>  _bubble_map;
 };
 
 #endif // CHATPAGE_H

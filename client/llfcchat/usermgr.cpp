@@ -31,6 +31,11 @@ QString UserMgr::GetIcon()
     return _user_info->_icon;
 }
 
+std::shared_ptr<UserInfo> UserMgr::GetUserInfo()
+{
+    return _user_info;
+}
+
 void UserMgr::AppendApplyList(QJsonArray array)
 {
     // 遍历 QJsonArray 并输出每个元素

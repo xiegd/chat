@@ -82,6 +82,8 @@ void ChatPage::on_send_btn_clicked()
 
             pBubble = new TextBubble(role, msgList[i].content);
             if(txt_size + msgList[i].content.length()> 1024){
+                textObj["fromuid"] = user_info->_uid;
+                textObj["touid"] = _user_info->_uid;
                 textObj["text_array"] = textArray;
                 QJsonDocument doc(textObj);
                 QString jsonString = doc.toJson(QJsonDocument::Indented);
@@ -121,6 +123,8 @@ void ChatPage::on_send_btn_clicked()
     qDebug() << "textArray is " << textArray ;
     //发送给服务器
     textObj["text_array"] = textArray;
+    textObj["fromuid"] = user_info->_uid;
+    textObj["touid"] = _user_info->_uid;
     QJsonDocument doc(textObj);
     QString jsonString = doc.toJson(QJsonDocument::Indented);
     //发送并清空之前累计的文本列表

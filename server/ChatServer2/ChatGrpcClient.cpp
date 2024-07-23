@@ -2,9 +2,7 @@
 #include "RedisMgr.h"
 #include "ConfigMgr.h"
 #include "UserMgr.h"
-#include <json/json.h>
-#include <json/value.h>
-#include <json/reader.h>
+
 #include "CSession.h"
 #include "MysqlMgr.h"
 
@@ -129,8 +127,9 @@ bool ChatGrpcClient::GetBaseInfo(std::string base_key, int uid, std::shared_ptr<
 
 AuthFriendRsp ChatGrpcClient::NotifyAuthFriend(std::string server_ip, const AuthFriendReq& req) {
 	AuthFriendRsp rsp;
+	rsp.set_error(ErrorCodes::Success);
+
 	Defer defer([&rsp, &req]() {
-		rsp.set_error(ErrorCodes::Success);
 		rsp.set_fromuid(req.fromuid());
 		rsp.set_touid(req.touid());
 		});
@@ -176,6 +175,58 @@ AuthFriendRsp ChatGrpcClient::NotifyAuthFriend(std::string server_ip, const Auth
 	ClientContext context;
 	auto stub = pool->getConnection();
 	Status status = stub->NotifyAuthFriend(&context, req, &rsp);
+	Defer defercon([&stub, this, &pool]() {
+		pool->returnConnection(std::move(stub));
+		});
+
+	if (!status.ok()) {
+		rsp.set_error(ErrorCodes::RPCFailed);
+		return rsp;
+	}
+
+	return rsp;
+}
+
+TextChatMsgRsp ChatGrpcClient::NotifyTextChatMsg(std::string server_ip, 
+	const TextChatMsgReq& req, const Json::Value& rtvalue) {
+	
+	TextChatMsgRsp rsp;
+	rsp.set_error(ErrorCodes::Success);
+
+	Defer defer([&rsp, &req]() {
+		rsp.set_fromuid(req.fromuid());
+		rsp.set_touid(req.touid());
+		for (const auto& text_data : req.textmsgs()) {
+			TextChatData* new_msg = rsp.add_textmsgs();
+			new_msg->set_msgid(text_data.msgid());
+			new_msg->set_msgcontent(text_data.msgcontent());
+		}
+		
+		});
+
+	auto find_iter = _pools.find(server_ip);
+	if (find_iter == _pools.end()) {
+		return rsp;
+	}
+
+	auto& cfg = ConfigMgr::Inst();
+	auto self_name = cfg["SelfServer"]["Name"];
+	//直接通知对方有认证通过消息
+	if (server_ip == self_name) {
+		auto session = UserMgr::GetInstance()->GetSession(req.touid());
+		if (session) {
+			//在内存中则直接发送通知对方
+			std::string return_str = rtvalue.toStyledString();
+			session->Send(return_str, ID_NOTIFY_TEXT_CHAT_MSG_REQ);
+		}
+
+		return rsp;
+	}
+
+	auto& pool = find_iter->second;
+	ClientContext context;
+	auto stub = pool->getConnection();
+	Status status = stub->NotifyTextChatMsg(&context, req, &rsp);
 	Defer defercon([&stub, this, &pool]() {
 		pool->returnConnection(std::move(stub));
 		});

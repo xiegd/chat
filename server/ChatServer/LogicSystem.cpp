@@ -317,6 +317,10 @@ void LogicSystem::DealChatTextMsg(std::shared_ptr<CSession> session, const short
 	Json::Reader reader;
 	Json::Value root;
 	reader.parse(msg_data, root);
+
+	auto uid = root["fromuid"].asInt();
+	auto touid = root["touid"].asInt();
+
 	const Json::Value  arrays = root["text_array"];
 	for (const auto& txt_obj : arrays) {
 		auto content = txt_obj["content"].asString();
@@ -327,14 +331,32 @@ void LogicSystem::DealChatTextMsg(std::shared_ptr<CSession> session, const short
 
 	Json::Value  rtvalue;
 	rtvalue["error"] = ErrorCodes::Success;
-	rtvalue["text_data"] = root;
+	rtvalue["text_array"] = arrays;
+	rtvalue["fromuid"] = uid;
+	rtvalue["touid"] = touid;
 
 	Defer defer([this, &rtvalue, session]() {
 		std::string return_str = rtvalue.toStyledString();
 		session->Send(return_str, ID_TEXT_CHAT_MSG_RSP);
 		});
 
+
+	//查询redis 查找touid对应的server ip
+	auto to_str = std::to_string(touid);
+	auto to_ip_key = USERIPPREFIX + to_str;
+	std::string to_ip_value = "";
+	bool b_ip = RedisMgr::GetInstance()->Get(to_ip_key, to_ip_value);
+	if (!b_ip) {
+		return;
+	}
+
+	TextChatMsgReq text_msg_req;
+	text_msg_req.set_fromuid(uid);
+	text_msg_req.set_touid(touid);
+
+
 	//发送通知 todo...
+	ChatGrpcClient::GetInstance()->NotifyTextChatMsg(to_ip_value, text_msg_req, rtvalue);
 }
 
 

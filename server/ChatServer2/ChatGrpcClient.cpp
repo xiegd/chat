@@ -139,38 +139,6 @@ AuthFriendRsp ChatGrpcClient::NotifyAuthFriend(std::string server_ip, const Auth
 		return rsp;
 	}
 
-	auto& cfg = ConfigMgr::Inst();
-	auto self_name = cfg["SelfServer"]["Name"];
-	//直接通知对方有认证通过消息
-	if (server_ip == self_name) {
-		auto session = UserMgr::GetInstance()->GetSession(req.touid());
-		if (session) {
-			//在内存中则直接发送通知对方
-			Json::Value  rtvalue;
-			rtvalue["error"] = ErrorCodes::Success;
-			rtvalue["fromuid"] = req.fromuid();
-			rtvalue["touid"] = req.touid();
-			std::string base_key = USER_BASE_INFO + std::to_string(req.fromuid());
-			auto user_info = std::make_shared<UserInfo>();
-			bool b_info = GetBaseInfo(base_key, req.fromuid(), user_info);
-			if (b_info) {
-				rtvalue["name"] = user_info->name;
-				rtvalue["nick"] = user_info->nick;
-				rtvalue["icon"] = user_info->icon;
-				rtvalue["sex"] = user_info->sex;
-			}
-			else {
-				rtvalue["error"] = ErrorCodes::UidInvalid;
-			}
-	
-
-			std::string return_str = rtvalue.toStyledString();
-			session->Send(return_str, ID_NOTIFY_AUTH_FRIEND_REQ);
-		}
-
-		return rsp;
-	}
-
 	auto& pool = find_iter->second;
 	ClientContext context;
 	auto stub = pool->getConnection();

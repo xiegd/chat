@@ -98,8 +98,8 @@ message TextChatMsgReq {
 }
 
 message TextChatData{
-	int32 msgid = 1;
-	int32 msgcotent = 2;
+	string msgid = 1;
+	string msgcontent = 2;
 }
 
 message TextChatMsgRsp {

@@ -2671,24 +2671,38 @@ class TextChatData PROTOBUF_FINAL :
 
   enum : int {
     kMsgidFieldNumber = 1,
-    kMsgcotentFieldNumber = 2,
+    kMsgcontentFieldNumber = 2,
   };
-  // int32 msgid = 1;
+  // string msgid = 1;
   void clear_msgid();
-  ::PROTOBUF_NAMESPACE_ID::int32 msgid() const;
-  void set_msgid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  const std::string& msgid() const;
+  void set_msgid(const std::string& value);
+  void set_msgid(std::string&& value);
+  void set_msgid(const char* value);
+  void set_msgid(const char* value, size_t size);
+  std::string* mutable_msgid();
+  std::string* release_msgid();
+  void set_allocated_msgid(std::string* msgid);
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_msgid() const;
-  void _internal_set_msgid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  const std::string& _internal_msgid() const;
+  void _internal_set_msgid(const std::string& value);
+  std::string* _internal_mutable_msgid();
   public:
 
-  // int32 msgcotent = 2;
-  void clear_msgcotent();
-  ::PROTOBUF_NAMESPACE_ID::int32 msgcotent() const;
-  void set_msgcotent(::PROTOBUF_NAMESPACE_ID::int32 value);
+  // string msgcontent = 2;
+  void clear_msgcontent();
+  const std::string& msgcontent() const;
+  void set_msgcontent(const std::string& value);
+  void set_msgcontent(std::string&& value);
+  void set_msgcontent(const char* value);
+  void set_msgcontent(const char* value, size_t size);
+  std::string* mutable_msgcontent();
+  std::string* release_msgcontent();
+  void set_allocated_msgcontent(std::string* msgcontent);
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_msgcotent() const;
-  void _internal_set_msgcotent(::PROTOBUF_NAMESPACE_ID::int32 value);
+  const std::string& _internal_msgcontent() const;
+  void _internal_set_msgcontent(const std::string& value);
+  std::string* _internal_mutable_msgcontent();
   public:
 
   // @@protoc_insertion_point(class_scope:message.TextChatData)
@@ -2698,8 +2712,8 @@ class TextChatData PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::int32 msgid_;
-  ::PROTOBUF_NAMESPACE_ID::int32 msgcotent_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr msgid_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr msgcontent_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_message_2eproto;
 };
@@ -4254,44 +4268,128 @@ TextChatMsgReq::textmsgs() const {
 
 // TextChatData
 
-// int32 msgid = 1;
+// string msgid = 1;
 inline void TextChatData::clear_msgid() {
-  msgid_ = 0;
+  msgid_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 TextChatData::_internal_msgid() const {
-  return msgid_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 TextChatData::msgid() const {
+inline const std::string& TextChatData::msgid() const {
   // @@protoc_insertion_point(field_get:message.TextChatData.msgid)
   return _internal_msgid();
 }
-inline void TextChatData::_internal_set_msgid(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  
-  msgid_ = value;
-}
-inline void TextChatData::set_msgid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void TextChatData::set_msgid(const std::string& value) {
   _internal_set_msgid(value);
   // @@protoc_insertion_point(field_set:message.TextChatData.msgid)
 }
-
-// int32 msgcotent = 2;
-inline void TextChatData::clear_msgcotent() {
-  msgcotent_ = 0;
+inline std::string* TextChatData::mutable_msgid() {
+  // @@protoc_insertion_point(field_mutable:message.TextChatData.msgid)
+  return _internal_mutable_msgid();
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 TextChatData::_internal_msgcotent() const {
-  return msgcotent_;
+inline const std::string& TextChatData::_internal_msgid() const {
+  return msgid_.Get();
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 TextChatData::msgcotent() const {
-  // @@protoc_insertion_point(field_get:message.TextChatData.msgcotent)
-  return _internal_msgcotent();
-}
-inline void TextChatData::_internal_set_msgcotent(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void TextChatData::_internal_set_msgid(const std::string& value) {
   
-  msgcotent_ = value;
+  msgid_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
 }
-inline void TextChatData::set_msgcotent(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_msgcotent(value);
-  // @@protoc_insertion_point(field_set:message.TextChatData.msgcotent)
+inline void TextChatData::set_msgid(std::string&& value) {
+  
+  msgid_.Set(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:message.TextChatData.msgid)
+}
+inline void TextChatData::set_msgid(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  msgid_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+              GetArena());
+  // @@protoc_insertion_point(field_set_char:message.TextChatData.msgid)
+}
+inline void TextChatData::set_msgid(const char* value,
+    size_t size) {
+  
+  msgid_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:message.TextChatData.msgid)
+}
+inline std::string* TextChatData::_internal_mutable_msgid() {
+  
+  return msgid_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline std::string* TextChatData::release_msgid() {
+  // @@protoc_insertion_point(field_release:message.TextChatData.msgid)
+  return msgid_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void TextChatData::set_allocated_msgid(std::string* msgid) {
+  if (msgid != nullptr) {
+    
+  } else {
+    
+  }
+  msgid_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), msgid,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:message.TextChatData.msgid)
+}
+
+// string msgcontent = 2;
+inline void TextChatData::clear_msgcontent() {
+  msgcontent_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline const std::string& TextChatData::msgcontent() const {
+  // @@protoc_insertion_point(field_get:message.TextChatData.msgcontent)
+  return _internal_msgcontent();
+}
+inline void TextChatData::set_msgcontent(const std::string& value) {
+  _internal_set_msgcontent(value);
+  // @@protoc_insertion_point(field_set:message.TextChatData.msgcontent)
+}
+inline std::string* TextChatData::mutable_msgcontent() {
+  // @@protoc_insertion_point(field_mutable:message.TextChatData.msgcontent)
+  return _internal_mutable_msgcontent();
+}
+inline const std::string& TextChatData::_internal_msgcontent() const {
+  return msgcontent_.Get();
+}
+inline void TextChatData::_internal_set_msgcontent(const std::string& value) {
+  
+  msgcontent_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+}
+inline void TextChatData::set_msgcontent(std::string&& value) {
+  
+  msgcontent_.Set(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:message.TextChatData.msgcontent)
+}
+inline void TextChatData::set_msgcontent(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  msgcontent_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+              GetArena());
+  // @@protoc_insertion_point(field_set_char:message.TextChatData.msgcontent)
+}
+inline void TextChatData::set_msgcontent(const char* value,
+    size_t size) {
+  
+  msgcontent_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:message.TextChatData.msgcontent)
+}
+inline std::string* TextChatData::_internal_mutable_msgcontent() {
+  
+  return msgcontent_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline std::string* TextChatData::release_msgcontent() {
+  // @@protoc_insertion_point(field_release:message.TextChatData.msgcontent)
+  return msgcontent_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void TextChatData::set_allocated_msgcontent(std::string* msgcontent) {
+  if (msgcontent != nullptr) {
+    
+  } else {
+    
+  }
+  msgcontent_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), msgcontent,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:message.TextChatData.msgcontent)
 }
 
 // -------------------------------------------------------------------

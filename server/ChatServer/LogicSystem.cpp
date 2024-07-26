@@ -305,6 +305,39 @@ void LogicSystem::AuthFriendApply(std::shared_ptr<CSession> session, const short
 		return;
 	}
 
+	auto& cfg = ConfigMgr::Inst();
+	auto self_name = cfg["SelfServer"]["Name"];
+	//直接通知对方有认证通过消息
+	if (to_ip_value == self_name) {
+		auto session = UserMgr::GetInstance()->GetSession(touid);
+		if (session) {
+			//在内存中则直接发送通知对方
+			Json::Value  rtvalue;
+			rtvalue["error"] = ErrorCodes::Success;
+			rtvalue["fromuid"] = uid;
+			rtvalue["touid"] = touid;
+			std::string base_key = USER_BASE_INFO + std::to_string(uid);
+			auto user_info = std::make_shared<UserInfo>();
+			bool b_info = GetBaseInfo(base_key, uid, user_info);
+			if (b_info) {
+				rtvalue["name"] = user_info->name;
+				rtvalue["nick"] = user_info->nick;
+				rtvalue["icon"] = user_info->icon;
+				rtvalue["sex"] = user_info->sex;
+			}
+			else {
+				rtvalue["error"] = ErrorCodes::UidInvalid;
+			}
+
+
+			std::string return_str = rtvalue.toStyledString();
+			session->Send(return_str, ID_NOTIFY_AUTH_FRIEND_REQ);
+		}
+
+		return ;
+	}
+
+
 	AuthFriendReq auth_req;
 	auth_req.set_fromuid(uid);
 	auth_req.set_touid(touid);
@@ -322,13 +355,7 @@ void LogicSystem::DealChatTextMsg(std::shared_ptr<CSession> session, const short
 	auto touid = root["touid"].asInt();
 
 	const Json::Value  arrays = root["text_array"];
-	for (const auto& txt_obj : arrays) {
-		auto content = txt_obj["content"].asString();
-		auto msgid = txt_obj["msgid"].asString();
-		std::cout << "content is " << content << std::endl;
-		std::cout << "msgid is " << msgid << std::endl;
-	}
-
+	
 	Json::Value  rtvalue;
 	rtvalue["error"] = ErrorCodes::Success;
 	rtvalue["text_array"] = arrays;
@@ -353,6 +380,15 @@ void LogicSystem::DealChatTextMsg(std::shared_ptr<CSession> session, const short
 	TextChatMsgReq text_msg_req;
 	text_msg_req.set_fromuid(uid);
 	text_msg_req.set_touid(touid);
+	for (const auto& txt_obj : arrays) {
+		auto content = txt_obj["content"].asString();
+		auto msgid = txt_obj["msgid"].asString();
+		std::cout << "content is " << content << std::endl;
+		std::cout << "msgid is " << msgid << std::endl;
+		auto *text_msg = text_msg_req.add_textmsgs();
+		text_msg->set_msgid(msgid);
+		text_msg->set_msgcontent(content);
+	}
 
 
 	//发送通知 todo...

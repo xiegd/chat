@@ -142,6 +142,9 @@ ChatDialog::ChatDialog(QWidget *parent) :
     //连接聊天列表点击信号
     connect(ui->chat_user_list, &QListWidget::itemClicked, this, &ChatDialog::slot_item_clicked);
 
+    //连接对端消息通知
+    connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_text_chat_msg,
+            this, &ChatDialog::slot_text_chat_msg);
 }
 
 ChatDialog::~ChatDialog()
@@ -182,6 +185,43 @@ void ChatDialog::slot_item_clicked(QListWidgetItem *item)
        ui->chat_page->SetUserInfo(user_info);
        return;
    }
+}
+
+void ChatDialog::slot_text_chat_msg(std::shared_ptr<TextChatMsg> msg)
+{
+    QString last_msg = "";
+    for(auto& msg : msg->_chat_msgs){
+        last_msg = msg->_msg_content;
+    }
+
+    auto find_iter = _chat_items_added.find(msg->_from_uid);
+    if(find_iter != _chat_items_added.end()){
+        qDebug() << "set chat item msg, uid is " << msg->_from_uid;
+        QWidget *widget = ui->chat_user_list->itemWidget(find_iter.value());
+        auto chat_wid = qobject_cast<ChatUserWid*>(widget);
+        if(!chat_wid){
+            return;
+        }
+        chat_wid->updateLastMsg(last_msg);
+        UserMgr::GetInstance()->AppendFriendChatMsg(msg->_from_uid,msg->_chat_msgs);
+        return;
+    }
+
+    //如果没找到，则创建新的插入listwidget
+
+    auto* chat_user_wid = new ChatUserWid();
+    //查询好友信息
+    auto fi_ptr = UserMgr::GetInstance()->GetFriendById(msg->_from_uid);
+    chat_user_wid->SetInfo(fi_ptr);
+    QListWidgetItem* item = new QListWidgetItem;
+    //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
+    item->setSizeHint(chat_user_wid->sizeHint());
+    chat_user_wid->updateLastMsg(last_msg);
+     UserMgr::GetInstance()->AppendFriendChatMsg(msg->_from_uid,msg->_chat_msgs);
+    ui->chat_user_list->insertItem(0, item);
+    ui->chat_user_list->setItemWidget(item, chat_user_wid);
+    _chat_items_added.insert(msg->_from_uid, item);
+
 }
 
 
@@ -334,7 +374,7 @@ void ChatDialog::SetSelectChatItem(int uid)
     }
 
     auto find_iter = _chat_items_added.find(uid);
-    if(find_iter != _chat_items_added.end()){
+    if(find_iter == _chat_items_added.end()){
         qDebug() << "uid " <<uid<< " not found, set curent row 0";
         ui->chat_user_list->setCurrentRow(0);
         return;
@@ -383,20 +423,8 @@ void ChatDialog::SetSelectChatPage(int uid)
         }
     }
 
-    //更新信息ui
-    if(ui->chat_user_list->count() > 0){
-        auto * first_item = ui->chat_user_list->item(0);
-        if(first_item){
-            //转为widget
-            QWidget *widget = ui->chat_user_list->itemWidget(first_item);
-            //判断是否成功
-            if(widget){
-
-            }
-        }
-    }
-
 }
+
 
 void ChatDialog::ShowSearch(bool bsearch)
 {

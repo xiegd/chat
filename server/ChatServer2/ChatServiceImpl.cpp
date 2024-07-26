@@ -46,6 +46,7 @@ Status ChatServiceImpl::NotifyAuthFriend(ServerContext* context, const AuthFrien
 	AuthFriendRsp* reply) {
 	//查找用户是否在本服务器
 	auto touid = request->touid();
+	auto fromuid = request->fromuid();
 	auto session = UserMgr::GetInstance()->GetSession(touid);
 
 	Defer defer([request, reply]() {
@@ -65,9 +66,9 @@ Status ChatServiceImpl::NotifyAuthFriend(ServerContext* context, const AuthFrien
 	rtvalue["fromuid"] = request->fromuid();
 	rtvalue["touid"] = request->touid();
 
-	std::string base_key = USER_BASE_INFO + std::to_string(touid);
+	std::string base_key = USER_BASE_INFO + std::to_string(fromuid);
 	auto user_info = std::make_shared<UserInfo>();
-	bool b_info = GetBaseInfo(base_key, touid, user_info);
+	bool b_info = GetBaseInfo(base_key, fromuid, user_info);
 	if (b_info) {
 		rtvalue["name"] = user_info->name;
 		rtvalue["nick"] = user_info->nick;

@@ -2,6 +2,9 @@
 #define USERDATA_H
 #include <QString>
 #include <memory>
+#include <QJsonArray>
+#include <vector>
+#include <QJsonObject>
 
 class SearchInfo {
 public:
@@ -66,6 +69,7 @@ struct AuthRsp {
     int _sex;
 };
 
+struct TextChatData;
 struct FriendInfo {
     FriendInfo(int uid, QString name, QString nick, QString icon,
         int sex, QString desc, QString back, QString last_msg=""):_uid(uid),
@@ -80,6 +84,8 @@ struct FriendInfo {
     _nick(auth_rsp->_nick),_icon(auth_rsp->_icon),_name(auth_rsp->_name),
       _sex(auth_rsp->_sex){}
 
+    void AppendChatMsgs(const std::vector<std::shared_ptr<TextChatData>> text_vec);
+
     int _uid;
     QString _name;
     QString _nick;
@@ -88,7 +94,7 @@ struct FriendInfo {
     QString _desc;
     QString _back;
     QString _last_msg;
-
+    std::vector<QString> _chat_msgs;
 };
 
 struct UserInfo {
@@ -130,5 +136,29 @@ struct UserInfo {
 
 };
 
+struct TextChatData{
+    TextChatData(QString msg_id, QString msg_content)
+        :_msg_id(msg_id),_msg_content(msg_content){
+
+    }
+    QString _msg_id;
+    QString _msg_content;
+};
+
+struct TextChatMsg{
+    TextChatMsg(int fromuid, int touid, QJsonArray arrays):
+        _from_uid(fromuid),_to_uid(touid){
+        for(auto  msg_data : arrays){
+            auto msg_obj = msg_data.toObject();
+            auto content = msg_obj["content"].toString();
+            auto msgid = msg_obj["msgid"].toString();
+            auto msg_ptr = std::make_shared<TextChatData>(msgid, content);
+            _chat_msgs.push_back(msg_ptr);
+        }
+    }
+    int _to_uid;
+    int _from_uid;
+    std::vector<std::shared_ptr<TextChatData>> _chat_msgs;
+};
 
 #endif

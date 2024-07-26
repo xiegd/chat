@@ -245,6 +245,27 @@ void LogicSystem::AddFriendApply(std::shared_ptr<CSession> session, const short&
 		return;
 	}
 
+
+	auto& cfg = ConfigMgr::Inst();
+	auto self_name = cfg["SelfServer"]["Name"];
+	//直接通知对方有申请消息
+	if (to_ip_value == self_name) {
+		auto session = UserMgr::GetInstance()->GetSession(touid);
+		if (session) {
+			//在内存中则直接发送通知对方
+			Json::Value  notify;
+			notify["error"] = ErrorCodes::Success;
+			notify["applyuid"] = uid;
+			notify["name"] = applyname;
+			notify["desc"] = "";
+			std::string return_str = notify.toStyledString();
+			session->Send(return_str, ID_NOTIFY_ADD_FRIEND_REQ);
+		}
+
+		return ;
+	}
+
+
 	AddFriendReq add_req;
 	add_req.set_applyuid(uid);
 	add_req.set_touid(touid);
@@ -312,25 +333,25 @@ void LogicSystem::AuthFriendApply(std::shared_ptr<CSession> session, const short
 		auto session = UserMgr::GetInstance()->GetSession(touid);
 		if (session) {
 			//在内存中则直接发送通知对方
-			Json::Value  rtvalue;
-			rtvalue["error"] = ErrorCodes::Success;
-			rtvalue["fromuid"] = uid;
-			rtvalue["touid"] = touid;
+			Json::Value  notify;
+			notify["error"] = ErrorCodes::Success;
+			notify["fromuid"] = uid;
+			notify["touid"] = touid;
 			std::string base_key = USER_BASE_INFO + std::to_string(uid);
 			auto user_info = std::make_shared<UserInfo>();
 			bool b_info = GetBaseInfo(base_key, uid, user_info);
 			if (b_info) {
-				rtvalue["name"] = user_info->name;
-				rtvalue["nick"] = user_info->nick;
-				rtvalue["icon"] = user_info->icon;
-				rtvalue["sex"] = user_info->sex;
+				notify["name"] = user_info->name;
+				notify["nick"] = user_info->nick;
+				notify["icon"] = user_info->icon;
+				notify["sex"] = user_info->sex;
 			}
 			else {
-				rtvalue["error"] = ErrorCodes::UidInvalid;
+				notify["error"] = ErrorCodes::UidInvalid;
 			}
 
 
-			std::string return_str = rtvalue.toStyledString();
+			std::string return_str = notify.toStyledString();
 			session->Send(return_str, ID_NOTIFY_AUTH_FRIEND_REQ);
 		}
 
@@ -376,6 +397,21 @@ void LogicSystem::DealChatTextMsg(std::shared_ptr<CSession> session, const short
 	if (!b_ip) {
 		return;
 	}
+
+	auto& cfg = ConfigMgr::Inst();
+	auto self_name = cfg["SelfServer"]["Name"];
+	//直接通知对方有认证通过消息
+	if (to_ip_value == self_name) {
+		auto session = UserMgr::GetInstance()->GetSession(touid);
+		if (session) {
+			//在内存中则直接发送通知对方
+			std::string return_str = rtvalue.toStyledString();
+			session->Send(return_str, ID_NOTIFY_TEXT_CHAT_MSG_REQ);
+		}
+
+		return ;
+	}
+
 
 	TextChatMsgReq text_msg_req;
 	text_msg_req.set_fromuid(uid);

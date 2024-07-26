@@ -35,6 +35,20 @@ void ChatUserWid::SetInfo(std::shared_ptr<UserInfo> user_info)
     ui->user_chat_lb->setText(_user_info->_last_msg);
 }
 
+void ChatUserWid::SetInfo(std::shared_ptr<FriendInfo> friend_info)
+{
+    _user_info = std::make_shared<UserInfo>(friend_info);
+    // 加载图片
+    QPixmap pixmap(_user_info->_icon);
+
+    // 设置图片自动缩放
+    ui->icon_lb->setPixmap(pixmap.scaled(ui->icon_lb->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->icon_lb->setScaledContents(true);
+
+    ui->user_name_lb->setText(_user_info->_name);
+    ui->user_chat_lb->setText(_user_info->_last_msg);
+}
+
 void ChatUserWid::ShowRedPoint(bool bshow)
 {
     if(bshow){
@@ -47,4 +61,10 @@ void ChatUserWid::ShowRedPoint(bool bshow)
 std::shared_ptr<UserInfo> ChatUserWid::GetUserInfo()
 {
     return _user_info;
+}
+
+void ChatUserWid::updateLastMsg(QString msg)
+{
+    _user_info->_last_msg = msg;
+    ui->user_chat_lb->setText(_user_info->_last_msg);
 }

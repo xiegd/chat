@@ -32,11 +32,11 @@ void CServer::StartAccept() {
 	_acceptor.async_accept(new_session->GetSocket(), std::bind(&CServer::HandleAccept, this, new_session, placeholders::_1));
 }
 
-void CServer::ClearSession(std::string session_id) {
+void CServer::ClearSession(std::string uuid) {
 	
 	if (_sessions.find(uuid) != _sessions.end()) {
 		//移除用户和session的关联
-		UserMgr::GetInstance()->RmvUserSession(uuid);
+		UserMgr::GetInstance()->RmvUserSession(_sessions[uuid]->GetUserId());
 	}
 
 	{

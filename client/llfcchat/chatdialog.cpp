@@ -23,7 +23,7 @@
 ChatDialog::ChatDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ChatDialog),_b_loading(false),_mode(ChatUIMode::ChatMode),
-    _state(ChatUIMode::ChatMode),_last_widget(nullptr)
+    _state(ChatUIMode::ChatMode),_last_widget(nullptr),_cur_chat_uid(0)
 {
     ui->setupUi(this);
 
@@ -203,6 +203,8 @@ void ChatDialog::slot_text_chat_msg(std::shared_ptr<TextChatMsg> msg)
             return;
         }
         chat_wid->updateLastMsg(last_msg);
+        //更新当前聊天页面记录
+        UpdateChatMsg(msg->_chat_msgs);
         UserMgr::GetInstance()->AppendFriendChatMsg(msg->_from_uid,msg->_chat_msgs);
         return;
     }
@@ -255,6 +257,17 @@ void ChatDialog::handleGlobalMousePress(QMouseEvent *event)
 void ChatDialog::CloseFindDlg()
 {
     ui->search_list->CloseFindDlg();
+}
+
+void ChatDialog::UpdateChatMsg(std::vector<std::shared_ptr<TextChatData> > msgdata)
+{
+    for(auto & msg : msgdata){
+        if(msg->_from_uid != _cur_chat_uid){
+            break;
+        }
+
+        ui->chat_page->AppendChatMsg(msg);
+    }
 }
 
 void ChatDialog::AddLBGroup(StateWidget* lb)
@@ -368,8 +381,30 @@ void ChatDialog::loadMoreConUser()
 
 void ChatDialog::SetSelectChatItem(int uid)
 {
+    if(ui->chat_user_list->count() <= 0){
+        return;
+    }
+
     if(uid == 0){
         ui->chat_user_list->setCurrentRow(0);
+        QListWidgetItem *firstItem = ui->chat_user_list->item(0);
+        if(!firstItem){
+            return;
+        }
+
+        //转为widget
+        QWidget *widget = ui->chat_user_list->itemWidget(firstItem);
+        if(!widget){
+            return;
+        }
+
+        auto con_item = qobject_cast<ChatUserWid*>(widget);
+        if(!con_item){
+            return;
+        }
+
+        _cur_chat_uid = con_item->GetUserInfo()->_uid;
+
         return;
     }
 
@@ -381,46 +416,66 @@ void ChatDialog::SetSelectChatItem(int uid)
     }
 
     ui->chat_user_list->setCurrentItem(find_iter.value());
+
+    _cur_chat_uid = uid;
 }
 
 void ChatDialog::SetSelectChatPage(int uid)
 {
-    if(uid == 0 && ui->chat_user_list->count() <= 0){
+    if( ui->chat_user_list->count() <= 0){
         return;
     }
 
-    if(uid == 0 && ui->chat_user_list->count() > 0){
-        auto * first_item = ui->chat_user_list->item(0);
-        if(!first_item){
+    if (uid == 0) {
+       auto item = ui->chat_user_list->item(0);
+       //转为widget
+       QWidget* widget = ui->chat_user_list->itemWidget(item);
+       if (!widget) {
+           return;
+       }
+
+       auto con_item = qobject_cast<ChatUserWid*>(widget);
+       if (!con_item) {
+           return;
+       }
+
+       //设置信息
+       auto user_info = con_item->GetUserInfo();
+       ui->chat_page->SetUserInfo(user_info);
+       return;
+    }
+
+    auto find_iter = _chat_items_added.find(uid);
+    if(find_iter == _chat_items_added.end()){
+        return;
+    }
+
+    //转为widget
+    QWidget *widget = ui->chat_user_list->itemWidget(find_iter.value());
+    if(!widget){
+        return;
+    }
+
+    //判断转化为自定义的widget
+    // 对自定义widget进行操作， 将item 转化为基类ListItemBase
+    ListItemBase *customItem = qobject_cast<ListItemBase*>(widget);
+    if(!customItem){
+        qDebug()<< "qobject_cast<ListItemBase*>(widget) is nullptr";
+        return;
+    }
+
+    auto itemType = customItem->GetItemType();
+    if(itemType == CHAT_USER_ITEM){
+        auto con_item = qobject_cast<ChatUserWid*>(customItem);
+        if(!con_item){
             return;
         }
 
-        //转为widget
-        QWidget *widget = ui->chat_user_list->itemWidget(first_item);
-        if(!widget){
-            return;
-        }
+        //设置信息
+        auto user_info = con_item->GetUserInfo();
+        ui->chat_page->SetUserInfo(user_info);
 
-        //判断转化为自定义的widget
-        // 对自定义widget进行操作， 将item 转化为基类ListItemBase
-        ListItemBase *customItem = qobject_cast<ListItemBase*>(widget);
-        if(!customItem){
-            qDebug()<< "qobject_cast<ListItemBase*>(widget) is nullptr";
-            return;
-        }
-
-        auto itemType = customItem->GetItemType();
-        if(itemType == CHAT_USER_ITEM){
-            auto con_item = qobject_cast<ChatUserWid*>(customItem);
-            if(!con_item){
-                return;
-            }
-
-            //设置信息
-            auto user_info = con_item->GetUserInfo();
-            ui->chat_page->SetUserInfo(user_info);
-            return;
-        }
+        return;
     }
 
 }

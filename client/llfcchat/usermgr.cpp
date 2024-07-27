@@ -208,7 +208,7 @@ void UserMgr::AddFriend(std::shared_ptr<AuthInfo> auth_info)
 std::shared_ptr<FriendInfo> UserMgr::GetFriendById(int uid)
 {
     auto find_it = _friend_map.find(uid);
-    if(find_it != _friend_map.end()){
+    if(find_it == _friend_map.end()){
         return nullptr;
     }
 

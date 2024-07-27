@@ -27,6 +27,7 @@ protected:
 
     void handleGlobalMousePress(QMouseEvent *event) ;
     void CloseFindDlg();
+    void UpdateChatMsg(std::vector<std::shared_ptr<TextChatData>> msgdata);
 private:
     void AddLBGroup(StateWidget* lb);
     void addChatUserList();
@@ -44,6 +45,7 @@ private:
     QWidget* _last_widget;
     //todo...
     QMap<int, QListWidgetItem*> _chat_items_added;
+    int _cur_chat_uid;
 public slots:
     void slot_loading_chat_user();
     void slot_side_chat();

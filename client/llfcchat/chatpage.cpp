@@ -37,6 +37,27 @@ void ChatPage::SetUserInfo(std::shared_ptr<UserInfo> user_info)
     _user_info = user_info;
     //设置ui界面
     ui->title_lb->setText(_user_info->_name);
+    ui->chat_data_list->removeAllItem();
+    for(auto & msg : user_info->_chat_msgs){
+        AppendChatMsg(msg);
+    }
+}
+
+void ChatPage::AppendChatMsg(std::shared_ptr<TextChatData> msg)
+{
+    //todo... 添加聊天显示
+    ChatRole role = ChatRole::Other;
+    ChatItemBase *pChatItem = new ChatItemBase(role);
+    auto friend_info = UserMgr::GetInstance()->GetFriendById(msg->_from_uid);
+    if (friend_info == nullptr) {
+        return;
+    }
+    pChatItem->setUserName(friend_info->_name);
+    pChatItem->setUserIcon(QPixmap(friend_info->_icon));
+    QWidget *pBubble = nullptr;
+    pBubble = new TextBubble(role, msg->_msg_content);
+    pChatItem->setWidget(pBubble);
+    ui->chat_data_list->appendChatItem(pChatItem);
 }
 
 void ChatPage::paintEvent(QPaintEvent *event)
@@ -49,6 +70,11 @@ void ChatPage::paintEvent(QPaintEvent *event)
 
 void ChatPage::on_send_btn_clicked()
 {
+    if (_user_info == nullptr) {
+        qDebug() << "friend_info is empty";
+        return;
+    }
+
     auto user_info = UserMgr::GetInstance()->GetUserInfo();
     auto pTextEdit = ui->chatEdit;
     ChatRole role = ChatRole::Self;
@@ -96,7 +122,7 @@ void ChatPage::on_send_btn_clicked()
             }
 
             //将bubble和uid绑定，以后可以等网络返回消息后设置是否送达
-            _bubble_map[uuidString] = pBubble;
+            //_bubble_map[uuidString] = pBubble;
             txt_size += msgList[i].content.length();
             QJsonObject obj;
             obj["content"] = msgList[i].content;
@@ -168,4 +194,9 @@ void ChatPage::on_receive_btn_clicked()
             ui->chat_data_list->appendChatItem(pChatItem);
         }
     }
+}
+
+void ChatPage::clearItems()
+{
+    ui->chat_data_list->removeAllItem();
 }

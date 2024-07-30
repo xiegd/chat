@@ -112,20 +112,21 @@ void ChatPage::on_send_btn_clicked()
                 textObj["touid"] = _user_info->_uid;
                 textObj["text_array"] = textArray;
                 QJsonDocument doc(textObj);
-                QString jsonString = doc.toJson(QJsonDocument::Indented);
+                QByteArray jsonData = doc.toJson(QJsonDocument::Compact);
                 //发送并清空之前累计的文本列表
                 txt_size = 0;
                 textArray = QJsonArray();
                 textObj = QJsonObject();
                 //发送tcp请求给chat server
-                emit TcpMgr::GetInstance()->sig_send_data(ReqId::ID_TEXT_CHAT_MSG_REQ, jsonString);
+                emit TcpMgr::GetInstance()->sig_send_data(ReqId::ID_TEXT_CHAT_MSG_REQ, jsonData);
             }
 
             //将bubble和uid绑定，以后可以等网络返回消息后设置是否送达
             //_bubble_map[uuidString] = pBubble;
             txt_size += msgList[i].content.length();
             QJsonObject obj;
-            obj["content"] = msgList[i].content;
+            QByteArray utf8Message = msgList[i].content.toUtf8();
+            obj["content"] = QString::fromUtf8(utf8Message);
             obj["msgid"] = uuidString;
             textArray.append(obj);
         }
@@ -152,13 +153,13 @@ void ChatPage::on_send_btn_clicked()
     textObj["fromuid"] = user_info->_uid;
     textObj["touid"] = _user_info->_uid;
     QJsonDocument doc(textObj);
-    QString jsonString = doc.toJson(QJsonDocument::Indented);
+    QByteArray jsonData = doc.toJson(QJsonDocument::Compact);
     //发送并清空之前累计的文本列表
     txt_size = 0;
     textArray = QJsonArray();
     textObj = QJsonObject();
     //发送tcp请求给chat server
-    emit TcpMgr::GetInstance()->sig_send_data(ReqId::ID_TEXT_CHAT_MSG_REQ, jsonString);
+    emit TcpMgr::GetInstance()->sig_send_data(ReqId::ID_TEXT_CHAT_MSG_REQ, jsonData);
 }
 
 void ChatPage::on_receive_btn_clicked()

@@ -76,6 +76,22 @@ std::vector<std::shared_ptr<ApplyInfo> > UserMgr::GetApplyList()
     return _apply_list;
 }
 
+void UserMgr::AddApplyList(std::shared_ptr<ApplyInfo> app)
+{
+    _apply_list.push_back(app);
+}
+
+bool UserMgr::AlreadyApply(int uid)
+{
+    for(auto& apply: _apply_list){
+        if(apply->_uid == uid){
+            return true;
+        }
+    }
+
+    return false;
+}
+
 std::vector<std::shared_ptr<FriendInfo>> UserMgr::GetChatListPerPage() {
     
     std::vector<std::shared_ptr<FriendInfo>> friend_list;
@@ -119,8 +135,6 @@ std::vector<std::shared_ptr<FriendInfo>> UserMgr::GetConListPerPage() {
 
 UserMgr::UserMgr():_user_info(nullptr), _chat_loaded(0),_contact_loaded(0)
 {
-    connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_auth_rsp, this, &UserMgr::SlotAddFriendRsp);
-    connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_add_auth_friend, this, &UserMgr::SlotAddFriendAuth);
 
 }
 
@@ -225,3 +239,5 @@ void UserMgr::AppendFriendChatMsg(int friend_id,std::vector<std::shared_ptr<Text
 
     find_iter.value()->AppendChatMsgs(msgs);
 }
+
+

@@ -219,8 +219,17 @@ void TcpMgr::initHandlers()
 			emit sig_user_search(nullptr);
 			return;
 		}
-		auto apply_info = std::make_shared<AddFriendApply>(jsonObj["applyuid"].toInt(), jsonObj["name"].toString(),
-			jsonObj["desc"].toString());
+
+         int from_uid = jsonObj["applyuid"].toInt();
+         QString name = jsonObj["name"].toString();
+         QString desc = jsonObj["desc"].toString();
+         QString icon = jsonObj["icon"].toString();
+         QString nick = jsonObj["nick"].toString();
+         int sex = jsonObj["sex"].toInt();
+
+        auto apply_info = std::make_shared<AddFriendApply>(
+                    from_uid, name, desc,
+                      icon, nick, sex);
 
 		emit sig_friend_apply(apply_info);
 		});

@@ -21,6 +21,8 @@ public:
     void AppendApplyList(QJsonArray array);
     void AppendFriendList(QJsonArray array);
     std::vector<std::shared_ptr<ApplyInfo>> GetApplyList();
+    void AddApplyList(std::shared_ptr<ApplyInfo> app);
+    bool AlreadyApply(int uid);
     std::vector<std::shared_ptr<FriendInfo>> GetChatListPerPage();
     bool IsLoadChatFin();
     void UpdateChatLoadedCount();

@@ -35,6 +35,9 @@ Status ChatServiceImpl::NotifyAddFriend(ServerContext* context, const AddFriendR
 	rtvalue["applyuid"] = request->applyuid();
 	rtvalue["name"] = request->name();
 	rtvalue["desc"] = request->desc();
+	rtvalue["icon"] = request->icon();
+	rtvalue["sex"] = request->sex();
+	rtvalue["nick"] = request->nick();
 
 	std::string return_str = rtvalue.toStyledString();
 

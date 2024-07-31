@@ -98,6 +98,10 @@ void SearchList::slot_item_clicked(QListWidgetItem *item)
        if (_send_pending) {
            return;
        }
+
+       if (!_search_edit) {
+           return;
+       }
        waitPending(true);
        auto search_edit = dynamic_cast<CustomizeEdit*>(_search_edit);
        auto uid_str = search_edit->text();

@@ -308,7 +308,7 @@ void LogicSystem::AuthFriendApply(std::shared_ptr<CSession> session, const short
 		rtvalue["nick"] = user_info->nick;
 		rtvalue["icon"] = user_info->icon;
 		rtvalue["sex"] = user_info->sex;
-		rtvalue["uid"] = user_info->uid;
+		rtvalue["uid"] = touid;
 	}
 	else {
 		rtvalue["error"] = ErrorCodes::UidInvalid;

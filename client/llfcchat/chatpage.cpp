@@ -45,19 +45,36 @@ void ChatPage::SetUserInfo(std::shared_ptr<UserInfo> user_info)
 
 void ChatPage::AppendChatMsg(std::shared_ptr<TextChatData> msg)
 {
+    auto self_info = UserMgr::GetInstance()->GetUserInfo();
+    ChatRole role;
     //todo... 添加聊天显示
-    ChatRole role = ChatRole::Other;
-    ChatItemBase *pChatItem = new ChatItemBase(role);
-    auto friend_info = UserMgr::GetInstance()->GetFriendById(msg->_from_uid);
-    if (friend_info == nullptr) {
-        return;
+    if (msg->_from_uid == self_info->_uid) {
+        role = ChatRole::Self;
+        ChatItemBase* pChatItem = new ChatItemBase(role);
+        
+        pChatItem->setUserName(self_info->_name);
+        pChatItem->setUserIcon(QPixmap(self_info->_icon));
+        QWidget* pBubble = nullptr;
+        pBubble = new TextBubble(role, msg->_msg_content);
+        pChatItem->setWidget(pBubble);
+        ui->chat_data_list->appendChatItem(pChatItem);
     }
-    pChatItem->setUserName(friend_info->_name);
-    pChatItem->setUserIcon(QPixmap(friend_info->_icon));
-    QWidget *pBubble = nullptr;
-    pBubble = new TextBubble(role, msg->_msg_content);
-    pChatItem->setWidget(pBubble);
-    ui->chat_data_list->appendChatItem(pChatItem);
+    else {
+        role = ChatRole::Other;
+        ChatItemBase* pChatItem = new ChatItemBase(role);
+        auto friend_info = UserMgr::GetInstance()->GetFriendById(msg->_from_uid);
+        if (friend_info == nullptr) {
+            return;
+        }
+        pChatItem->setUserName(friend_info->_name);
+        pChatItem->setUserIcon(QPixmap(friend_info->_icon));
+        QWidget* pBubble = nullptr;
+        pBubble = new TextBubble(role, msg->_msg_content);
+        pChatItem->setWidget(pBubble);
+        ui->chat_data_list->appendChatItem(pChatItem);
+    }
+
+
 }
 
 void ChatPage::paintEvent(QPaintEvent *event)
@@ -129,6 +146,9 @@ void ChatPage::on_send_btn_clicked()
             obj["content"] = QString::fromUtf8(utf8Message);
             obj["msgid"] = uuidString;
             textArray.append(obj);
+            auto txt_msg = std::make_shared<TextChatData>(uuidString, obj["content"].toString(),
+                user_info->_uid, _user_info->_uid);
+            emit sig_append_send_chat_msg(txt_msg);
         }
         else if(type == "image")
         {

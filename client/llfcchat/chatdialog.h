@@ -28,6 +28,7 @@ protected:
     void handleGlobalMousePress(QMouseEvent *event) ;
     void CloseFindDlg();
     void UpdateChatMsg(std::vector<std::shared_ptr<TextChatData>> msgdata);
+    
 private:
     void AddLBGroup(StateWidget* lb);
     void addChatUserList();
@@ -63,6 +64,7 @@ public slots:
     void slot_jump_chat_item_from_infopage(std::shared_ptr<UserInfo> ui);
     void slot_item_clicked(QListWidgetItem *item);
     void slot_text_chat_msg(std::shared_ptr<TextChatMsg> msg);
+    void slot_append_send_chat_msg(std::shared_ptr<TextChatData> msgdata);
 private slots:
 
 };

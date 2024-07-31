@@ -63,8 +63,16 @@ std::shared_ptr<UserInfo> ChatUserWid::GetUserInfo()
     return _user_info;
 }
 
-void ChatUserWid::updateLastMsg(QString msg)
-{
-    _user_info->_last_msg = msg;
+void ChatUserWid::updateLastMsg(std::vector<std::shared_ptr<TextChatData>> msgs) {
+
+    QString last_msg = "";
+    for (auto& msg : msgs) {
+        last_msg = msg->_msg_content;
+        _user_info->_chat_msgs.push_back(msg);
+    }
+    
+    _user_info->_last_msg = last_msg;
     ui->user_chat_lb->setText(_user_info->_last_msg);
 }
+
+

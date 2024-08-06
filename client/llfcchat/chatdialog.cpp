@@ -302,7 +302,9 @@ void ChatDialog::slot_append_send_chat_msg(std::shared_ptr<TextChatData> msgdata
         //设置信息
         auto user_info = con_item->GetUserInfo();
         user_info->_chat_msgs.push_back(msgdata);
-
+        std::vector<std::shared_ptr<TextChatData>> msg_vec;
+        msg_vec.push_back(msgdata);
+        UserMgr::GetInstance()->AppendFriendChatMsg(_cur_chat_uid,msg_vec);
         return;
     }
 }
